@@ -1,10 +1,10 @@
 import * as React from "react";
 import { SurfaceStreamReducer, type SurfaceEvent } from "@ovxa/protocol";
-import type { JsonValue, Surface } from "@ovxa/schema";
+import { resolveSurface, type JsonValue, type ResolvedNode, type Surface } from "@ovxa/schema";
 import { createActionRegistry, type ActionRegistry } from "@ovxa/registry";
 import { createSurfaceRuntime, type SurfaceRuntime } from "@ovxa/genui-runtime";
 import { fallbackComponents } from "./fallback";
-import { SurfaceRenderer, useSurfaceRuntime, type SurfaceComponentMap } from "./index";
+import { SurfaceRenderer, useSurfaceRuntime, type SurfaceComponentMap } from "./renderer";
 
 /**
  * The embed layer: one component that turns an intent into a live interface.
@@ -16,9 +16,6 @@ import { SurfaceRenderer, useSurfaceRuntime, type SurfaceComponentMap } from "./
  *   </OVXAProvider>
  *
  * Components and actions are optional. Missing renderers still show the data.
- * Streaming, reconciliation, the action loop, and loading, empty and error
- * states are handled here — those are the parts every integration otherwise
- * rewrites and gets subtly wrong.
  */
 
 /** The slice of the client this layer needs. Keeps React free of the transport. */
@@ -55,9 +52,9 @@ export function OVXAProvider({
   components,
   actions,
   children,
-}: OVXAProviderProps) {
+}: OVXAProviderProps): React.ReactElement {
   const value = React.useMemo(
-    () => ({
+    (): OvxaContextValue => ({
       client,
       components: components ?? fallbackComponents,
       actions: actions ?? DEFAULT_ACTIONS,
@@ -77,12 +74,11 @@ export function useOvxa(): OvxaContextValue {
 
 export type SurfacePhase =
   | { status: "idle" }
-  /** The shell has not arrived; there is nothing to lay out yet. */
   | { status: "planning" }
-  /** A surface exists and is filling in. Render it. */
-  | { status: "streaming"; surface: Surface }
-  | { status: "ready"; surface: Surface }
-  | { status: "error"; message: string; surface: Surface | null };
+  | { status: "streaming"; surface: Surface; tree: ResolvedNode[] }
+  | { status: "ready"; surface: Surface; tree: ResolvedNode[] }
+  | { status: "error"; message: string; surface: null }
+  | { status: "error"; message: string; surface: Surface; tree: ResolvedNode[] };
 
 export type UseOvxaSurfaceResult = {
   phase: SurfacePhase;
@@ -92,28 +88,33 @@ export type UseOvxaSurfaceResult = {
   regenerate: () => void;
 };
 
+export type UseOvxaSurfaceOptions = {
+  intent: string;
+  state?: Record<string, JsonValue>;
+  locale?: string;
+  enabled?: boolean;
+};
+
 /**
  * Streams a surface and keeps it live.
  *
- * The reducer folds events into a surface as they arrive, and a runtime is
- * created once the stream completes so the interaction loop owns the settled
- * surface rather than racing the stream for it.
+ * The reducer folds events into a surface as they arrive. Bindings are resolved
+ * in this effect — not during render — so a parent re-render does not redo that
+ * work. A runtime is created once the stream completes so the interaction loop
+ * owns the settled surface rather than racing the stream for it.
  */
 export function useOvxaSurface({
   intent,
   state,
   locale,
   enabled = true,
-}: {
-  intent: string;
-  state?: Record<string, JsonValue>;
-  locale?: string;
-  enabled?: boolean;
-}): UseOvxaSurfaceResult {
+}: UseOvxaSurfaceOptions): UseOvxaSurfaceResult {
   const { client, actions } = useOvxa();
   const [phase, setPhase] = React.useState<SurfacePhase>({ status: "idle" });
   const [runtime, setRuntime] = React.useState<SurfaceRuntime | null>(null);
   const [nonce, setNonce] = React.useState(0);
+  const stateRef = React.useRef(state);
+  stateRef.current = state;
 
   // Serialised so a caller passing a fresh object literal does not re-stream on
   // every render, which would be an expensive and very easy mistake to make.
@@ -127,6 +128,7 @@ export function useOvxaSurface({
 
     const controller = new AbortController();
     let live = true;
+    const boundState = stateRef.current;
     setRuntime(null);
     setPhase({ status: "planning" });
 
@@ -135,7 +137,7 @@ export function useOvxaSurface({
       try {
         const stream = client.stream({
           intent,
-          ...(state ? { state } : {}),
+          ...(boundState ? { state: boundState } : {}),
           ...(locale ? { locale } : {}),
           signal: controller.signal,
         });
@@ -144,7 +146,13 @@ export function useOvxaSurface({
         while (!next.done) {
           reducer.apply(next.value);
           const current = reducer.current;
-          if (live && current) setPhase({ status: "streaming", surface: current });
+          if (live && current) {
+            setPhase({
+              status: "streaming",
+              surface: current,
+              tree: resolveSurface(current),
+            });
+          }
           next = await stream.next();
         }
 
@@ -158,16 +166,28 @@ export function useOvxaSurface({
           });
           return;
         }
-        setPhase({ status: "ready", surface: settled });
+        setPhase({
+          status: "ready",
+          surface: settled,
+          tree: resolveSurface(settled),
+        });
         setRuntime(createSurfaceRuntime(settled, actions));
       } catch (error) {
         if (!live || controller.signal.aborted) return;
-        // Whatever streamed stays on screen: a partly-built interface the user
-        // can still read beats replacing it with an error panel.
+        const current = reducer.current;
+        if (current) {
+          setPhase({
+            status: "error",
+            message: error instanceof Error ? error.message : "Generation failed.",
+            surface: current,
+            tree: resolveSurface(current),
+          });
+          return;
+        }
         setPhase({
           status: "error",
           message: error instanceof Error ? error.message : "Generation failed.",
-          surface: reducer.current,
+          surface: null,
         });
       }
     })();
@@ -176,7 +196,7 @@ export function useOvxaSurface({
       live = false;
       controller.abort();
     };
-  }, [client, actions, intent, stateKey, locale, enabled, nonce, state]);
+  }, [client, actions, intent, stateKey, locale, enabled, nonce]);
 
   const regenerate = React.useCallback(() => {
     setNonce((value) => value + 1);
@@ -221,7 +241,7 @@ export function OVXASurface({
   error,
   onAction,
   className,
-}: OVXASurfaceProps) {
+}: OVXASurfaceProps): React.ReactElement | null {
   const boundState = state ?? data;
   const { components } = useOvxa();
   const { phase, runtime, regenerate } = useOvxaSurface({
@@ -247,7 +267,7 @@ export function OVXASurface({
     return <>{loading ?? <SurfaceSkeleton />}</>;
   }
 
-  if (phase.status === "error" && !phase.surface) {
+  if (phase.status === "error" && phase.surface === null) {
     return (
       <>
         {error?.(phase.message, regenerate) ?? (
@@ -263,17 +283,18 @@ export function OVXASurface({
     );
   }
 
-  // Prefer the runtime's tree once it exists; before that, render the fold.
   const surface = snapshot?.surface ?? phase.surface;
   if (!surface) return <>{empty ?? null}</>;
   if (surface.root.length === 0 && phase.status === "ready") {
     return <>{empty ?? <SurfaceSkeleton />}</>;
   }
 
+  const tree = snapshot?.tree ?? ("tree" in phase ? phase.tree : []);
+
   return (
     <div className={className} data-ovxa-status={surface.status}>
       <SurfaceRenderer
-        tree={snapshot?.tree ?? resolveOnce(surface)}
+        tree={tree}
         surface={surface}
         components={components}
         onAction={dispatch}
@@ -283,36 +304,7 @@ export function OVXASurface({
   );
 }
 
-/**
- * Resolves a streaming surface for one render.
- *
- * Only used before a runtime exists. The runtime resolves on every patch after
- * that, so this never becomes the hot path.
- */
-function resolveOnce(surface: Surface) {
-  // Imported lazily through the runtime module to keep one resolver in the tree.
-  return createSurfaceRuntime(surface, STREAMING_ACTIONS).snapshot.tree;
-}
-
-/**
- * A registry with nothing in it. A streaming surface is not interactive yet, so
- * dispatching from it must fail closed rather than reach a handler.
- */
-const STREAMING_ACTIONS = {
-  has: () => false,
-  get: () => undefined,
-  list: () => [],
-  ids: () => [],
-  register() {
-    throw new Error("Cannot register actions on a streaming surface");
-  },
-  dispatch: async () => ({
-    ok: false as const,
-    reason: "This surface is still generating",
-  }),
-} as unknown as ActionRegistry;
-
-function SurfaceSkeleton() {
+function SurfaceSkeleton(): React.ReactElement {
   return (
     <div className="ovxa-skeleton" aria-busy="true" aria-live="polite">
       <span className="ovxa-sk ovxa-sk-title" />

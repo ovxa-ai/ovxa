@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { SurfaceComponentMap, SurfaceComponentProps } from "@ovxa/react";
-import { ActionBar, FallbackNode } from "@ovxa/react";
+import { ActionBar } from "@ovxa/react";
 import { arr, isRecord, num, str } from "./values";
 
 function compact(value: number): string {
@@ -649,11 +649,7 @@ const specialized: SurfaceComponentMap = {
 };
 
 /**
- * Reference renderers for every surface-kit component, plus a structured
- * fallback so a host that forgets a name still shows the data.
+ * Reference renderers for every surface-kit component. Unknown types are not
+ * on this map — `SurfaceRenderer` shows the data through `FallbackNode`.
  */
-export const defaultComponents: SurfaceComponentMap = new Proxy(specialized, {
-  get: (target, property) =>
-    typeof property === "string" ? (target[property] ?? FallbackNode) : undefined,
-  has: () => true,
-});
+export const defaultComponents: SurfaceComponentMap = specialized;

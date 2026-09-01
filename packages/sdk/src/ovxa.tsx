@@ -1,25 +1,42 @@
 import * as React from "react";
-import { createOvxa, type OvxaClient, type OvxaClientOptions } from "@ovxa/client";
+import { createOvxa } from "@ovxa/client";
 import {
   OVXAProvider,
   OVXASurface,
-  type OVXASurfaceProps,
   type SurfaceComponentMap,
   type SurfaceSource,
 } from "@ovxa/react";
-import { createSurfaceActions } from "@ovxa/surface-kit";
 import type { ActionRegistry } from "@ovxa/registry";
+import type { JsonValue } from "@ovxa/schema";
+import { createSurfaceActions } from "@ovxa/surface-kit";
 import { defaultComponents } from "./defaults";
 
 const defaultActions = createSurfaceActions();
 
-export type OvxaProps = OVXASurfaceProps &
-  Pick<OvxaClientOptions, "apiKey" | "baseUrl"> & {
-    /** Pass a client you already created. Otherwise one is created from apiKey/baseUrl. */
-    client?: SurfaceSource;
-    components?: SurfaceComponentMap;
-    actions?: ActionRegistry;
-  };
+/**
+ * Customer-facing embed props. `data` is the name to use; `state` is the same
+ * value kept for existing call sites.
+ */
+export type OvxaProps = {
+  intent: string;
+  data?: Record<string, JsonValue>;
+  state?: Record<string, JsonValue>;
+  locale?: string;
+  enabled?: boolean;
+  loading?: React.ReactNode;
+  empty?: React.ReactNode;
+  error?: (message: string, retry: () => void) => React.ReactNode;
+  onAction?: (actionId: string, input: Record<string, unknown>) => void;
+  className?: string;
+  /** Same-origin `/api` is the default. */
+  baseUrl?: string;
+  /** Server key. Never pass this from a browser bundle. */
+  apiKey?: string;
+  /** Pass a client you already created. Otherwise one is created from apiKey/baseUrl. */
+  client?: SurfaceSource;
+  components?: SurfaceComponentMap;
+  actions?: ActionRegistry;
+};
 
 /**
  * The whole integration.
@@ -59,5 +76,3 @@ export function Ovxa({
     </OVXAProvider>
   );
 }
-
-export type { OvxaClient };

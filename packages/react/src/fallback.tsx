@@ -98,11 +98,9 @@ export function FallbackNode({
   );
 }
 
-/** A map that resolves every component name, including ones the host forgot. */
-export const fallbackComponents: SurfaceComponentMap = new Proxy(
-  {} as SurfaceComponentMap,
-  {
-    get: () => FallbackNode,
-    has: () => true,
-  },
-);
+/**
+ * Empty host map. `SurfaceRenderer` already falls back to `FallbackNode` for
+ * any name that is missing — a Proxy that claimed every key was a renderer
+ * hid that invariant.
+ */
+export const fallbackComponents: SurfaceComponentMap = {};

@@ -9,6 +9,10 @@
  * That is the whole integration. Streaming, the action loop, and loading /
  * empty / error states are handled. Pass `components` when you want the
  * generated interface to use your design system instead of the reference kit.
+ *
+ * Advanced hosts that want the provider split can import `OVXAProvider` and
+ * `OVXASurface`. Renderer internals (`FallbackNode`, `SurfaceRenderer`) live
+ * on `@ovxa/react`.
  */
 export { Ovxa, type OvxaProps } from "./ovxa";
 export { defaultComponents } from "./defaults";
@@ -29,24 +33,16 @@ export {
 } from "@ovxa/client";
 
 export {
-  ActionBar,
-  FallbackNode,
   OVXAProvider,
   OVXASurface,
-  SurfaceEmpty,
-  SurfaceRenderer,
-  fallbackComponents,
   useOvxa,
   useOvxaSurface,
-  useSurfaceRuntime,
   type OVXAProviderProps,
   type OVXASurfaceProps,
-  type OvxaContextValue,
   type SurfaceComponentMap,
-  type SurfaceComponentProps,
   type SurfacePhase,
   type SurfaceSource,
   type UseOvxaSurfaceResult,
 } from "@ovxa/react";
 
-export { createSurfaceActions, createSurfaceRegistry } from "@ovxa/surface-kit";
+export { createSurfaceActions } from "@ovxa/surface-kit";

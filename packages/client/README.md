@@ -1,6 +1,7 @@
 # @ovxa/client
 
-Prefer `@ovxa/sdk` for the product integration:
+Typed HTTP / SSE transport for OVXA. For the product integration, use
+[`@ovxa/sdk`](../sdk/README.md):
 
 ```tsx
 import { Ovxa } from "@ovxa/sdk";
@@ -9,12 +10,12 @@ import "@ovxa/sdk/styles.css";
 <Ovxa intent="Compare Q2 revenue against Q1" data={revenue} />
 ```
 
-`@ovxa/client` is the typed HTTP / SSE transport underneath. Use it directly
-when you are not rendering React, or when you already own the stream.
+Use this package when you are not rendering React, or when you already own the
+stream.
 
 ```bash
 npm install @ovxa/sdk
-# or, transport only:
+# transport only
 npm install @ovxa/client
 ```
 
@@ -35,29 +36,16 @@ app.post("/api/genui/stream", async (request, reply) => {
 });
 ```
 
-Client — one component:
+Client — one component, via `@ovxa/sdk`:
 
 ```tsx
-import { createOvxa } from "@ovxa/client";
-import { OVXAProvider, OVXASurface } from "@ovxa/react";
+import { Ovxa } from "@ovxa/sdk";
+import "@ovxa/sdk/styles.css";
 
-const ovxa = createOvxa({ baseUrl: "/api" });
-
-export function RevenueReview({ data }) {
-  return (
-    <OVXAProvider client={ovxa} components={components} actions={actions}>
-      <OVXASurface
-        intent="Compare Q2 revenue against Q1 and show where growth was lost"
-        state={data}
-      />
-    </OVXAProvider>
-  );
-}
+<Ovxa intent="Compare Q2 revenue against Q1" data={data} />
 ```
 
-That is the whole integration. Streaming, reconciliation, the action loop, and
-loading, empty and error states are handled — those are the parts every
-integration otherwise rewrites and gets subtly wrong.
+`createOvxa` remains the transport if you fold the stream yourself.
 
 ## The three ways to call it
 

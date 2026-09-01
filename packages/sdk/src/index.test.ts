@@ -11,8 +11,8 @@ describe("defaultComponents", () => {
     expect(missing).toEqual([]);
   });
 
-  it("still renders a component the host never registered", () => {
-    expect(typeof defaultComponents["NotInTheKit"]).toBe("function");
+  it("does not pretend unknown types are registered — the renderer falls back", () => {
+    expect(defaultComponents["NotInTheKit"]).toBeUndefined();
   });
 });
 

@@ -1,21 +1,10 @@
 import * as React from "react";
-import type { ResolvedNode, Surface, SurfaceAction } from "@ovxa/schema";
+import type { ResolvedNode, Surface } from "@ovxa/schema";
 import type { SurfaceRuntime, RuntimeSnapshot } from "@ovxa/genui-runtime";
+import { FallbackNode } from "./fallback";
+import type { SurfaceComponentMap } from "./types";
 
-/** Props every registered React component receives from the renderer. */
-export type SurfaceComponentProps = {
-  node: ResolvedNode;
-  /** Resolved props: bindings already replaced with live state. */
-  data: Record<string, unknown>;
-  actions: SurfaceAction[];
-  onAction: (actionId: string, input?: Record<string, unknown>) => void;
-  children?: React.ReactNode;
-};
-
-export type SurfaceComponentMap = Record<
-  string,
-  React.ComponentType<SurfaceComponentProps>
->;
+export type { SurfaceComponentMap, SurfaceComponentProps } from "./types";
 
 /**
  * Renders a resolved node tree. A node whose type has no React implementation
@@ -36,16 +25,7 @@ function RenderNode({
     <RenderNode key={child.key} node={child} map={map} onAction={onAction} />
   ));
 
-  if (!Component) {
-    return (
-      <div data-ovxa-node-id={node.id} style={{ display: "contents" }}>
-        <div className="ovxa-unmapped" role="note">
-          <strong>{node.type}</strong>
-          <span>No renderer registered for this component.</span>
-        </div>
-      </div>
-    );
-  }
+  const Renderer = Component ?? FallbackNode;
 
   if (node.phase === "error") {
     return (
@@ -68,14 +48,14 @@ function RenderNode({
 
   return (
     <div data-ovxa-node-id={node.id} style={{ display: "contents" }}>
-      <Component
+      <Renderer
         node={node}
         data={node.props}
         actions={node.actions ?? []}
         onAction={onAction}
       >
         {children.length > 0 ? children : undefined}
-      </Component>
+      </Renderer>
     </div>
   );
 }
@@ -173,12 +153,15 @@ export {
   OVXASurface,
   useOvxa,
   useOvxaSurface,
+  type OVXAProviderProps,
   type OVXASurfaceProps,
   type OvxaContextValue,
   type SurfacePhase,
   type SurfaceSource,
   type UseOvxaSurfaceResult,
 } from "./embed";
+
+export { ActionBar, FallbackNode, fallbackComponents } from "./fallback";
 
 /** Subscribes a component to a runtime and re-renders on every patch. */
 export function useSurfaceRuntime(runtime: SurfaceRuntime | null): RuntimeSnapshot | null {

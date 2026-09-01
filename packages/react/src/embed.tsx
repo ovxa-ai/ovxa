@@ -1,20 +1,24 @@
 import * as React from "react";
 import { SurfaceStreamReducer, type SurfaceEvent } from "@ovxa/protocol";
 import type { JsonValue, Surface } from "@ovxa/schema";
-import type { ActionRegistry } from "@ovxa/registry";
+import { createActionRegistry, type ActionRegistry } from "@ovxa/registry";
 import { createSurfaceRuntime, type SurfaceRuntime } from "@ovxa/genui-runtime";
+import { fallbackComponents } from "./fallback";
 import { SurfaceRenderer, useSurfaceRuntime, type SurfaceComponentMap } from "./index";
 
 /**
  * The embed layer: one component that turns an intent into a live interface.
  *
- *   <OVXAProvider client={ovxa} components={components} actions={actions}>
- *     <OVXASurface intent="Compare Q2 revenue against Q1" state={data} />
+ *   const ovxa = createOvxa({ baseUrl: "/api" });
+ *
+ *   <OVXAProvider client={ovxa}>
+ *     <OVXASurface intent="Compare Q2 revenue against Q1" data={revenue} />
  *   </OVXAProvider>
  *
+ * Components and actions are optional. Missing renderers still show the data.
  * Streaming, reconciliation, the action loop, and loading, empty and error
- * states are all handled here, because those are exactly the parts every
- * integration would otherwise rewrite — and get subtly wrong.
+ * states are handled here — those are the parts every integration otherwise
+ * rewrites and gets subtly wrong.
  */
 
 /** The slice of the client this layer needs. Keeps React free of the transport. */
@@ -33,16 +37,31 @@ export type OvxaContextValue = {
   actions: ActionRegistry;
 };
 
+export type OVXAProviderProps = {
+  client: SurfaceSource;
+  /** Host design-system map. Unmapped types still render as structured HTML. */
+  components?: SurfaceComponentMap;
+  /** Host action handlers. Defaults to an empty allowlist. */
+  actions?: ActionRegistry;
+  children: React.ReactNode;
+};
+
 const OvxaContext = React.createContext<OvxaContextValue | null>(null);
+
+const DEFAULT_ACTIONS = createActionRegistry();
 
 export function OVXAProvider({
   client,
   components,
   actions,
   children,
-}: OvxaContextValue & { children: React.ReactNode }) {
+}: OVXAProviderProps) {
   const value = React.useMemo(
-    () => ({ client, components, actions }),
+    () => ({
+      client,
+      components: components ?? fallbackComponents,
+      actions: actions ?? DEFAULT_ACTIONS,
+    }),
     [client, components, actions],
   );
   return <OvxaContext.Provider value={value}>{children}</OvxaContext.Provider>;
@@ -168,7 +187,10 @@ export function useOvxaSurface({
 
 export type OVXASurfaceProps = {
   intent: string;
+  /** Application data the surface may bind to. Alias of `data`. */
   state?: Record<string, JsonValue>;
+  /** Same as `state`. Prefer this name in product code. */
+  data?: Record<string, JsonValue>;
   locale?: string;
   enabled?: boolean;
   /** Rendered while the plan is still being chosen. */
@@ -191,6 +213,7 @@ export type OVXASurfaceProps = {
 export function OVXASurface({
   intent,
   state,
+  data,
   locale,
   enabled,
   loading,
@@ -199,10 +222,11 @@ export function OVXASurface({
   onAction,
   className,
 }: OVXASurfaceProps) {
+  const boundState = state ?? data;
   const { components } = useOvxa();
   const { phase, runtime, regenerate } = useOvxaSurface({
     intent,
-    ...(state ? { state } : {}),
+    ...(boundState ? { state: boundState } : {}),
     ...(locale ? { locale } : {}),
     ...(enabled === undefined ? {} : { enabled }),
   });
@@ -267,14 +291,14 @@ export function OVXASurface({
  */
 function resolveOnce(surface: Surface) {
   // Imported lazily through the runtime module to keep one resolver in the tree.
-  return createSurfaceRuntime(surface, EMPTY_ACTIONS).snapshot.tree;
+  return createSurfaceRuntime(surface, STREAMING_ACTIONS).snapshot.tree;
 }
 
 /**
  * A registry with nothing in it. A streaming surface is not interactive yet, so
  * dispatching from it must fail closed rather than reach a handler.
  */
-const EMPTY_ACTIONS = {
+const STREAMING_ACTIONS = {
   has: () => false,
   get: () => undefined,
   list: () => [],

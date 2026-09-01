@@ -20,10 +20,11 @@ export default defineConfig({
       "@ovxa/surface-model": fromRoot("./packages/surface-model/src/index.ts"),
       "@ovxa/react": fromRoot("./packages/react/src/index.tsx"),
       "@ovxa/client": fromRoot("./packages/client/src/index.ts"),
+      "@ovxa/sdk": fromRoot("./packages/sdk/src/index.ts"),
     },
   },
   test: {
-    include: ["packages/**/*.test.ts"],
+    include: ["packages/**/*.test.ts", "packages/**/*.test.tsx"],
     environment: "happy-dom",
   },
 });

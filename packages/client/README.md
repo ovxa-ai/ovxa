@@ -1,9 +1,21 @@
 # @ovxa/client
 
-The SDK for generating interfaces instead of text.
+Prefer `@ovxa/sdk` for the product integration:
+
+```tsx
+import { Ovxa } from "@ovxa/sdk";
+import "@ovxa/sdk/styles.css";
+
+<Ovxa intent="Compare Q2 revenue against Q1" data={revenue} />
+```
+
+`@ovxa/client` is the typed HTTP / SSE transport underneath. Use it directly
+when you are not rendering React, or when you already own the stream.
 
 ```bash
-npm install @ovxa/client @ovxa/react
+npm install @ovxa/sdk
+# or, transport only:
+npm install @ovxa/client
 ```
 
 ## Quickstart

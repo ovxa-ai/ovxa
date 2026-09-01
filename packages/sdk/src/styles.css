@@ -1,0 +1,278 @@
+.ovxa-surface {
+  display: grid;
+  gap: 1rem;
+  color: inherit;
+  font: inherit;
+}
+
+.ovxa-muted {
+  color: color-mix(in srgb, currentColor 62%, transparent);
+  font-size: 0.875em;
+}
+
+.ovxa-metrics,
+.ovxa-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.ovxa-metric,
+.ovxa-stat,
+.ovxa-option,
+.ovxa-callout,
+.ovxa-summary,
+.ovxa-approval,
+.ovxa-node,
+.ovxa-section,
+.ovxa-code,
+.ovxa-gauge,
+.ovxa-tool {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 0.9rem;
+}
+
+.ovxa-stat-value {
+  font-size: 1.6em;
+  letter-spacing: -0.03em;
+}
+
+.ovxa-trend-up,
+.ovxa-tone-success,
+.ovxa-trend-positive {
+  color: #3dd68c;
+}
+
+.ovxa-trend-down,
+.ovxa-tone-critical,
+.ovxa-trend-negative {
+  color: #f87171;
+}
+
+.ovxa-table-wrap {
+  overflow: auto;
+}
+
+.ovxa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.925em;
+}
+
+.ovxa-table th,
+.ovxa-table td {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ovxa-btn {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.65rem;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ovxa-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ovxa-btn-primary,
+.ovxa-btn-destructive {
+  background: currentColor;
+  color: Canvas;
+}
+
+.ovxa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ovxa-option {
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.ovxa-option.is-selected,
+.ovxa-option.is-recommended {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.ovxa-chip {
+  margin-left: 0.4rem;
+  font-size: 0.75em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.ovxa-filters,
+.ovxa-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ovxa-filters label,
+.ovxa-form label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ovxa-filters select,
+.ovxa-form input,
+.ovxa-form select {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.ovxa-timeline,
+.ovxa-trace,
+.ovxa-ranked,
+.ovxa-sources,
+.ovxa-tasks ul,
+.ovxa-anomalies,
+.ovxa-funnel {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ovxa-bar-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ovxa-bar {
+  height: 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.ovxa-chart svg {
+  width: 100%;
+  height: 8rem;
+}
+
+.ovxa-gauge-track {
+  height: 0.45rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ovxa-gauge-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+}
+
+.ovxa-code pre,
+.ovxa-diff pre {
+  margin: 0;
+  overflow: auto;
+  font-size: 0.85em;
+}
+
+.ovxa-diff-panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.ovxa-link {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ovxa-node-props,
+.ovxa-kv dl,
+.ovxa-summary dl,
+.ovxa-approval dl {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.ovxa-node-row,
+.ovxa-kv dl > div,
+.ovxa-summary dl > div,
+.ovxa-approval dl > div {
+  display: grid;
+  grid-template-columns: minmax(6rem, 30%) 1fr;
+  gap: 0.5rem;
+}
+
+.ovxa-skeleton {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ovxa-sk {
+  display: block;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  min-height: 0.7rem;
+}
+
+.ovxa-sk-title {
+  width: 40%;
+  height: 1.1rem;
+}
+
+.ovxa-sk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.ovxa-sk-card {
+  height: 5rem;
+}
+
+.ovxa-error {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, #f87171 50%, transparent);
+  border-radius: 0.9rem;
+}
+
+.ovxa-empty-surface {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+}
+
+@media (max-width: 720px) {
+  .ovxa-diff-panes,
+  .ovxa-sk-grid {
+    grid-template-columns: 1fr;
+  }
+}

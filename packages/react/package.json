@@ -1,0 +1,29 @@
+{
+  "name": "@ovxa/react",
+  "version": "0.1.0",
+  "description": "React renderer and provider for OVXA surfaces.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.tsx",
+      "import": "./src/index.tsx"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ovxa/schema": "0.1.0",
+    "@ovxa/genui-runtime": "0.1.0",
+    "@ovxa/protocol": "0.1.0",
+    "@ovxa/registry": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  }
+}

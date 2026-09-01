@@ -1,0 +1,23 @@
+{
+  "name": "@ovxa/schema",
+  "version": "0.1.0",
+  "description": "Declarative OVXA UI schema: surfaces, bindings, actions, patches.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "zod": "4.5.4"
+  }
+}

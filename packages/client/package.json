@@ -1,0 +1,27 @@
+{
+  "name": "@ovxa/client",
+  "version": "0.1.0",
+  "description": "Typed HTTP/SSE client for OVXA generation and surface actions.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ovxa/compiler": "0.1.0",
+    "@ovxa/intelligence": "0.1.0",
+    "@ovxa/protocol": "0.1.0",
+    "@ovxa/schema": "0.1.0",
+    "@ovxa/streaming": "0.1.0"
+  }
+}

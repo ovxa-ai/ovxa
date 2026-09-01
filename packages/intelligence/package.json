@@ -1,0 +1,24 @@
+{
+  "name": "@ovxa/intelligence",
+  "version": "0.1.0",
+  "description": "UI Intelligence Engine: understand, propose, evaluate, select, learn.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ovxa/schema": "0.1.0",
+    "@ovxa/registry": "0.1.0"
+  }
+}

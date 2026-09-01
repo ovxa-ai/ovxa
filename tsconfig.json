@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "paths": {
+      "@ovxa/schema": ["./packages/schema/src/index.ts"],
+      "@ovxa/registry": ["./packages/registry/src/index.ts"],
+      "@ovxa/intelligence": ["./packages/intelligence/src/index.ts"],
+      "@ovxa/compiler": ["./packages/compiler/src/index.ts"],
+      "@ovxa/protocol": ["./packages/protocol/src/index.ts"],
+      "@ovxa/genui-runtime": ["./packages/genui-runtime/src/index.ts"],
+      "@ovxa/streaming": ["./packages/streaming/src/index.ts"],
+      "@ovxa/wire": ["./packages/wire/src/index.ts"],
+      "@ovxa/llm": ["./packages/llm/src/index.ts"],
+      "@ovxa/surface-kit": ["./packages/surface-kit/src/index.ts"],
+      "@ovxa/surface-model": ["./packages/surface-model/src/index.ts"],
+      "@ovxa/react": ["./packages/react/src/index.tsx"],
+      "@ovxa/client": ["./packages/client/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src"]
+}

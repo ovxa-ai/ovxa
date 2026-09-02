@@ -21,22 +21,11 @@ npm install @ovxa/client
 
 ## Quickstart
 
-Server — one route, because the provider credential must not reach a browser and
-a compiler guarantee the client can skip is not a guarantee:
+This package is the transport, not the server implementation. Point it at the
+OVXA API hosted by Studio, or at your own compatible same-origin route. Provider
+credentials must remain on that server.
 
-```ts
-import { GenUiService } from "@ovxa/api";
-
-const genui = new GenUiService({ adapter, model: "gpt-4.1-mini" });
-
-app.post("/api/genui/stream", async (request, reply) => {
-  const stream = genui.stream({ intent: request.body.intent, state: request.body.state });
-  for await (const event of stream) reply.raw.write(`data: ${JSON.stringify(event)}\n\n`);
-  reply.raw.end();
-});
-```
-
-Client — one component, via `@ovxa/sdk`:
+For React, use the one-component integration from `@ovxa/sdk`:
 
 ```tsx
 import { Ovxa } from "@ovxa/sdk";
@@ -67,7 +56,7 @@ Interactions patch the surface in place rather than regenerating it:
 const { surface, revision } = await ovxa.surfaces.act(id, "drillDown", { id: "enterprise" });
 ```
 
-## Why this is cheaper to run
+## Why generation stays compact
 
 A generated surface is mostly data. OVXA's model never writes the data.
 
@@ -76,28 +65,6 @@ runtime resolves the binding at render time. So the model describes the
 interface and nothing else, which means generation cost tracks how many
 components the interface has, not how much data they show. The same twelve-token
 chart line serves twelve points or twelve thousand.
-
-On top of that the wire format is line-oriented rather than JSON, so the model
-never reproduces braces, quotes, colons or commas, and never repeats a key.
-
-Measured with the GPT-4o BPE encoder across seven interfaces
-(`npx tsx scripts/wire-benchmark.ts`, scenarios in
-`packages/wire/src/benchmark.ts`):
-
-| scenario           |  JSON | Wire | Wire + bindings | Wire vs JSON | Bound vs JSON |
-| ------------------ | ----: | ---: | --------------: | -----------: | ------------: |
-| simple-table       |   402 |  271 |              28 |       −32.6% |        −93.0% |
-| chart-with-data    |   205 |  165 |              39 |       −19.5% |        −81.0% |
-| contact-form       |   237 |  176 |              37 |       −25.7% |        −84.4% |
-| dashboard          |   526 |  389 |             153 |       −26.0% |        −70.9% |
-| pricing-page       |   364 |  261 |              42 |       −28.3% |        −88.5% |
-| settings-panel     |   442 |  333 |              84 |       −24.7% |        −81.0% |
-| ecommerce-product  |   379 |  281 |             117 |       −25.9% |        −69.1% |
-| **total**          | **2555** | **1876** | **500**  |   **−26.6%** |    **−80.4%** |
-
-The JSON column is already minified, so −26.6% is a structural saving against a
-lean baseline rather than a verbose one. The bound column is the path OVXA
-actually generates on.
 
 ## Latency
 

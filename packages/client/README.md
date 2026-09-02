@@ -60,11 +60,11 @@ const { surface, revision } = await ovxa.surfaces.act(id, "drillDown", { id: "en
 
 A generated surface is mostly data. OVXA's model never writes the data.
 
-Components bind to host state by name — `series @revenueByMonth` — and the
-runtime resolves the binding at render time. So the model describes the
+Components bind to host state by path — `{ "$bind": "revenueByMonth" }` — and
+the runtime resolves the binding at render time. So the model describes the
 interface and nothing else, which means generation cost tracks how many
-components the interface has, not how much data they show. The same twelve-token
-chart line serves twelve points or twelve thousand.
+components the interface has, not how much data they show. The same component
+binding serves twelve points or twelve thousand.
 
 ## Latency
 

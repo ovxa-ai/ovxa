@@ -18,8 +18,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@ovxa/schema": "0.1.0",
+    "@ovxa/intelligence": "0.1.0",
     "@ovxa/registry": "0.1.0",
-    "@ovxa/intelligence": "0.1.0"
+    "@ovxa/schema": "0.1.0",
+    "zod": "4.5.4"
   }
 }

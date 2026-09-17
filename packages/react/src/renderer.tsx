@@ -90,7 +90,6 @@ export type SurfaceRendererProps = {
   onAction: (actionId: string, input?: Record<string, unknown>) => void;
   empty?: React.ReactNode;
   focusRequest?: RuntimeSnapshot["focusRequest"];
-  theme?: Record<string, string>;
 };
 
 /**
@@ -105,7 +104,6 @@ export function SurfaceRenderer({
   onAction,
   empty,
   focusRequest,
-  theme,
 }: SurfaceRendererProps): React.ReactElement {
   const rootRef = React.useRef<HTMLDivElement>(null);
 
@@ -134,7 +132,6 @@ export function SurfaceRenderer({
       ref={rootRef}
       className={`ovxa-surface ovxa-cols-${columns} ovxa-${surface.layout.density}`}
       data-kind={surface.kind}
-      {...(theme ? { style: theme as React.CSSProperties } : {})}
     >
       {tree.map((node) => (
         <RenderNode key={node.key} node={node} map={components} onAction={onAction} />

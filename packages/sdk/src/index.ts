@@ -1,20 +1,25 @@
 /**
  * The OVXA SDK.
  *
- *   import { Ovxa } from "@ovxa/sdk";
+ *   import { Ovxa, OvxaSearch } from "@ovxa/sdk";
  *   import "@ovxa/sdk/styles.css";
  *
  *   <Ovxa intent="Compare Q2 against Q1" data={revenue} />
+ *   <OvxaSearch data={workspace} />
  *
- * That is the whole integration. Streaming, the action loop, and loading /
- * empty / error states are handled. Pass `components` when you want the
- * generated interface to use your design system instead of the reference kit.
+ * `Ovxa` renders one intent. `OvxaSearch` lets the user type the intent and
+ * renders the answer underneath. Streaming, the action loop, and loading /
+ * empty / error states are handled by both. The generated interface inherits
+ * the host's colour and type; pass `theme` or set `--ovxa-*` custom properties
+ * to tune the rest, and `components` to render with your own design system.
  *
- * Advanced hosts that want the provider split can import `OVXAProvider` and
- * `OVXASurface`. Renderer internals (`FallbackNode`, `SurfaceRenderer`) live
- * on `@ovxa/react`.
+ * Advanced hosts that want the provider split can import `OVXAProvider`,
+ * `useOvxaSurface` and `OVXASurfaceView`. Renderer internals (`FallbackNode`,
+ * `SurfaceRenderer`) live on `@ovxa/react`.
  */
-export { Ovxa, type OvxaProps } from "./ovxa";
+export { Ovxa, OvxaRoot, type OvxaConnectionProps, type OvxaProps } from "./ovxa";
+export { OvxaSearch, type OvxaSearchProps } from "./search";
+export { defaultUseCases, filterUseCases, type UseCase } from "./use-cases";
 export { defaultComponents } from "./defaults";
 
 export {
@@ -35,13 +40,18 @@ export {
 export {
   OVXAProvider,
   OVXASurface,
+  OVXASurfaceView,
   useOvxa,
   useOvxaSurface,
   type OVXAProviderProps,
   type OVXASurfaceProps,
+  type OVXASurfaceViewProps,
+  type OvxaTheme,
   type SurfaceComponentMap,
+  type SurfaceComponentProps,
   type SurfacePhase,
   type SurfaceSource,
+  type SurfaceViewProps,
   type UseOvxaSurfaceResult,
 } from "@ovxa/react";
 

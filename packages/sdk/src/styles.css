@@ -1,21 +1,98 @@
+/*
+ * @ovxa/sdk — reference styles.
+ *
+ * The surface inherits the host's colour and type. Everything else is a token
+ * derived from `currentColor`, so a surface looks native in an app that never
+ * configured it. Override on any ancestor to match a design system:
+ *
+ *   .ovxa { --ovxa-radius: var(--radius); --ovxa-border: hsl(var(--border)); }
+ */
+
+.ovxa {
+  --ovxa-radius: 0.75rem;
+  --ovxa-border: color-mix(in srgb, currentColor 12%, transparent);
+  --ovxa-border-strong: color-mix(in srgb, currentColor 36%, transparent);
+  --ovxa-muted: color-mix(in srgb, currentColor 62%, transparent);
+  --ovxa-fill: color-mix(in srgb, currentColor 5%, transparent);
+  --ovxa-fill-strong: color-mix(in srgb, currentColor 10%, transparent);
+  --ovxa-accent: currentColor;
+  --ovxa-on-accent: Canvas;
+  --ovxa-success: #3dd68c;
+  --ovxa-danger: #f87171;
+  --ovxa-font: inherit;
+  --ovxa-gap: 1rem;
+  --ovxa-focus: 0 0 0 2px Canvas, 0 0 0 4px var(--ovxa-border-strong);
+  --ovxa-ease: 160ms cubic-bezier(0.2, 0, 0, 1);
+
+  color: inherit;
+  font: var(--ovxa-font);
+  line-height: 1.45;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.ovxa *,
+.ovxa *::before,
+.ovxa *::after {
+  box-sizing: inherit;
+}
+
+.ovxa h3,
+.ovxa p,
+.ovxa ul,
+.ovxa ol,
+.ovxa dl {
+  margin: 0;
+}
+
+.ovxa h3 {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ovxa :focus-visible {
+  outline: none;
+  box-shadow: var(--ovxa-focus);
+}
+
+/* Layout ------------------------------------------------------------------ */
+
 .ovxa-surface {
   display: grid;
-  gap: 1rem;
-  color: inherit;
-  font: inherit;
+  gap: var(--ovxa-gap);
+  grid-template-columns: repeat(var(--ovxa-columns, 1), minmax(0, 1fr));
+}
+
+.ovxa-cols-2 { --ovxa-columns: 2; }
+.ovxa-cols-3 { --ovxa-columns: 3; }
+.ovxa-cols-4 { --ovxa-columns: 4; }
+
+.ovxa-compact {
+  --ovxa-gap: 0.625rem;
+}
+
+.ovxa-surface > * {
+  min-width: 0;
+}
+
+.ovxa-surface > .ovxa-section,
+.ovxa-surface > .ovxa-table-wrap,
+.ovxa-surface > .ovxa-metrics,
+.ovxa-surface > .ovxa-options,
+.ovxa-surface > .ovxa-form,
+.ovxa-surface > .ovxa-filters,
+.ovxa-surface > .ovxa-diff,
+.ovxa-surface > .ovxa-funnel {
+  grid-column: 1 / -1;
 }
 
 .ovxa-muted {
-  color: color-mix(in srgb, currentColor 62%, transparent);
+  color: var(--ovxa-muted);
   font-size: 0.875em;
 }
 
-.ovxa-metrics,
-.ovxa-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 0.75rem;
-}
+/* Cards ------------------------------------------------------------------- */
 
 .ovxa-metric,
 .ovxa-stat,
@@ -26,177 +103,185 @@
 .ovxa-node,
 .ovxa-section,
 .ovxa-code,
+.ovxa-diff,
 .ovxa-gauge,
-.ovxa-tool {
+.ovxa-tool,
+.ovxa-kv,
+.ovxa-tasks,
+.ovxa-chart {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.4rem;
+  align-content: start;
   padding: 0.9rem 1rem;
-  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
-  border-radius: 0.9rem;
+  border: 1px solid var(--ovxa-border);
+  border-radius: var(--ovxa-radius);
+  background: var(--ovxa-fill);
 }
 
+.ovxa-section {
+  gap: 0.75rem;
+  background: transparent;
+}
+
+.ovxa-section > header {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.ovxa-metrics,
+.ovxa-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+}
+
+.ovxa-metric strong,
 .ovxa-stat-value {
-  font-size: 1.6em;
+  font-size: 1.5em;
+  font-weight: 600;
   letter-spacing: -0.03em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.ovxa-trend {
+  font-size: 0.8125em;
+  font-variant-numeric: tabular-nums;
 }
 
 .ovxa-trend-up,
-.ovxa-tone-success,
-.ovxa-trend-positive {
-  color: #3dd68c;
+.ovxa-trend-positive,
+.ovxa-tone-success {
+  color: var(--ovxa-success);
 }
 
 .ovxa-trend-down,
+.ovxa-trend-negative,
 .ovxa-tone-critical,
-.ovxa-trend-negative {
-  color: #f87171;
+.ovxa-risk-high {
+  color: var(--ovxa-danger);
 }
+
+.ovxa-callout {
+  border-left-width: 3px;
+}
+
+.ovxa-callout p,
+.ovxa-approval p {
+  color: var(--ovxa-muted);
+  font-size: 0.9em;
+}
+
+.ovxa-approval.ovxa-risk-high {
+  color: inherit;
+  border-color: color-mix(in srgb, var(--ovxa-danger) 45%, transparent);
+}
+
+/* Tables ------------------------------------------------------------------ */
 
 .ovxa-table-wrap {
   overflow: auto;
+  border: 1px solid var(--ovxa-border);
+  border-radius: var(--ovxa-radius);
 }
 
 .ovxa-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.925em;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ovxa-table caption {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  color: var(--ovxa-muted);
+  font-size: 0.875em;
+  caption-side: top;
 }
 
 .ovxa-table th,
 .ovxa-table td {
   text-align: left;
-  padding: 0.55rem 0.7rem;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--ovxa-border);
 }
 
-.ovxa-btn {
+.ovxa-table th {
+  font-weight: 500;
+  color: var(--ovxa-muted);
+  font-size: 0.85em;
+}
+
+.ovxa-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ovxa-table tbody tr:hover td {
+  background: var(--ovxa-fill);
+}
+
+.ovxa-heat td {
+  text-align: right;
+}
+
+/* Buttons and actions ----------------------------------------------------- */
+
+.ovxa-btn,
+.ovxa-chip-btn {
   appearance: none;
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--ovxa-border-strong);
   background: transparent;
   color: inherit;
-  border-radius: 0.65rem;
-  padding: 0.4rem 0.75rem;
+  border-radius: calc(var(--ovxa-radius) - 0.2rem);
+  padding: 0.4rem 0.8rem;
   font: inherit;
+  font-size: 0.9em;
+  line-height: 1.2;
   cursor: pointer;
+  transition:
+    background var(--ovxa-ease),
+    border-color var(--ovxa-ease),
+    opacity var(--ovxa-ease);
+}
+
+.ovxa-btn:hover,
+.ovxa-chip-btn:hover {
+  background: var(--ovxa-fill-strong);
 }
 
 .ovxa-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.ovxa-btn-primary,
+.ovxa-btn-primary {
+  background: var(--ovxa-accent);
+  border-color: var(--ovxa-accent);
+  color: var(--ovxa-on-accent);
+}
+
+.ovxa-btn-primary:hover {
+  background: color-mix(in srgb, var(--ovxa-accent) 88%, transparent);
+}
+
 .ovxa-btn-destructive {
-  background: currentColor;
-  color: Canvas;
+  color: var(--ovxa-danger);
+  border-color: color-mix(in srgb, var(--ovxa-danger) 45%, transparent);
+}
+
+.ovxa-btn-ghost {
+  border-color: transparent;
 }
 
 .ovxa-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-.ovxa-option {
-  text-align: left;
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
-
-.ovxa-option.is-selected,
-.ovxa-option.is-recommended {
-  border-color: color-mix(in srgb, currentColor 40%, transparent);
-}
-
-.ovxa-chip {
-  margin-left: 0.4rem;
-  font-size: 0.75em;
-  padding: 0.1rem 0.4rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-}
-
-.ovxa-filters,
-.ovxa-form {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.ovxa-filters label,
-.ovxa-form label {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.ovxa-filters select,
-.ovxa-form input,
-.ovxa-form select {
-  font: inherit;
-  color: inherit;
-  background: transparent;
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-  border-radius: 0.6rem;
-  padding: 0.4rem 0.6rem;
-}
-
-.ovxa-timeline,
-.ovxa-trace,
-.ovxa-ranked,
-.ovxa-sources,
-.ovxa-tasks ul,
-.ovxa-anomalies,
-.ovxa-funnel {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ovxa-bar-row {
-  display: grid;
-  grid-template-columns: 7rem 1fr auto;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.ovxa-bar {
-  height: 0.45rem;
-  border-radius: 999px;
-  background: currentColor;
-}
-
-.ovxa-chart svg {
-  width: 100%;
-  height: 8rem;
-}
-
-.ovxa-gauge-track {
-  height: 0.45rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-}
-
-.ovxa-gauge-fill {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: currentColor;
-}
-
-.ovxa-code pre,
-.ovxa-diff pre {
-  margin: 0;
-  overflow: auto;
-  font-size: 0.85em;
-}
-
-.ovxa-diff-panes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  padding-top: 0.25rem;
 }
 
 .ovxa-link {
@@ -206,16 +291,352 @@
   color: inherit;
   font: inherit;
   text-decoration: underline;
+  text-underline-offset: 0.15em;
   cursor: pointer;
   padding: 0;
 }
+
+/* Options ----------------------------------------------------------------- */
+
+.ovxa-option {
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: border-color var(--ovxa-ease), background var(--ovxa-ease);
+}
+
+.ovxa-option:hover {
+  background: var(--ovxa-fill-strong);
+}
+
+.ovxa-option.is-recommended {
+  border-color: var(--ovxa-border-strong);
+}
+
+.ovxa-option.is-selected {
+  border-color: var(--ovxa-accent);
+  box-shadow: inset 0 0 0 1px var(--ovxa-accent);
+}
+
+.ovxa-option ul {
+  padding-left: 1.1rem;
+  color: var(--ovxa-muted);
+  font-size: 0.875em;
+}
+
+.ovxa-option-price {
+  font-size: 1.25em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ovxa-option-price em {
+  font-style: normal;
+  font-size: 0.7em;
+  font-weight: 400;
+  color: var(--ovxa-muted);
+}
+
+.ovxa-chip {
+  margin-left: 0.4rem;
+  font-size: 0.72em;
+  font-weight: 500;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--ovxa-border-strong);
+  vertical-align: middle;
+}
+
+/* Forms ------------------------------------------------------------------- */
+
+.ovxa-filters,
+.ovxa-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ovxa-filters {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.ovxa-filters label,
+.ovxa-form label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9em;
+}
+
+.ovxa-filters select,
+.ovxa-form input,
+.ovxa-form select {
+  font: inherit;
+  color: inherit;
+  background: var(--ovxa-fill);
+  border: 1px solid var(--ovxa-border-strong);
+  border-radius: calc(var(--ovxa-radius) - 0.2rem);
+  padding: 0.5rem 0.7rem;
+  min-height: 2.4rem;
+  transition: border-color var(--ovxa-ease);
+}
+
+.ovxa-form input:hover,
+.ovxa-form select:hover,
+.ovxa-filters select:hover {
+  border-color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.ovxa-form .ovxa-btn-primary {
+  justify-self: start;
+}
+
+/* Lists ------------------------------------------------------------------- */
+
+.ovxa-timeline,
+.ovxa-trace,
+.ovxa-ranked,
+.ovxa-sources,
+.ovxa-tasks ul,
+.ovxa-anomalies,
+.ovxa-funnel,
+.ovxa-donut ul {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ovxa-timeline li,
+.ovxa-trace li,
+.ovxa-ranked li,
+.ovxa-sources li,
+.ovxa-tasks li,
+.ovxa-anomalies li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--ovxa-border);
+}
+
+.ovxa-timeline li:last-child,
+.ovxa-trace li:last-child,
+.ovxa-ranked li:last-child,
+.ovxa-sources li:last-child,
+.ovxa-tasks li:last-child,
+.ovxa-anomalies li:last-child {
+  border-bottom: 0;
+}
+
+.ovxa-timeline li,
+.ovxa-trace li,
+.ovxa-tasks li {
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  align-items: baseline;
+}
+
+.ovxa-timeline li::before,
+.ovxa-trace li::before,
+.ovxa-tasks li::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ovxa-border-strong);
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.ovxa-timeline li[data-status="done"]::before,
+.ovxa-timeline li[data-status="complete"]::before,
+.ovxa-trace li[data-status="done"]::before,
+.ovxa-trace li[data-status="complete"]::before,
+.ovxa-tasks li[data-status="done"]::before,
+.ovxa-tasks li[data-status="complete"]::before {
+  background: var(--ovxa-success);
+  border-color: var(--ovxa-success);
+}
+
+.ovxa-timeline li[data-status="active"]::before,
+.ovxa-timeline li[data-status="running"]::before,
+.ovxa-trace li[data-status="running"]::before,
+.ovxa-tasks li[data-status="running"]::before {
+  background: var(--ovxa-accent);
+  border-color: var(--ovxa-accent);
+}
+
+.ovxa-timeline li[data-status="failed"]::before,
+.ovxa-trace li[data-status="failed"]::before,
+.ovxa-tasks li[data-status="failed"]::before {
+  background: var(--ovxa-danger);
+  border-color: var(--ovxa-danger);
+}
+
+.ovxa-anomalies li[data-severity="high"] strong,
+.ovxa-anomalies li[data-severity="critical"] strong {
+  color: var(--ovxa-danger);
+}
+
+.ovxa-ranked li {
+  grid-template-columns: 1.5rem 1fr auto;
+  align-items: baseline;
+  column-gap: 0.5rem;
+  counter-increment: ovxa-rank;
+}
+
+.ovxa-ranked {
+  counter-reset: ovxa-rank;
+}
+
+.ovxa-ranked li::before {
+  content: counter(ovxa-rank);
+  color: var(--ovxa-muted);
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ovxa-ranked li .ovxa-muted {
+  grid-column: 2 / -1;
+}
+
+.ovxa-ranked strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Charts ------------------------------------------------------------------ */
+
+.ovxa-chart {
+  gap: 0.5rem;
+}
+
+.ovxa-bar-row {
+  display: grid;
+  grid-template-columns: minmax(4rem, 7rem) 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.875em;
+}
+
+.ovxa-bar-row > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ovxa-muted);
+}
+
+.ovxa-bar-row > span:last-child {
+  font-variant-numeric: tabular-nums;
+}
+
+.ovxa-bar {
+  display: block;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--ovxa-accent);
+  opacity: 0.85;
+  min-width: 2px;
+  transition: width 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ovxa-chart svg {
+  width: 100%;
+  height: 8rem;
+  overflow: visible;
+}
+
+.ovxa-chart svg path {
+  vector-effect: non-scaling-stroke;
+}
+
+.ovxa-donut li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--ovxa-border);
+  font-size: 0.9em;
+}
+
+.ovxa-donut li:last-child {
+  border-bottom: 0;
+}
+
+.ovxa-donut figcaption {
+  display: grid;
+  padding-top: 0.5rem;
+}
+
+.ovxa-donut figcaption strong {
+  font-size: 1.5em;
+  letter-spacing: -0.03em;
+}
+
+.ovxa-funnel {
+  gap: 0.35rem;
+}
+
+.ovxa-funnel li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.8rem;
+  min-width: 8rem;
+  border-radius: calc(var(--ovxa-radius) - 0.25rem);
+  background: var(--ovxa-fill-strong);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+  transition: width 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ovxa-gauge-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--ovxa-fill-strong);
+  overflow: hidden;
+}
+
+.ovxa-gauge-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ovxa-accent);
+  transition: width 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ovxa-gauge strong {
+  font-size: 1.25em;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Code -------------------------------------------------------------------- */
+
+.ovxa-code pre,
+.ovxa-diff pre {
+  margin: 0;
+  overflow: auto;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.8125em;
+  line-height: 1.5;
+  border-radius: calc(var(--ovxa-radius) - 0.25rem);
+  background: var(--ovxa-fill-strong);
+  tab-size: 2;
+}
+
+.ovxa-diff-panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+/* Definition lists -------------------------------------------------------- */
 
 .ovxa-node-props,
 .ovxa-kv dl,
 .ovxa-summary dl,
 .ovxa-approval dl {
   display: grid;
-  gap: 0.35rem;
+  gap: 0;
   margin: 0;
 }
 
@@ -224,9 +645,53 @@
 .ovxa-summary dl > div,
 .ovxa-approval dl > div {
   display: grid;
-  grid-template-columns: minmax(6rem, 30%) 1fr;
-  gap: 0.5rem;
+  grid-template-columns: minmax(6rem, 32%) 1fr;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--ovxa-border);
+  font-size: 0.9em;
 }
+
+.ovxa-node-row:last-child,
+.ovxa-kv dl > div:last-child,
+.ovxa-summary dl > div:last-child,
+.ovxa-approval dl > div:last-child {
+  border-bottom: 0;
+}
+
+.ovxa dt {
+  color: var(--ovxa-muted);
+}
+
+.ovxa dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Node-level states ------------------------------------------------------- */
+
+.ovxa-node-loading {
+  min-height: 4rem;
+  border-radius: var(--ovxa-radius);
+  background: var(--ovxa-fill);
+  animation: ovxa-pulse 1.4s ease-in-out infinite;
+}
+
+.ovxa-node-error {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px dashed color-mix(in srgb, var(--ovxa-danger) 45%, transparent);
+  border-radius: var(--ovxa-radius);
+  font-size: 0.9em;
+}
+
+.ovxa-node-error span {
+  color: var(--ovxa-muted);
+}
+
+/* Surface-level states ---------------------------------------------------- */
 
 .ovxa-skeleton {
   display: grid;
@@ -235,14 +700,19 @@
 
 .ovxa-sk {
   display: block;
-  border-radius: 0.5rem;
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  min-height: 0.7rem;
+  border-radius: calc(var(--ovxa-radius) - 0.25rem);
+  background: var(--ovxa-fill-strong);
+  min-height: 0.75rem;
+  animation: ovxa-pulse 1.4s ease-in-out infinite;
 }
 
 .ovxa-sk-title {
-  width: 40%;
+  width: 38%;
   height: 1.1rem;
+}
+
+.ovxa-sk-line {
+  width: 62%;
 }
 
 .ovxa-sk-grid {
@@ -252,27 +722,287 @@
 }
 
 .ovxa-sk-card {
-  height: 5rem;
+  height: 5.5rem;
+  border-radius: var(--ovxa-radius);
 }
 
 .ovxa-error {
   display: grid;
-  gap: 0.5rem;
-  padding: 1rem;
-  border: 1px solid color-mix(in srgb, #f87171 50%, transparent);
-  border-radius: 0.9rem;
+  gap: 0.4rem;
+  justify-items: start;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--ovxa-danger) 45%, transparent);
+  border-radius: var(--ovxa-radius);
+  background: color-mix(in srgb, var(--ovxa-danger) 6%, transparent);
+}
+
+.ovxa-error span {
+  color: var(--ovxa-muted);
+  font-size: 0.9em;
+}
+
+.ovxa-error .ovxa-btn {
+  margin-top: 0.35rem;
 }
 
 .ovxa-empty-surface {
   display: grid;
   gap: 0.4rem;
   justify-items: start;
-  color: color-mix(in srgb, currentColor 72%, transparent);
+  padding: 1.25rem 1.1rem;
+  border: 1px dashed var(--ovxa-border-strong);
+  border-radius: var(--ovxa-radius);
+  color: var(--ovxa-muted);
 }
 
+.ovxa-empty-surface strong {
+  color: inherit;
+}
+
+.ovxa-empty-mark svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Search ------------------------------------------------------------------ */
+
+.ovxa-search {
+  display: grid;
+  gap: var(--ovxa-gap);
+}
+
+.ovxa-search-form {
+  position: relative;
+  display: grid;
+}
+
+.ovxa-search-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 3rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--ovxa-border-strong);
+  border-radius: var(--ovxa-radius);
+  background: var(--ovxa-fill);
+  transition: border-color var(--ovxa-ease), box-shadow var(--ovxa-ease);
+}
+
+.ovxa-search-bar:hover {
+  border-color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.ovxa-search-bar:focus-within {
+  border-color: color-mix(in srgb, currentColor 60%, transparent);
+  box-shadow: 0 0 0 3px var(--ovxa-fill-strong);
+}
+
+.ovxa-search-icon {
+  display: inline-flex;
+  color: var(--ovxa-muted);
+}
+
+.ovxa-search-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.ovxa-search-input {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 0.75rem 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1em;
+}
+
+.ovxa-search-input::placeholder {
+  color: var(--ovxa-muted);
+}
+
+.ovxa-search-input:focus,
+.ovxa-search-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.ovxa-search-hint {
+  font: inherit;
+  font-size: 0.75em;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--ovxa-border);
+  border-radius: 0.35rem;
+  color: var(--ovxa-muted);
+}
+
+.ovxa-search-clear {
+  appearance: none;
+  display: inline-flex;
+  padding: 0.3rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ovxa-muted);
+  cursor: pointer;
+  transition: background var(--ovxa-ease), color var(--ovxa-ease);
+}
+
+.ovxa-search-clear:hover {
+  background: var(--ovxa-fill-strong);
+  color: inherit;
+}
+
+.ovxa-search-clear svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.ovxa-spinner {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ovxa-border-strong);
+  border-top-color: currentColor;
+  animation: ovxa-spin 700ms linear infinite;
+}
+
+.ovxa-search-list {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  display: grid;
+  gap: 0.1rem;
+  max-height: 18rem;
+  overflow: auto;
+  border: 1px solid var(--ovxa-border-strong);
+  border-radius: var(--ovxa-radius);
+  background: Canvas;
+  color: CanvasText;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, CanvasText 8%, transparent),
+    0 12px 32px -12px color-mix(in srgb, CanvasText 30%, transparent);
+}
+
+.ovxa-search-list[hidden] {
+  display: none;
+}
+
+.ovxa-search-option {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: calc(var(--ovxa-radius) - 0.3rem);
+  cursor: pointer;
+}
+
+.ovxa-search-option.is-active {
+  background: var(--ovxa-fill-strong);
+}
+
+.ovxa-search-option-title {
+  font-size: 0.8em;
+  font-weight: 500;
+  color: var(--ovxa-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ovxa-search-option-intent {
+  font-size: 0.95em;
+}
+
+.ovxa-search-result {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ovxa-search-status {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.25rem;
+  font-size: 0.875em;
+}
+
+.ovxa-search-status .ovxa-link {
+  color: var(--ovxa-muted);
+  font-size: 0.875em;
+}
+
+.ovxa-search-empty {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+
+.ovxa-search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ovxa-chip-btn {
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  border-color: var(--ovxa-border);
+}
+
+/* Motion ------------------------------------------------------------------ */
+
+@keyframes ovxa-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes ovxa-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ovxa *,
+  .ovxa *::before,
+  .ovxa *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ovxa-spinner {
+    animation: none;
+    border-top-color: var(--ovxa-border-strong);
+  }
+}
+
+/* Responsive -------------------------------------------------------------- */
+
 @media (max-width: 720px) {
+  .ovxa-surface {
+    grid-template-columns: 1fr;
+  }
+
   .ovxa-diff-panes,
   .ovxa-sk-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ovxa-bar-row {
+    grid-template-columns: minmax(3rem, 5rem) 1fr auto;
   }
 }

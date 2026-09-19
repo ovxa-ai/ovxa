@@ -235,7 +235,7 @@ describe("OvxaSearch", () => {
     expect(field.value).toBe("Review this refund request and decide");
   });
 
-  it("clears with Escape and goes back to the empty state", async () => {
+  it("Escape clears the box but never the result; Clear resets both", async () => {
     const client = fakeClient();
     const host = await render(<OvxaSearch client={client} defaultIntent="Compare Q2 against Q1" />);
     await flush();
@@ -243,10 +243,26 @@ describe("OvxaSearch", () => {
 
     const field = input(host);
     await key(field, "Escape");
-
     expect(field.value).toBe("");
+    expect(host.querySelector(".ovxa-search-result")).not.toBeNull();
+
+    const clearButton = host.querySelector<HTMLButtonElement>(".ovxa-search-clear");
+    expect(clearButton).not.toBeNull();
+    await act(async () => {
+      clearButton?.click();
+    });
     expect(host.querySelector(".ovxa-search-result")).toBeNull();
     expect(host.querySelectorAll(".ovxa-chip-btn")).toHaveLength(defaultUseCases.length);
+  });
+
+  it("offers the Enter hint only when there is something new to submit", async () => {
+    const client = fakeClient();
+    const host = await render(<OvxaSearch client={client} defaultIntent="Compare Q2 against Q1" />);
+    await flush();
+    expect(host.querySelector(".ovxa-search-hint")).toBeNull();
+
+    await type(input(host), "Something else");
+    expect(host.querySelector(".ovxa-search-hint")).not.toBeNull();
   });
 
   it("regenerates when the same intent is submitted again", async () => {

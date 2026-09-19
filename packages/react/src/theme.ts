@@ -26,6 +26,8 @@ export type OvxaTheme = {
   accent?: string;
   /** Text colour on top of `accent`. */
   onAccent?: string;
+  /** Opaque background for floating layers such as the suggestion list. */
+  popover?: string;
   success?: string;
   danger?: string;
   /** Font shorthand. Defaults to `inherit`. */
@@ -42,6 +44,7 @@ const TOKEN_TO_PROPERTY: Record<keyof OvxaTheme, string> = {
   fill: "--ovxa-fill",
   accent: "--ovxa-accent",
   onAccent: "--ovxa-on-accent",
+  popover: "--ovxa-popover",
   success: "--ovxa-success",
   danger: "--ovxa-danger",
   font: "--ovxa-font",

@@ -39,7 +39,8 @@ import "@ovxa/sdk/styles.css";
 ```
 
 - Suggestions come from `defaultUseCases` until you pass `suggestions`.
-- Arrow keys move through suggestions, Enter submits, Escape closes then clears.
+- Arrow keys move through suggestions, Enter submits, Escape closes the list
+  and then clears the box — never the generated result. The × button clears both.
 - Submitting the same intent again regenerates. `onIntent` fires on every submit.
 - Before anything is asked, the use cases are shown as chips — the empty state
   is an invitation, not a blank box.
@@ -72,8 +73,13 @@ configured it. To match a design system, set tokens — as a prop or in CSS:
   --ovxa-muted: hsl(var(--muted-foreground));
   --ovxa-accent: hsl(var(--primary));
   --ovxa-on-accent: hsl(var(--primary-foreground));
+  --ovxa-popover: hsl(var(--popover));
 }
 ```
+
+`onAccent` and `popover` default to the browser's `Canvas` colour, which follows
+the page's `color-scheme`. Set both if your dark theme does not declare
+`color-scheme: dark`.
 
 | Token | Default | Used for |
 | --- | --- | --- |
@@ -82,6 +88,7 @@ configured it. To match a design system, set tokens — as a prop or in CSS:
 | `muted` | `currentColor` at 62% | Secondary text |
 | `fill` | `currentColor` at 5% | Card backgrounds, skeletons, tracks |
 | `accent` / `onAccent` | `currentColor` / `Canvas` | Primary actions, bars, selection |
+| `popover` | `Canvas` | Opaque background of the suggestion list |
 | `success` / `danger` | green / red | Trends, risk, errors |
 | `font` | `inherit` | Everything |
 | `gap` | `1rem` | Space between components |

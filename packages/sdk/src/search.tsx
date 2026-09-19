@@ -122,6 +122,7 @@ function SearchBody({
     [intent, onIntent, result],
   );
 
+  /** Clears the box and the result. Escape only ever touches the box. */
   const clear = React.useCallback(() => {
     setQuery("");
     setIntent("");
@@ -154,10 +155,12 @@ function SearchBody({
         setActive(-1);
       } else if (query.length > 0) {
         event.preventDefault();
-        clear();
+        setQuery("");
       }
     }
   };
+
+  const canSubmit = query.trim().length > 0 && query.trim() !== intent;
 
   const activeId = active >= 0 && showList ? `${listId}-${active}` : undefined;
 
@@ -205,25 +208,28 @@ function SearchBody({
             }}
             onKeyDown={onKeyDown}
           />
-          {busy ? (
-            <span className="ovxa-spinner" role="status" aria-label={STATUS_LABEL[status]} />
-          ) : query.length > 0 ? (
-            <button
-              type="button"
-              className="ovxa-search-clear"
-              aria-label="Clear"
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={clear}
-            >
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                <path d="M4 4l8 8M12 4l-8 8" strokeLinecap="round" />
-              </svg>
-            </button>
-          ) : (
-            <kbd className="ovxa-search-hint" aria-hidden="true">
-              ↵
-            </kbd>
-          )}
+          <span className="ovxa-search-tools">
+            {busy ? (
+              <span className="ovxa-spinner" role="status" aria-label={STATUS_LABEL[status]} />
+            ) : canSubmit ? (
+              <kbd className="ovxa-search-hint" aria-hidden="true">
+                ↵
+              </kbd>
+            ) : null}
+            {query.length > 0 || intent.length > 0 ? (
+              <button
+                type="button"
+                className="ovxa-search-clear"
+                aria-label="Clear"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={clear}
+              >
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                  <path d="M4 4l8 8M12 4l-8 8" strokeLinecap="round" />
+                </svg>
+              </button>
+            ) : null}
+          </span>
         </div>
 
         <ul

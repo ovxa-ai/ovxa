@@ -17,12 +17,14 @@
   --ovxa-fill-strong: color-mix(in srgb, currentColor 10%, transparent);
   --ovxa-accent: currentColor;
   --ovxa-on-accent: Canvas;
+  --ovxa-popover: Canvas;
   --ovxa-success: #3dd68c;
   --ovxa-danger: #f87171;
   --ovxa-font: inherit;
   --ovxa-gap: 1rem;
   --ovxa-focus: 0 0 0 2px Canvas, 0 0 0 4px var(--ovxa-border-strong);
-  --ovxa-ease: 160ms cubic-bezier(0.2, 0, 0, 1);
+  --ovxa-ease: cubic-bezier(0.2, 0, 0, 1);
+  --ovxa-speed: 160ms;
 
   color: inherit;
   font: var(--ovxa-font);
@@ -74,6 +76,11 @@
 
 .ovxa-surface > * {
   min-width: 0;
+}
+
+/* Components appear one at a time while streaming; each one settles in. */
+.ovxa-surface > [data-ovxa-node-id] > * {
+  animation: ovxa-rise 360ms var(--ovxa-ease) both;
 }
 
 .ovxa-surface > .ovxa-section,
@@ -243,9 +250,9 @@
   line-height: 1.2;
   cursor: pointer;
   transition:
-    background var(--ovxa-ease),
-    border-color var(--ovxa-ease),
-    opacity var(--ovxa-ease);
+    background var(--ovxa-speed) var(--ovxa-ease),
+    border-color var(--ovxa-speed) var(--ovxa-ease),
+    opacity var(--ovxa-speed) var(--ovxa-ease);
 }
 
 .ovxa-btn:hover,
@@ -303,7 +310,7 @@
   cursor: pointer;
   color: inherit;
   font: inherit;
-  transition: border-color var(--ovxa-ease), background var(--ovxa-ease);
+  transition: border-color var(--ovxa-speed) var(--ovxa-ease), background var(--ovxa-speed) var(--ovxa-ease);
 }
 
 .ovxa-option:hover {
@@ -377,7 +384,7 @@
   border-radius: calc(var(--ovxa-radius) - 0.2rem);
   padding: 0.5rem 0.7rem;
   min-height: 2.4rem;
-  transition: border-color var(--ovxa-ease);
+  transition: border-color var(--ovxa-speed) var(--ovxa-ease);
 }
 
 .ovxa-form input:hover,
@@ -786,7 +793,7 @@
   border: 1px solid var(--ovxa-border-strong);
   border-radius: var(--ovxa-radius);
   background: var(--ovxa-fill);
-  transition: border-color var(--ovxa-ease), box-shadow var(--ovxa-ease);
+  transition: border-color var(--ovxa-speed) var(--ovxa-ease), box-shadow var(--ovxa-speed) var(--ovxa-ease);
 }
 
 .ovxa-search-bar:hover {
@@ -830,6 +837,13 @@
   box-shadow: none;
 }
 
+.ovxa-search-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 1.5rem;
+}
+
 .ovxa-search-hint {
   font: inherit;
   font-size: 0.75em;
@@ -837,6 +851,7 @@
   border: 1px solid var(--ovxa-border);
   border-radius: 0.35rem;
   color: var(--ovxa-muted);
+  animation: ovxa-fade var(--ovxa-speed) var(--ovxa-ease) both;
 }
 
 .ovxa-search-clear {
@@ -848,7 +863,7 @@
   background: transparent;
   color: var(--ovxa-muted);
   cursor: pointer;
-  transition: background var(--ovxa-ease), color var(--ovxa-ease);
+  transition: background var(--ovxa-speed) var(--ovxa-ease), color var(--ovxa-speed) var(--ovxa-ease);
 }
 
 .ovxa-search-clear:hover {
@@ -885,11 +900,12 @@
   overflow: auto;
   border: 1px solid var(--ovxa-border-strong);
   border-radius: var(--ovxa-radius);
-  background: Canvas;
-  color: CanvasText;
+  background: var(--ovxa-popover);
   box-shadow:
-    0 1px 2px color-mix(in srgb, CanvasText 8%, transparent),
-    0 12px 32px -12px color-mix(in srgb, CanvasText 30%, transparent);
+    0 1px 2px color-mix(in srgb, currentColor 8%, transparent),
+    0 12px 32px -12px color-mix(in srgb, currentColor 30%, transparent);
+  transform-origin: top;
+  animation: ovxa-drop 180ms var(--ovxa-ease) both;
 }
 
 .ovxa-search-list[hidden] {
@@ -972,6 +988,37 @@
 @keyframes ovxa-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ovxa-rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ovxa-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ovxa-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

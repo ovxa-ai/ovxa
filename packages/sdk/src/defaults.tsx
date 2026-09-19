@@ -305,19 +305,23 @@ function BarChart({ data, node }: SurfaceComponentProps): React.ReactElement | n
   const unit = str(data["unit"]);
   return (
     <figure className="ovxa-chart" aria-label={node.type}>
-      {series.map((item) => (
-        <div className="ovxa-bar-row" key={item.label}>
-          <span>{item.label}</span>
-          <span
-            className="ovxa-bar"
-            style={{ width: `${(Math.abs(num(item.value)) / max) * 100}%` }}
-          />
-          <span>
-            {compact(num(item.value))}
-            {unit}
-          </span>
-        </div>
-      ))}
+      {series.map((item) => {
+        const value = num(item.value);
+        return (
+          <div className="ovxa-bar-row" key={item.label}>
+            <span>{item.label}</span>
+            <span
+              className="ovxa-bar"
+              data-negative={value < 0 ? "" : undefined}
+              style={{ width: `${(Math.abs(value) / max) * 100}%` }}
+            />
+            <span className={value < 0 ? "ovxa-trend-negative" : undefined}>
+              {compact(value)}
+              {unit}
+            </span>
+          </div>
+        );
+      })}
     </figure>
   );
 }

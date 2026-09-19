@@ -21,6 +21,7 @@
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -45,7 +46,7 @@
       </div>
     </header>
 
-    <main id="main">
+    <main id="main" class="hero-bg">
       <section class="wrap hero">
         <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Open source · Apache-2.0 · Node 22+</p>
         <h1>The interface a task deserves.</h1>
@@ -57,9 +58,12 @@
           <div class="install">
             <code id="install-cmd">npm install @ovxa/sdk</code>
             <button class="copy" type="button" data-copy="npm install @ovxa/sdk" aria-label="Copy install command">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <svg class="icon-copy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
                 <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
+              </svg>
+              <svg class="icon-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M3.5 8.5 6.5 11.5 12.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
@@ -88,7 +92,18 @@
                 <path d="M13.2 13.2 17 17" stroke-linecap="round" />
               </svg>
               <span class="q" id="demo-intent">Compare Q2 revenue against Q1 and show where growth was lost</span>
-              <span class="state"><span>Ready</span></span>
+              <span class="state" data-phase="ready"><span>Ready</span></span>
+            </div>
+
+            <div class="stage">
+            <div class="g-skeleton" aria-hidden="true" hidden>
+              <span class="g-sk g-sk-title"></span>
+              <span class="g-sk g-sk-line"></span>
+              <div class="g-sk-grid">
+                <span class="g-sk g-sk-card"></span>
+                <span class="g-sk g-sk-card"></span>
+                <span class="g-sk g-sk-card"></span>
+              </div>
             </div>
 
             <div class="scene" id="scene-compare" role="tabpanel" aria-labelledby="tab-compare" data-active="true">
@@ -183,6 +198,7 @@
                 <div class="g-actions"><span class="g-btn primary">Roll back v2.31.0</span><span class="g-btn">Open trace</span><span class="g-btn">Sources (3)</span></div>
               </div>
             </div>
+            </div>
           </div>
         </div>
         <p class="caption">
@@ -193,12 +209,12 @@
 
       <section class="section" id="how">
         <div class="wrap">
-          <div class="section-head">
+          <div class="section-head" data-reveal>
             <span class="kicker">How generation works</span>
             <h2>The Quality Engine ranks competing plans before anything is compiled.</h2>
             <p>Generation is the expensive step and it happens once, for the plan that won. Rendering is deterministic: nothing unregistered ever executes.</p>
           </div>
-          <ol class="pipeline" aria-label="Generation pipeline">
+          <ol class="pipeline" aria-label="Generation pipeline" data-reveal>
             <li class="step"><strong>Intent</strong><span>What the user is trying to do, in their words.</span></li>
             <li class="step"><strong>Context</strong><span>App state, data, permissions, and what happened last time.</span></li>
             <li class="step"><strong>Candidates</strong><span>Several competing UI plans — plus chat and a static screen as baselines.</span></li>
@@ -212,12 +228,12 @@
 
       <section class="section" id="sdk">
         <div class="wrap">
-          <div class="section-head">
+          <div class="section-head" data-reveal>
             <span class="kicker">The SDK</span>
             <h2>One import. An intent in, a live interface out.</h2>
             <p>Streaming, the action loop, and loading, empty and error states are handled. The surface inherits your colour and type; tune the rest with tokens.</p>
           </div>
-          <div class="cols">
+          <div class="cols" data-reveal>
             <div class="card">
               <h3>Render one intent</h3>
               <p>Drop it where a chart or a form would have gone. It decides which one the task needs.</p>
@@ -246,12 +262,12 @@
 
       <section class="section" id="use-cases">
         <div class="wrap">
-          <div class="section-head">
+          <div class="section-head" data-reveal>
             <span class="kicker">Use cases</span>
             <h2>When chat is the wrong output.</h2>
             <p>The user needs to compare, choose, configure, approve or investigate something — and a paragraph cannot do that.</p>
           </div>
-          <div class="grid-3">
+          <div class="grid-3" data-reveal>
             <article class="usecase">
               <h3>Compare</h3>
               <q>Compare Q2 revenue against Q1 and show where growth was lost</q>
@@ -288,12 +304,12 @@
 
       <section class="section" id="guarantees">
         <div class="wrap">
-          <div class="section-head">
+          <div class="section-head" data-reveal>
             <span class="kicker">Guarantees</span>
             <h2>Fail closed. Degrade gracefully.</h2>
             <p>Generated output is data, never code. Everything a model writes is checked against your registry as it streams.</p>
           </div>
-          <div class="grid-2">
+          <div class="grid-2" data-reveal>
             <div class="guarantee">
               <h3>Unregistered components never render</h3>
               <p>Component types, prop shapes and action ids are allowlists. A node that cannot resolve is stripped; a surface that cannot be grounded becomes a simpler one, never a blank screen.</p>
@@ -316,12 +332,12 @@
 
       <section class="section" id="install">
         <div class="wrap">
-          <div class="section-head">
+          <div class="section-head" data-reveal>
             <span class="kicker">Install</span>
             <h2>Start with one package. Reach for the rest when you need them.</h2>
             <p>Dependency flow is one way. Nothing below imports anything above.</p>
           </div>
-          <div class="packages">
+          <div class="packages" data-reveal>
             <div class="pkg"><code>@ovxa/sdk</code><span>Zero-config embed and search</span></div>
             <div class="pkg"><code>@ovxa/react</code><span>Renderer, provider, tokens</span></div>
             <div class="pkg"><code>@ovxa/client</code><span>Typed HTTP / SSE transport</span></div>

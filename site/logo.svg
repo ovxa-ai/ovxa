@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" role="img" aria-label="OVXA">
+  <rect x="2.25" y="2.25" width="27.5" height="27.5" rx="8" stroke="currentColor" stroke-width="2.5"/>
+  <rect x="9" y="9" width="14" height="3.5" rx="1.75" fill="currentColor"/>
+  <rect x="9" y="15.5" width="6.5" height="7.5" rx="2" fill="currentColor"/>
+  <rect x="17.75" y="15.5" width="5.25" height="7.5" rx="2" fill="currentColor" opacity="0.4"/>
+</svg>

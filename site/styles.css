@@ -17,6 +17,7 @@
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 64px -32px rgba(0, 0, 0, 0.8);
+  --glow: 7%;
 }
 
 @media (prefers-color-scheme: light) {
@@ -34,6 +35,7 @@
     --success: #15803d;
     --danger: #dc2626;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 24px 64px -32px rgba(0, 0, 0, 0.25);
+    --glow: 2.5%;
   }
 }
 
@@ -202,7 +204,7 @@ kbd {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(60% 55% at 50% 0%, color-mix(in srgb, var(--fg) 7%, transparent), transparent 70%),
+    radial-gradient(60% 55% at 50% 0%, color-mix(in srgb, var(--fg) var(--glow), transparent), transparent 70%),
     linear-gradient(to bottom, transparent, transparent 60%, var(--bg));
   -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent);
   mask-image: linear-gradient(to bottom, #000 40%, transparent);
@@ -903,10 +905,10 @@ h1 {
   position: absolute;
   top: 50%;
   right: -0.4rem;
-  width: 0.35rem;
-  height: 0.35rem;
-  border-top: 1px solid var(--border-strong);
-  border-right: 1px solid var(--border-strong);
+  width: 0.4rem;
+  height: 0.4rem;
+  border-top: 1.5px solid var(--fg-faint);
+  border-right: 1.5px solid var(--fg-faint);
   transform: translateY(-50%) rotate(45deg);
 }
 

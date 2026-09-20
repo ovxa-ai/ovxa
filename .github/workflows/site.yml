@@ -1,5 +1,18 @@
 name: site
 
+# Publishes site/ to GitHub Pages and, when configured, provisions everything
+# around it so no manual clicking is needed:
+#
+#   secrets.PAGES_ADMIN_TOKEN   fine-grained PAT (repo: this one, permission
+#                               "Pages: read and write"). Lets the workflow
+#                               enable Pages and set the custom domain itself.
+#   vars.SITE_DOMAIN            e.g. ovxa.ai. Set as the Pages custom domain and
+#                               (with the Cloudflare secrets) pointed at Pages.
+#   secrets.CLOUDFLARE_API_TOKEN  Cloudflare API token with "Zone → DNS → Edit"
+#                               on the zone that owns SITE_DOMAIN.
+#
+# Without any of these it still deploys, as long as Pages was enabled by hand.
+
 on:
   push:
     branches: [main]
@@ -25,17 +38,39 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      ADMIN_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
+      SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
     steps:
       - uses: actions/checkout@v4
 
-      # GITHUB_TOKEN cannot create the Pages site, so it has to be enabled once
-      # by an admin: Settings → Pages → Build and deployment → Source: GitHub Actions.
+      - name: enable GitHub Pages and set the custom domain
+        if: env.ADMIN_TOKEN != ''
+        env:
+          GH_TOKEN: ${{ env.ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "Pages already enabled."
+          else
+            gh api -X POST "repos/${GITHUB_REPOSITORY}/pages" -f build_type=workflow >/dev/null
+            echo "::notice::Enabled GitHub Pages (source: GitHub Actions)."
+          fi
+          gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" -f build_type=workflow >/dev/null
+          if [ -n "${SITE_DOMAIN}" ]; then
+            current="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.cname // ""')"
+            if [ "${current}" != "${SITE_DOMAIN}" ]; then
+              gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" -f cname="${SITE_DOMAIN}" >/dev/null
+              echo "::notice::Set Pages custom domain to ${SITE_DOMAIN}."
+            fi
+          fi
+
       - name: check GitHub Pages is enabled
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if ! gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
-            echo "::error title=GitHub Pages is not enabled::Enable it under Settings → Pages → Build and deployment → Source: GitHub Actions, then re-run this workflow."
+            echo "::error title=GitHub Pages is not enabled::Add a PAGES_ADMIN_TOKEN repository secret (fine-grained PAT with Pages: read and write) so this workflow can enable it, or enable it once under Settings → Pages → Build and deployment → Source: GitHub Actions."
             exit 1
           fi
 
@@ -47,3 +82,57 @@ jobs:
 
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  dns:
+    name: point ${{ vars.SITE_DOMAIN }} at Pages
+    needs: deploy
+    if: vars.SITE_DOMAIN != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
+    steps:
+      - name: upsert DNS record in Cloudflare
+        run: |
+          set -euo pipefail
+          if [ -z "${CF_TOKEN}" ]; then
+            echo "::notice::CLOUDFLARE_API_TOKEN is not set; skipping DNS. Point ${SITE_DOMAIN} at ${GITHUB_REPOSITORY_OWNER,,}.github.io yourself."
+            exit 0
+          fi
+          target="${GITHUB_REPOSITORY_OWNER,,}.github.io"
+          api="https://api.cloudflare.com/client/v4"
+          auth=(-H "Authorization: Bearer ${CF_TOKEN}" -H "Content-Type: application/json")
+
+          # Walk up the labels until Cloudflare recognises a zone (ovxa.ai for www.ovxa.ai).
+          zone_name="${SITE_DOMAIN}"; zone_id=""
+          while [ -z "${zone_id}" ] && [[ "${zone_name}" == *.* ]]; do
+            zone_id="$(curl -fsS "${auth[@]}" "${api}/zones?name=${zone_name}&status=active" | jq -r '.result[0].id // ""')"
+            [ -n "${zone_id}" ] || zone_name="${zone_name#*.}"
+          done
+          if [ -z "${zone_id}" ]; then
+            echo "::error::No active Cloudflare zone found for ${SITE_DOMAIN} with this token."
+            exit 1
+          fi
+
+          # Address records for this exact hostname (A/AAAA/CNAME cannot coexist with the CNAME we add).
+          existing="$(curl -fsS "${auth[@]}" "${api}/zones/${zone_id}/dns_records?name=${SITE_DOMAIN}" \
+            | jq -c '[.result[] | select(.type=="CNAME" or .type=="A" or .type=="AAAA") | {id,type,content}]')"
+
+          if [ "$(echo "${existing}" | jq -r --arg t "${target}" 'length == 1 and .[0].type == "CNAME" and .[0].content == $t')" = "true" ]; then
+            echo "${SITE_DOMAIN} already points at ${target}."
+            exit 0
+          fi
+
+          for row in $(echo "${existing}" | jq -r '.[] | @base64'); do
+            id="$(echo "${row}" | base64 -d | jq -r .id)"
+            desc="$(echo "${row}" | base64 -d | jq -r '"\(.type) → \(.content)"')"
+            curl -fsS "${auth[@]}" -X DELETE "${api}/zones/${zone_id}/dns_records/${id}" >/dev/null
+            echo "::warning::Removed ${SITE_DOMAIN} ${desc}. Anything served there before (app routes, API) is no longer reachable on this hostname."
+          done
+
+          # DNS-only (not proxied) so GitHub can issue the certificate; the
+          # record can be switched to proxied in Cloudflare afterwards.
+          body="$(jq -nc --arg n "${SITE_DOMAIN}" --arg c "${target}" '{type:"CNAME",name:$n,content:$c,ttl:1,proxied:false}')"
+          curl -fsS "${auth[@]}" -X POST "${api}/zones/${zone_id}/dns_records" --data "${body}" >/dev/null
+          echo "::notice::${SITE_DOMAIN} now points at ${target}. GitHub Pages will issue HTTPS within a few minutes."

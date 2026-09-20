@@ -36,6 +36,17 @@ schema
 `@ovxa/llm` is the provider adapter only. Experience-generation types stay in
 studio’s `@ovxa/llm-gateway`, which re-exports this package.
 
+## Build
+
+Each package is a composite TypeScript project (`packages/*/tsconfig.json`)
+whose `references` mirror its `dependencies`, so `tsc -b` builds in dependency
+order. Keep the two lists in step when a package gains an import. Output is ESM plus
+declarations in `dist/`, which is what `exports` points at; relative imports
+carry `.js` extensions so the output runs in Node without a bundler.
+
+Development never waits on the build: the root `tsconfig.json` and
+`vitest.config.ts` map `@ovxa/*` straight to `src/`.
+
 ## Testing
 
 Every package that can break a guarantee has a suite next to the source:

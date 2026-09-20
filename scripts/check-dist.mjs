@@ -1,8 +1,8 @@
 /**
  * Loads every workspace package the way an npm consumer does — through its
  * package.json `exports`, with Node's ESM loader, no bundler and no TypeScript.
- * Catches missing `dist/`, relative imports without `.js`, and undeclared
- * cross-package dependencies before they reach a release.
+ * Catches a missing or stale `dist/`, relative imports without `.js`, and
+ * entry points that lost an export, before they reach a release.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";

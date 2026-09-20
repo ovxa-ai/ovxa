@@ -7,9 +7,18 @@ git tag v0.1.1
 git push origin v0.1.1
 ```
 
-GitHub Actions publishes every public workspace package to npm with provenance.
-Create the `NPM_TOKEN` repository secret (an npm automation token, or configure
+GitHub Actions builds every package (`npm run build`), runs the type check,
+tests and `npm run check:dist`, then publishes every public workspace package to
+npm with provenance. Only `dist/` (built ESM and `.d.ts`) is published, plus
+`src/styles.css` for `@ovxa/sdk`. Create the `NPM_TOKEN` repository secret (an
+npm automation token, or configure
 [trusted publishing](https://docs.npmjs.com/trusted-publishers) for `@ovxa/*`).
+
+To inspect exactly what a release ships:
+
+```bash
+npm pack --workspaces --pack-destination /tmp/ovxa-packs
+```
 
 ## Landing page
 

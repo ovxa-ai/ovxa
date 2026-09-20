@@ -42,7 +42,7 @@ jobs:
       ADMIN_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
       SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: enable GitHub Pages and set the custom domain
         if: env.ADMIN_TOKEN != ''

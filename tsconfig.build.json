@@ -1,0 +1,47 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/client"
+    },
+    {
+      "path": "./packages/compiler"
+    },
+    {
+      "path": "./packages/genui-runtime"
+    },
+    {
+      "path": "./packages/intelligence"
+    },
+    {
+      "path": "./packages/llm"
+    },
+    {
+      "path": "./packages/protocol"
+    },
+    {
+      "path": "./packages/react"
+    },
+    {
+      "path": "./packages/registry"
+    },
+    {
+      "path": "./packages/schema"
+    },
+    {
+      "path": "./packages/sdk"
+    },
+    {
+      "path": "./packages/streaming"
+    },
+    {
+      "path": "./packages/surface-kit"
+    },
+    {
+      "path": "./packages/surface-model"
+    },
+    {
+      "path": "./packages/wire"
+    }
+  ]
+}

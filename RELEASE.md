@@ -23,12 +23,25 @@ the contents of `site/` over the studio's static root (it references
 `styles.css`, `site.js`, `boot.js`, and the SVGs by relative path) and deploy
 studio.
 
-The `site` workflow also publishes `site/` to GitHub Pages on every push to
-`main` that touches it. Pages must be enabled once under
-Settings → Pages → Build and deployment → Source: **GitHub Actions**; the
-workflow token cannot do this itself. To serve ovxa.ai from Pages instead of
-studio, set the custom domain in that same settings page and point the
-`ovxa.ai` DNS record (Cloudflare) at `ovxa-ai.github.io`.
+### Automatic publishing to GitHub Pages
+
+The `site` workflow publishes `site/` to GitHub Pages on every push to `main`
+that touches it, and provisions everything around it when given credentials.
+Configure once under Settings → Secrets and variables → Actions:
+
+| Name | Kind | Purpose |
+| --- | --- | --- |
+| `PAGES_ADMIN_TOKEN` | secret | Fine-grained PAT scoped to this repository with **Pages: read and write**. The workflow uses it to enable Pages (source: GitHub Actions) and set the custom domain. Without it, Pages must be enabled by hand once. |
+| `SITE_DOMAIN` | variable | Hostname to serve the page on, e.g. `ovxa.ai` or `www.ovxa.ai`. Set as the Pages custom domain. |
+| `CLOUDFLARE_API_TOKEN` | secret | Cloudflare token with **Zone → DNS → Edit** on the zone. With `SITE_DOMAIN` set, the workflow replaces that hostname's address records with `CNAME ovxa-ai.github.io` (DNS-only, so GitHub can issue HTTPS). |
+
+Pointing the apex `ovxa.ai` at Pages takes the hostname away from the studio
+server, so `/login`, `/signup` and `/api/*` must live on another hostname
+(e.g. `app.ovxa.ai`) first. Use `www.ovxa.ai` or `site.ovxa.ai` as
+`SITE_DOMAIN` to publish without touching the app.
+
+Every step is idempotent: re-running the workflow with the same configuration
+changes nothing.
 
 Production for the ovxa.ai API is the studio repository. This engine is
 consumed there as the `engine` git submodule.

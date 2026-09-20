@@ -9,8 +9,8 @@ import {
   type SurfaceViewProps,
 } from "@ovxa/react";
 import type { JsonValue } from "@ovxa/schema";
-import { OvxaRoot, type OvxaConnectionProps } from "./ovxa";
-import { defaultUseCases, filterUseCases, type UseCase } from "./use-cases";
+import { OvxaRoot, type OvxaConnectionProps } from "./ovxa.js";
+import { defaultUseCases, filterUseCases, type UseCase } from "./use-cases.js";
 
 export type OvxaSearchProps = OvxaConnectionProps &
   SurfaceViewProps & {

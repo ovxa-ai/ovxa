@@ -1,4 +1,4 @@
-import type { LlmAdapter, LlmProvider, LlmRequest, LlmResponse } from "./types";
+import type { LlmAdapter, LlmProvider, LlmRequest, LlmResponse } from "./types.js";
 
 export interface LlmAdapterConfig {
   provider: LlmProvider;

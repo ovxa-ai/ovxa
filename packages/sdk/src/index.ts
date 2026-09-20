@@ -17,10 +17,10 @@
  * `useOvxaSurface` and `OVXASurfaceView`. Renderer internals (`FallbackNode`,
  * `SurfaceRenderer`) live on `@ovxa/react`.
  */
-export { Ovxa, OvxaRoot, type OvxaConnectionProps, type OvxaProps } from "./ovxa";
-export { OvxaSearch, type OvxaSearchProps } from "./search";
-export { defaultUseCases, filterUseCases, type UseCase } from "./use-cases";
-export { defaultComponents } from "./defaults";
+export { Ovxa, OvxaRoot, type OvxaConnectionProps, type OvxaProps } from "./ovxa.js";
+export { OvxaSearch, type OvxaSearchProps } from "./search.js";
+export { defaultUseCases, filterUseCases, type UseCase } from "./use-cases.js";
+export { defaultComponents } from "./defaults.js";
 
 export {
   OvxaError,

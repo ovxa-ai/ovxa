@@ -1,13 +1,13 @@
-import type { ContextUnderstanding } from "./context";
+import type { ContextUnderstanding } from "./context.js";
 import {
   candidateFromPlan,
   type PlanDraft,
   type UiCandidate,
-} from "./candidates";
-import { evaluateCandidate, type CandidateEvaluation } from "./evaluate";
-import { selectBest, type RankedCandidate } from "./select";
-import type { PatternMemory } from "./memory";
-import type { InterfaceBaseline } from "./outcome";
+} from "./candidates.js";
+import { evaluateCandidate, type CandidateEvaluation } from "./evaluate.js";
+import { selectBest, type RankedCandidate } from "./select.js";
+import type { PatternMemory } from "./memory.js";
+import type { InterfaceBaseline } from "./outcome.js";
 
 export type StrategySet = {
   chat: PlanDraft;

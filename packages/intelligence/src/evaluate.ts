@@ -1,8 +1,8 @@
 import { walkComponents, type Surface, type SurfaceKind } from "@ovxa/schema";
 import type { ComponentIntent } from "@ovxa/registry";
-import type { ContextUnderstanding, TaskKind } from "./context";
-import type { UiCandidate } from "./candidates";
-import type { PatternMemory } from "./memory";
+import type { ContextUnderstanding, TaskKind } from "./context.js";
+import type { UiCandidate } from "./candidates.js";
+import type { PatternMemory } from "./memory.js";
 
 /**
  * Dimensions the Quality Engine scores. Task completion is the north star;

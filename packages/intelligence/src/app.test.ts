@@ -7,7 +7,7 @@ import {
   ovxaVisualContract,
   productKnowledgeFromGraph,
   suggestedIntents,
-} from "./app";
+} from "./app.js";
 
 const acme = productKnowledgeFromGraph({
   application: { name: "Acme Cloud" },

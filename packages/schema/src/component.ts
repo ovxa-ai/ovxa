@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { actionSchema } from "./action";
-import { bindableSchema, conditionSchema, type Condition } from "./primitives";
-import type { SurfaceAction } from "./action";
-import type { Bindable } from "./primitives";
+import { actionSchema } from "./action.js";
+import { bindableSchema, conditionSchema, type Condition } from "./primitives.js";
+import type { SurfaceAction } from "./action.js";
+import type { Bindable } from "./primitives.js";
 
 export const breakpoints = ["sm", "md", "lg"] as const;
 export type Breakpoint = (typeof breakpoints)[number];

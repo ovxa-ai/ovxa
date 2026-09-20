@@ -1,4 +1,4 @@
-import type { LlmProvider } from "./types";
+import type { LlmProvider } from "./types.js";
 
 /** Provider defaults, overridable with `OVXA_LLM_MODEL`. */
 const DEFAULT_MODEL: Record<LlmProvider, string> = {

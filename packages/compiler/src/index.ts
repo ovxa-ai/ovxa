@@ -7,9 +7,9 @@ export {
   uiPlanSchema,
   type CompileContext,
   type UiPlan,
-} from "./plan";
+} from "./plan.js";
 
-export { groundSurface, type GroundingIssue, type GroundingResult } from "./validate";
+export { groundSurface, type GroundingIssue, type GroundingResult } from "./validate.js";
 
 export {
   CATALOG_LIMIT,
@@ -28,10 +28,10 @@ export {
   type PlanSelection,
   type SurfaceModel,
   type Tracker,
-} from "./phases";
+} from "./phases.js";
 
 export {
   compileSurface,
   type CompiledAttempt,
   type CompileResult,
-} from "./compiler";
+} from "./compiler.js";

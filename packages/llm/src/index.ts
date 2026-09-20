@@ -4,7 +4,7 @@ export {
   vertexAccessToken,
   LlmRequestError,
   type LlmAdapterConfig,
-} from "./adapters";
+} from "./adapters.js";
 export {
   describeLlmConfig,
   resolveGcpProject,
@@ -14,11 +14,11 @@ export {
   type Env,
   type LlmAuth,
   type LlmConfiguration,
-} from "./config";
+} from "./config.js";
 export {
   ProviderIndependentLlmGateway,
   type LlmAdapter,
   type LlmProvider,
   type LlmRequest,
   type LlmResponse,
-} from "./types";
+} from "./types.js";

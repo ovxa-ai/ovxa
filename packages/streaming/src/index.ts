@@ -10,18 +10,18 @@ export {
   IncrementalSurfaceParser,
   type IncrementalHeader,
   type IncrementalYield,
-} from "./incremental";
+} from "./incremental.js";
 
 export {
   collectStream,
   streamSurface,
   type StreamOptions,
   type StreamResult,
-} from "./stream";
+} from "./stream.js";
 
 export {
   SSE_HEADERS,
   SseDecoder,
   encodeSseEvent,
   readSurfaceEventStream,
-} from "./transport";
+} from "./transport.js";

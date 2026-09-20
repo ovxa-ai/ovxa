@@ -11,7 +11,7 @@ import {
   selectBest,
   understandContext,
   type TaskOutcome,
-} from "./index";
+} from "./index.js";
 
 const chooseIntent = "Help me choose the right health insurance plan for my family";
 

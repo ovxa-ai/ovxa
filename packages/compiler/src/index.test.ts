@@ -8,7 +8,7 @@ import {
 } from "@ovxa/registry";
 import { SCHEMA_VERSION } from "@ovxa/schema";
 import { learnApp } from "@ovxa/intelligence";
-import { compileSurface, type SurfaceModel } from "./index";
+import { compileSurface, type SurfaceModel } from "./index.js";
 
 const planGrid = defineComponent({
   name: "PlanGrid",

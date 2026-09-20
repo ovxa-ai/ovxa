@@ -4,7 +4,7 @@ import {
   RESERVED_PROP_KEYS,
   type WireLine,
   type WireValue,
-} from "./grammar";
+} from "./grammar.js";
 
 /**
  * Wire → a surface draft.

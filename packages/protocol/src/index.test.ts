@@ -5,7 +5,7 @@ import {
   SurfaceStreamReducer,
   decodeSurfaceEvent,
   encodeSurfaceEvent,
-} from "./index";
+} from "./index.js";
 
 const now = "2026-08-30T12:00:00.000Z";
 

@@ -5,7 +5,7 @@ import {
   describeLlmConfig,
   parseJsonPayload,
   resolveLlmConfig,
-} from "./index";
+} from "./index.js";
 
 const originalFetch = globalThis.fetch;
 

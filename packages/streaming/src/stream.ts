@@ -30,7 +30,7 @@ import {
   type UiPlan,
 } from "@ovxa/compiler";
 import { SurfaceEventEmitter, type SurfaceEvent } from "@ovxa/protocol";
-import { IncrementalSurfaceParser, type IncrementalHeader } from "./incremental";
+import { IncrementalSurfaceParser, type IncrementalHeader } from "./incremental.js";
 
 export type StreamOptions = CompilerOptions & {
   /** Cancels in-flight generation. Whatever already streamed stays on screen. */

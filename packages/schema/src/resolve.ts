@@ -4,9 +4,9 @@ import {
   readPath,
   type Bindable,
   type JsonValue,
-} from "./primitives";
-import { type ComponentNode } from "./component";
-import type { Surface } from "./surface";
+} from "./primitives.js";
+import { type ComponentNode } from "./component.js";
+import type { Surface } from "./surface.js";
 
 /**
  * A node with every binding replaced by live state and every hidden branch

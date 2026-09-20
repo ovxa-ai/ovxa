@@ -3,14 +3,14 @@ import { SurfaceStreamReducer, type SurfaceEvent } from "@ovxa/protocol";
 import { resolveSurface, type JsonValue, type ResolvedNode, type Surface } from "@ovxa/schema";
 import { createActionRegistry, type ActionRegistry } from "@ovxa/registry";
 import { createSurfaceRuntime, type SurfaceRuntime } from "@ovxa/genui-runtime";
-import { fallbackComponents } from "./fallback";
+import { fallbackComponents } from "./fallback.js";
 import {
   SurfaceEmpty,
   SurfaceRenderer,
   useSurfaceRuntime,
   type SurfaceComponentMap,
-} from "./renderer";
-import { cx, themeStyle, type OvxaTheme } from "./theme";
+} from "./renderer.js";
+import { cx, themeStyle, type OvxaTheme } from "./theme.js";
 
 /**
  * The embed layer: one component that turns an intent into a live interface.

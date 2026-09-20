@@ -71,7 +71,10 @@ const { surface } = await ovxa.generate({ intent, state: data });
 ```
 
 Until packages are on npm, consume this repo from studio as the `engine`
-submodule, or clone it as a workspace sibling.
+submodule, or clone it as a workspace sibling. Every package ships built ESM
+and type declarations from `dist/`; `npm install` in a workspace that includes
+`engine/packages/*` builds them, so no extra step is needed there. See
+[Consuming from studio](#consuming-from-studio).
 
 ## Use cases
 
@@ -132,10 +135,17 @@ Dependency flow is one way. Nothing below imports anything above.
 Requires Node.js 22 or newer.
 
 ```bash
-npm install
+npm install          # also builds every package to dist/
 npm test
 npm run typecheck
+npm run build        # rebuild dist/ after editing a package
+npm run dev          # rebuild on change
+npm run check:dist   # load every package from dist the way npm consumers do
 ```
+
+Tests and `typecheck` run against `src/` directly, so they never need a build.
+Package `exports` point at `dist/`, which is what npm consumers and the studio
+resolve; `npm run build` (or `npm run dev` while working) keeps it current.
 
 Preview the landing page with any static server, e.g.
 `python3 -m http.server -d site 4173`.
@@ -143,6 +153,15 @@ Preview the landing page with any static server, e.g.
 CI runs on every pull request. A version tag `v*` publishes public packages to
 npm with provenance; a push to `main` that touches `site/` deploys the landing
 page. See [RELEASE.md](RELEASE.md) and [SECURITY.md](SECURITY.md).
+
+### Consuming from studio
+
+Studio includes this repository as the `engine` git submodule and lists
+`engine/packages/*` in its npm workspaces. Each engine package builds itself on
+`prepare`, so studio's `npm install` produces `dist/` for all fourteen packages
+and `@ovxa/*` imports resolve with no further configuration. After editing
+engine source inside studio, run `npm run build` (or `npm run dev`) in the
+`engine/` directory to refresh `dist/`.
 
 ## License
 

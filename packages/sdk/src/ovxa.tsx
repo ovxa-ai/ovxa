@@ -9,7 +9,7 @@ import {
 } from "@ovxa/react";
 import type { ActionRegistry } from "@ovxa/registry";
 import { createSurfaceActions } from "@ovxa/surface-kit";
-import { defaultComponents } from "./defaults";
+import { defaultComponents } from "./defaults.js";
 
 const defaultActions = createSurfaceActions();
 

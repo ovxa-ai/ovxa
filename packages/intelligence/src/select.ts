@@ -1,5 +1,5 @@
-import type { CandidateEvaluation } from "./evaluate";
-import type { UiCandidate } from "./candidates";
+import type { CandidateEvaluation } from "./evaluate.js";
+import type { UiCandidate } from "./candidates.js";
 
 export type RankedCandidate = {
   candidate: UiCandidate;

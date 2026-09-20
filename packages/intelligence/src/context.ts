@@ -1,5 +1,5 @@
 import type { SurfaceKind } from "@ovxa/schema";
-import type { AppLearning } from "./app";
+import type { AppLearning } from "./app.js";
 
 /**
  * What the user is trying to finish — not what the UI looks like. Surface

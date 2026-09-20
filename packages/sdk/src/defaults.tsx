@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { SurfaceComponentMap, SurfaceComponentProps } from "@ovxa/react";
 import { ActionBar } from "@ovxa/react";
-import { arr, isRecord, num, str } from "./values";
+import { arr, isRecord, num, str } from "./values.js";
 
 function compact(value: number): string {
   const abs = Math.abs(value);

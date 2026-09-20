@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { createActionRegistry, defineAction } from "@ovxa/registry";
 import { parseSurface, SCHEMA_VERSION, type Surface } from "@ovxa/schema";
-import { createSurfaceRuntime } from "./index";
+import { createSurfaceRuntime } from "./index.js";
 
 const now = "2026-08-30T12:00:00.000Z";
 

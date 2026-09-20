@@ -27,6 +27,6 @@ export {
   type StreamSummary,
   type SurfaceRecordView,
   type VisualizeRequest,
-} from "./client";
+} from "./client.js";
 
-export { collectSurface, type CollectedSurface } from "./collect";
+export { collectSurface, type CollectedSurface } from "./collect.js";

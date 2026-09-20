@@ -24,7 +24,7 @@ export {
   type WireLine,
   type WireLineKind,
   type WireValue,
-} from "./grammar";
+} from "./grammar.js";
 
 export {
   WireStreamDecoder,
@@ -33,13 +33,13 @@ export {
   type WireHeader,
   type WireNode,
   type WireSurfaceDraft,
-} from "./decode";
+} from "./decode.js";
 
-export { encodeSurfaceToWire } from "./encode";
+export { encodeSurfaceToWire } from "./encode.js";
 
 export {
   buildWireCatalog,
   buildWireExample,
   buildWirePrompt,
   buildWireSyntax,
-} from "./prompt";
+} from "./prompt.js";

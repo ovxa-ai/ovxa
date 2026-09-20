@@ -1,11 +1,11 @@
-export type { SurfaceComponentMap, SurfaceComponentProps } from "./types";
+export type { SurfaceComponentMap, SurfaceComponentProps } from "./types.js";
 
 export {
   SurfaceEmpty,
   SurfaceRenderer,
   useSurfaceRuntime,
   type SurfaceRendererProps,
-} from "./renderer";
+} from "./renderer.js";
 
 export {
   OVXAProvider,
@@ -23,8 +23,8 @@ export {
   type SurfaceViewProps,
   type UseOvxaSurfaceOptions,
   type UseOvxaSurfaceResult,
-} from "./embed";
+} from "./embed.js";
 
-export { ActionBar, FallbackNode, fallbackComponents } from "./fallback";
+export { ActionBar, FallbackNode, fallbackComponents } from "./fallback.js";
 
-export { cx, themeStyle, type OvxaTheme } from "./theme";
+export { cx, themeStyle, type OvxaTheme } from "./theme.js";

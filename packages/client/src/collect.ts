@@ -1,6 +1,6 @@
 import { SurfaceStreamReducer, type SurfaceEvent } from "@ovxa/protocol";
 import type { Surface } from "@ovxa/schema";
-import type { StreamSummary } from "./client";
+import type { StreamSummary } from "./client.js";
 
 export type CollectedSurface = {
   surface: Surface | null;

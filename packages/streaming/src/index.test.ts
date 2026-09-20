@@ -15,7 +15,7 @@ import {
   collectStream,
   encodeSseEvent,
   streamSurface,
-} from "./index";
+} from "./index.js";
 
 function fixtures() {
   const components = createRegistry()

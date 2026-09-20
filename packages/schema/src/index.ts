@@ -15,7 +15,7 @@ export {
   type Binding,
   type Condition,
   type JsonValue,
-} from "./primitives";
+} from "./primitives.js";
 
 export {
   actionInvocationSchema,
@@ -28,7 +28,7 @@ export {
   type ActionStatus,
   type Confirmation,
   type SurfaceAction,
-} from "./action";
+} from "./action.js";
 
 export {
   accessibilitySchema,
@@ -44,7 +44,7 @@ export {
   type ComponentNode,
   type ComponentPhase,
   type Responsive,
-} from "./component";
+} from "./component.js";
 
 export {
   SCHEMA_VERSION,
@@ -59,7 +59,7 @@ export {
   type SurfaceKind,
   type SurfaceLayout,
   type SurfaceStatus,
-} from "./surface";
+} from "./surface.js";
 
 export {
   applySurfacePatch,
@@ -69,11 +69,11 @@ export {
   type RejectedOperation,
   type SurfacePatch,
   type SurfacePatchOperation,
-} from "./patch";
+} from "./patch.js";
 
 export {
   collectBoundPaths,
   resolveBindable,
   resolveSurface,
   type ResolvedNode,
-} from "./resolve";
+} from "./resolve.js";

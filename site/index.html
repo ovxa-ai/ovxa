@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
-    <script>document.documentElement.classList.add("js");</script>
+    <script src="boot.js"></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -128,10 +128,10 @@
                 <div class="g-card">
                   <span class="g-label">Growth by segment, Q2 vs Q1</span>
                   <div class="g-bars">
-                    <div class="g-bar"><span>Enterprise</span><i style="width: 92%"></i><b>+$318k</b></div>
-                    <div class="g-bar"><span>Mid-market</span><i style="width: 54%"></i><b>+$186k</b></div>
-                    <div class="g-bar"><span>SMB</span><i style="width: 22%"></i><b>+$76k</b></div>
-                    <div class="g-bar"><span>Self-serve</span><i style="width: 38%; opacity: 0.35"></i><b class="down">−$131k</b></div>
+                    <div class="g-bar"><span>Enterprise</span><i data-w="92"></i><b>+$318k</b></div>
+                    <div class="g-bar"><span>Mid-market</span><i data-w="54"></i><b>+$186k</b></div>
+                    <div class="g-bar"><span>SMB</span><i data-w="22"></i><b>+$76k</b></div>
+                    <div class="g-bar"><span>Self-serve</span><i data-w="38" class="faint"></i><b class="down">−$131k</b></div>
                   </div>
                 </div>
                 <div class="g-card">
@@ -156,8 +156,8 @@
             <div class="scene" id="scene-approve" role="tabpanel" aria-labelledby="tab-approve" data-active="false" hidden>
               <div class="g-card">
                 <span class="g-label">Refund request · #R-48211 · Medium risk</span>
-                <strong style="font-size: 1.1rem; letter-spacing: -0.015em">Refund $1,240.00 to Meridian Labs</strong>
-                <p style="color: var(--fg-muted); font-size: 0.9rem">Annual plan, cancelled on day 41. Policy allows a prorated refund inside 45 days; this exceeds the prorated amount by $186.</p>
+                <strong class="g-title">Refund $1,240.00 to Meridian Labs</strong>
+                <p class="g-note">Annual plan, cancelled on day 41. Policy allows a prorated refund inside 45 days; this exceeds the prorated amount by $186.</p>
                 <dl class="g-facts">
                   <div><dt>Customer since</dt><dd>March 2024 · 3 renewals</dd></div>
                   <div><dt>Prorated amount</dt><dd>$1,054.00</dd></div>
@@ -177,10 +177,10 @@
                 <div class="g-card">
                   <span class="g-label">Checkout funnel · Tuesday vs 4-week median</span>
                   <ol class="g-funnel">
-                    <li style="width: 100%"><span>Cart</span><b>18,420 · −1%</b></li>
-                    <li style="width: 78%"><span>Address</span><b>14,360 · −2%</b></li>
-                    <li style="width: 41%" class="drop"><span>Payment</span><b>7,550 · −31%</b></li>
-                    <li style="width: 36%"><span>Confirmed</span><b>6,630 · −29%</b></li>
+                    <li data-w="100"><span>Cart</span><b>18,420 · −1%</b></li>
+                    <li data-w="78"><span>Address</span><b>14,360 · −2%</b></li>
+                    <li data-w="41" class="drop"><span>Payment</span><b>7,550 · −31%</b></li>
+                    <li data-w="36"><span>Confirmed</span><b>6,630 · −29%</b></li>
                   </ol>
                 </div>
                 <div class="g-card">

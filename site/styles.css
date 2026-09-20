@@ -654,9 +654,34 @@ h1 {
   animation: grow 700ms var(--ease) both;
 }
 
+.g-bar i.faint {
+  opacity: 0.35;
+}
+
 .g-bar b {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Widths live in data attributes so the page ships without inline styles
+   and works under a strict `style-src 'self'` CSP. */
+[data-w="100"] { width: 100%; }
+[data-w="92"] { width: 92%; }
+[data-w="78"] { width: 78%; }
+[data-w="54"] { width: 54%; }
+[data-w="41"] { width: 41%; }
+[data-w="38"] { width: 38%; }
+[data-w="36"] { width: 36%; }
+[data-w="22"] { width: 22%; }
+
+.g-title {
+  font-size: 1.1rem;
+  letter-spacing: -0.015em;
+}
+
+.g-note {
+  color: var(--fg-muted);
+  font-size: 0.9rem;
 }
 
 .g-table {

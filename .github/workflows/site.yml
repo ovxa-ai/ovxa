@@ -1,6 +1,6 @@
 name: site
 
-# Publishes site/ to GitHub Pages and, when configured, provisions everything
+# Publishes packages/site/public/ to GitHub Pages and, when configured, provisions everything
 # around it so no manual clicking is needed:
 #
 #   secrets.PAGES_ADMIN_TOKEN   fine-grained PAT (repo: this one, permission
@@ -17,7 +17,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "site/**"
+      - "packages/site/public/**"
       - ".github/workflows/site.yml"
   workflow_dispatch:
 
@@ -78,7 +78,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: packages/site/public
 
       - id: deploy
         uses: actions/deploy-pages@v4

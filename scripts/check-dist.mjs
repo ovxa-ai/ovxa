@@ -14,6 +14,7 @@ const expectedExports = {
   "@ovxa/react": ["OVXAProvider", "OVXASurface", "useOvxaSurface", "SurfaceRenderer"],
   "@ovxa/surface-kit": ["createSurfaceRegistry", "createSurfaceActions"],
   "@ovxa/llm": ["resolveLlmConfig", "describeLlmConfig"],
+  "@ovxa/site": ["siteRoot", "siteFiles", "resolveSiteFile", "createSiteHandler"],
 };
 
 let failed = false;

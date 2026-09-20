@@ -33,6 +33,9 @@ schema
 | Experience runtime / planner / policy | `ovxa-ai/studio` |
 | Cloud Run, Terraform, Cloudflare | `ovxa-ai/studio` |
 
+`@ovxa/site` is the landing page's files and a request handler over Node's
+`http` types; it never listens. Studio owns the server it is mounted on.
+
 `@ovxa/llm` is the provider adapter only. Experience-generation types stay in
 studio’s `@ovxa/llm-gateway`, which re-exports this package.
 

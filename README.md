@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="site/logo.svg" width="56" height="56" alt="OVXA" />
+  <img src="packages/site/public/logo.svg" width="56" height="56" alt="OVXA" />
 </p>
 
 <h1 align="center">OVXA</h1>
@@ -28,8 +28,9 @@ type theirs — a search box for interfaces — and renders the answer underneat
 Streaming, reconciliation, the action loop, and loading / empty / error states
 are handled by the SDK.
 
-The landing page lives in [`site/`](site) and deploys to GitHub Pages. The
-hosted control plane at [ovxa.ai](https://ovxa.ai) lives in
+The landing page is [`@ovxa/site`](packages/site): static files plus a Node
+handler that serves them, so the studio server at [ovxa.ai](https://ovxa.ai)
+mounts it straight from the engine. The hosted control plane itself lives in
 [`ovxa-ai/studio`](https://github.com/ovxa-ai/studio).
 
 ## Install
@@ -129,6 +130,7 @@ Dependency flow is one way. Nothing below imports anything above.
 | `@ovxa/surface-model` | Hosted generation against a catalogue |
 | `@ovxa/llm` | Provider adapters |
 | `@ovxa/wire` | Compact prompt encoding, token benchmark |
+| `@ovxa/site` | The ovxa.ai landing page and a handler that serves it |
 
 ## Develop
 
@@ -148,11 +150,11 @@ Package `exports` point at `dist/`, which is what npm consumers and the studio
 resolve; `npm run build` (or `npm run dev` while working) keeps it current.
 
 Preview the landing page with any static server, e.g.
-`python3 -m http.server -d site 4173`.
+`python3 -m http.server -d packages/site/public 4173`.
 
 CI runs on every pull request. A version tag `v*` publishes public packages to
-npm with provenance; a push to `main` that touches `site/` deploys the landing
-page. See [RELEASE.md](RELEASE.md) and [SECURITY.md](SECURITY.md).
+npm with provenance; a push to `main` that touches `packages/site/public/`
+deploys the landing page to GitHub Pages. See [RELEASE.md](RELEASE.md) and [SECURITY.md](SECURITY.md).
 
 ### Consuming from studio
 
@@ -162,6 +164,10 @@ Studio includes this repository as the `engine` git submodule and lists
 and `@ovxa/*` imports resolve with no further configuration. After editing
 engine source inside studio, run `npm run build` (or `npm run dev`) in the
 `engine/` directory to refresh `dist/`.
+
+The landing page reaches production the same way: studio registers
+[`@ovxa/site`](packages/site/README.md) on its Fastify server and every
+submodule bump ships the current page with the next studio deploy.
 
 ## License
 

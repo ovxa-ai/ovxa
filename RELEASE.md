@@ -22,19 +22,37 @@ npm pack --workspaces --pack-destination /tmp/ovxa-packs
 
 ## Landing page
 
-`site/` is a self-contained static page: plain HTML, CSS, and JS with no build
-step, no inline scripts or styles, so it runs under a strict
-`script-src 'self'; style-src 'self'` CSP.
+The page is the [`@ovxa/site`](packages/site/README.md) package:
+`packages/site/public/` is plain HTML, CSS, and JS with no build step, no inline
+scripts or styles, so it runs under a strict `script-src 'self'; style-src
+'self'` CSP; the module serves those files from any Node HTTP server.
 
 **https://ovxa.ai is served by the studio server, not by this repository.**
-Merging here does not change what ovxa.ai shows. To ship the page there, copy
-the contents of `site/` over the studio's static root (it references
-`styles.css`, `site.js`, `boot.js`, and the SVGs by relative path) and deploy
-studio.
+Merging here does not change what ovxa.ai shows until studio picks up the
+change.
+
+### Updating production (studio)
+
+1. Merge to `main` here.
+2. In studio, bump the `engine` submodule and install, which builds every engine
+   package including `@ovxa/site`:
+
+   ```bash
+   git -C engine fetch origin && git -C engine checkout origin/main
+   npm install
+   git add engine && git commit -m "engine: update landing page"
+   ```
+
+3. Once, register the page on the Fastify server before the API plugins — the
+   `registerSite` routine in the
+   [`@ovxa/site` README](packages/site/README.md#fastify-studio) is complete.
+   Later bumps need only step 2.
+4. Deploy studio as usual (Cloud Run). The page, its assets and the CSP headers
+   ship with the API.
 
 ### Automatic publishing to GitHub Pages
 
-The `site` workflow publishes `site/` to GitHub Pages on every push to `main`
+The `site` workflow publishes `packages/site/public/` to GitHub Pages on every push to `main`
 that touches it, and provisions everything around it when given credentials.
 Configure once under Settings → Secrets and variables → Actions:
 

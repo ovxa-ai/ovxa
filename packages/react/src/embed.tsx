@@ -4,7 +4,13 @@ import { resolveSurface, type JsonValue, type ResolvedNode, type Surface } from 
 import { createActionRegistry, type ActionRegistry } from "@ovxa/registry";
 import { createSurfaceRuntime, type SurfaceRuntime } from "@ovxa/genui-runtime";
 import { fallbackComponents } from "./fallback";
-import { SurfaceRenderer, useSurfaceRuntime, type SurfaceComponentMap } from "./renderer";
+import {
+  SurfaceEmpty,
+  SurfaceRenderer,
+  useSurfaceRuntime,
+  type SurfaceComponentMap,
+} from "./renderer";
+import { cx, themeStyle, type OvxaTheme } from "./theme";
 
 /**
  * The embed layer: one component that turns an intent into a live interface.
@@ -205,14 +211,8 @@ export function useOvxaSurface({
   return { phase, runtime, regenerate };
 }
 
-export type OVXASurfaceProps = {
-  intent: string;
-  /** Application data the surface may bind to. Alias of `data`. */
-  state?: Record<string, JsonValue>;
-  /** Same as `state`. Prefer this name in product code. */
-  data?: Record<string, JsonValue>;
-  locale?: string;
-  enabled?: boolean;
+/** Presentation props shared by `OVXASurface` and `OVXASurfaceView`. */
+export type SurfaceViewProps = {
   /** Rendered while the plan is still being chosen. */
   loading?: React.ReactNode;
   /** Rendered when nothing usable was produced. */
@@ -220,15 +220,26 @@ export type OVXASurfaceProps = {
   error?: (message: string, retry: () => void) => React.ReactNode;
   onAction?: (actionId: string, input: Record<string, unknown>) => void;
   className?: string;
+  /** Host design tokens. Also settable as `--ovxa-*` custom properties in CSS. */
+  theme?: OvxaTheme;
+};
+
+export type OVXASurfaceProps = SurfaceViewProps & {
+  intent: string;
+  /** Application data the surface may bind to. Alias of `data`. */
+  state?: Record<string, JsonValue>;
+  /** Same as `state`. Prefer this name in product code. */
+  data?: Record<string, JsonValue>;
+  locale?: string;
+  enabled?: boolean;
 };
 
 /**
  * A generated interface, streamed and interactive.
  *
- * While streaming, the folded surface is rendered directly — that is what makes
- * components appear one at a time. Once the stream settles, rendering switches to
- * the runtime, so an interaction patches the surface in place and preserves
- * selections, focus and scroll instead of regenerating.
+ * Owns the stream. Hosts that want to drive the stream themselves — to show
+ * its status elsewhere, or to prefetch — call `useOvxaSurface` and render the
+ * result with `OVXASurfaceView`.
  */
 export function OVXASurface({
   intent,
@@ -236,20 +247,43 @@ export function OVXASurface({
   data,
   locale,
   enabled,
-  loading,
-  empty,
-  error,
-  onAction,
-  className,
+  ...view
 }: OVXASurfaceProps): React.ReactElement | null {
   const boundState = state ?? data;
-  const { components } = useOvxa();
-  const { phase, runtime, regenerate } = useOvxaSurface({
+  const result = useOvxaSurface({
     intent,
     ...(boundState ? { state: boundState } : {}),
     ...(locale ? { locale } : {}),
     ...(enabled === undefined ? {} : { enabled }),
   });
+  return <OVXASurfaceView {...result} {...view} />;
+}
+
+export type OVXASurfaceViewProps = SurfaceViewProps & UseOvxaSurfaceResult;
+
+/**
+ * Renders the result of `useOvxaSurface`.
+ *
+ * While streaming, the folded surface is rendered directly — that is what makes
+ * components appear one at a time. Once the stream settles, rendering switches to
+ * the runtime, so an interaction patches the surface in place and preserves
+ * selections, focus and scroll instead of regenerating.
+ *
+ * Every state renders inside one `.ovxa` root so host tokens apply to the
+ * skeleton and the error exactly as they apply to the surface.
+ */
+export function OVXASurfaceView({
+  phase,
+  runtime,
+  regenerate,
+  loading,
+  empty,
+  error,
+  onAction,
+  className,
+  theme,
+}: OVXASurfaceViewProps): React.ReactElement | null {
+  const { components } = useOvxa();
   const snapshot = useSurfaceRuntime(runtime);
 
   const dispatch = React.useCallback(
@@ -263,48 +297,58 @@ export function OVXASurface({
 
   if (phase.status === "idle") return null;
 
+  const style = themeStyle(theme);
+  const root = (status: string, children: React.ReactNode): React.ReactElement => (
+    <div
+      className={cx("ovxa", className)}
+      data-ovxa-status={status}
+      {...(style ? { style } : {})}
+    >
+      {children}
+    </div>
+  );
+
   if (phase.status === "planning") {
-    return <>{loading ?? <SurfaceSkeleton />}</>;
+    return root("planning", loading ?? <SurfaceSkeleton />);
   }
 
   if (phase.status === "error" && phase.surface === null) {
-    return (
-      <>
-        {error?.(phase.message, regenerate) ?? (
-          <div className="ovxa-error" role="alert">
-            <strong>This interface could not be generated</strong>
-            <span>{phase.message}</span>
-            <button type="button" onClick={regenerate}>
-              Try again
-            </button>
-          </div>
-        )}
-      </>
+    return root(
+      "error",
+      error?.(phase.message, regenerate) ?? (
+        <div className="ovxa-error" role="alert">
+          <strong>This interface could not be generated</strong>
+          <span>{phase.message}</span>
+          <button type="button" className="ovxa-btn" onClick={regenerate}>
+            Try again
+          </button>
+        </div>
+      ),
     );
   }
 
   const surface = snapshot?.surface ?? phase.surface;
-  if (!surface) return <>{empty ?? null}</>;
+  if (!surface) return root("empty", empty ?? null);
   if (surface.root.length === 0 && phase.status === "ready") {
-    return <>{empty ?? <SurfaceSkeleton />}</>;
+    return root("empty", empty ?? <SurfaceEmpty surface={surface} />);
   }
 
   const tree = snapshot?.tree ?? ("tree" in phase ? phase.tree : []);
 
-  return (
-    <div className={className} data-ovxa-status={surface.status}>
-      <SurfaceRenderer
-        tree={tree}
-        surface={surface}
-        components={components}
-        onAction={dispatch}
-        {...(snapshot ? { focusRequest: snapshot.focusRequest } : {})}
-      />
-    </div>
+  return root(
+    surface.status,
+    <SurfaceRenderer
+      tree={tree}
+      surface={surface}
+      components={components}
+      onAction={dispatch}
+      {...(snapshot ? { focusRequest: snapshot.focusRequest } : {})}
+    />,
   );
 }
 
-function SurfaceSkeleton(): React.ReactElement {
+/** Layout-shaped placeholder shown while a plan is being chosen. */
+export function SurfaceSkeleton(): React.ReactElement {
   return (
     <div className="ovxa-skeleton" aria-busy="true" aria-live="polite">
       <span className="ovxa-sk ovxa-sk-title" />

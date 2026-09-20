@@ -139,7 +139,7 @@ export function decodeValue(raw: string): WireValue {
  * The leading pipe is a marker rather than a separator, so it is dropped before
  * splitting; a trailing pipe is not, because an empty final cell is meaningful.
  */
-export function splitRow(text: string): string[] {
+function splitRow(text: string): string[] {
   return text.replace(/^\|/, "").split("|").map((cell) => cell.trim());
 }
 

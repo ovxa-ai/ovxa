@@ -1,25 +1,35 @@
-# OVXA
+<p align="center">
+  <img src="site/logo.svg" width="56" height="56" alt="OVXA" />
+</p>
 
-[![CI](https://github.com/ovxa-ai/ovxa/actions/workflows/ci.yml/badge.svg)](https://github.com/ovxa-ai/ovxa/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+<h1 align="center">OVXA</h1>
 
-The UI Intelligence Engine for Generative UI.
+<p align="center">
+  <a href="https://github.com/ovxa-ai/ovxa/actions/workflows/ci.yml"><img src="https://github.com/ovxa-ai/ovxa/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License" /></a>
+</p>
+
+<p align="center">The UI Intelligence Engine for Generative UI.</p>
 
 A model proposes an interface. The compiler decides what survives. The north
 star is not whether the UI rendered — it is whether the generated interface
 helped the user finish the task.
 
 ```tsx
-import { Ovxa } from "@ovxa/sdk";
+import { Ovxa, OvxaSearch } from "@ovxa/sdk";
 import "@ovxa/sdk/styles.css";
 
 <Ovxa intent="Compare Q2 revenue against Q1" data={revenue} />
+<OvxaSearch data={workspace} />
 ```
 
-That is the integration. Streaming, reconciliation, the action loop, and
-loading / empty / error states are handled by the SDK.
+That is the integration. `Ovxa` renders one intent. `OvxaSearch` lets the user
+type theirs — a search box for interfaces — and renders the answer underneath.
+Streaming, reconciliation, the action loop, and loading / empty / error states
+are handled by the SDK.
 
-The hosted control plane at [ovxa.ai](https://ovxa.ai) lives in
+The landing page lives in [`site/`](site) and deploys to GitHub Pages. The
+hosted control plane at [ovxa.ai](https://ovxa.ai) lives in
 [`ovxa-ai/studio`](https://github.com/ovxa-ai/studio).
 
 ## Install
@@ -42,6 +52,11 @@ export function RevenueReview({ revenue }: { revenue: Record<string, unknown> })
 }
 ```
 
+The surface inherits your `color` and `font`; everything else is a token. Match
+a design system with `theme` or `--ovxa-*` custom properties, and pass
+`components` to render with your own. See the
+[SDK README](packages/sdk/README.md).
+
 Never ship a server key to a browser. On the backend:
 
 ```ts
@@ -57,6 +72,22 @@ const { surface } = await ovxa.generate({ intent, state: data });
 
 Until packages are on npm, consume this repo from studio as the `engine`
 submodule, or clone it as a workspace sibling.
+
+## Use cases
+
+When chat is the wrong output: the user needs to **compare**, **choose**,
+**configure**, **approve**, **investigate** or **monitor** something, and a
+paragraph cannot do that. These ship as `defaultUseCases` and are the
+suggestions `OvxaSearch` shows before the user types.
+
+| | Intent | The interface that tends to win |
+| --- | --- | --- |
+| Compare | "Compare Q2 revenue against Q1 and show where growth was lost" | Two periods side by side, with the delta that explains the change |
+| Choose | "Help me pick the right plan for a team of twelve" | Options with a recommendation |
+| Configure | "Set alerting thresholds for the checkout service" | Only the fields that matter, prefilled |
+| Approve | "Review this refund request and decide" | The facts, the risk, one clear action |
+| Investigate | "Why did checkout conversion drop last Tuesday?" | A funnel, the anomaly, the sources |
+| Monitor | "Show the health of the payments pipeline right now" | Live metrics, failing step first |
 
 ## How generation works
 
@@ -81,9 +112,9 @@ Dependency flow is one way. Nothing below imports anything above.
 
 | Package | Role |
 | --- | --- |
-| `@ovxa/sdk` | Zero-config customer SDK |
+| `@ovxa/sdk` | Zero-config embed (`Ovxa`) and search (`OvxaSearch`) |
 | `@ovxa/client` | Typed HTTP / SSE transport |
-| `@ovxa/react` | Renderer and provider |
+| `@ovxa/react` | Renderer, provider, theme tokens |
 | `@ovxa/schema` | Surface, bindings, actions, patches |
 | `@ovxa/registry` | Component and action allowlist |
 | `@ovxa/intelligence` | Understand, propose, score, select |
@@ -94,7 +125,7 @@ Dependency flow is one way. Nothing below imports anything above.
 | `@ovxa/surface-kit` | Reference component definitions |
 | `@ovxa/surface-model` | Hosted generation against a catalogue |
 | `@ovxa/llm` | Provider adapters |
-| `@ovxa/wire` | Compact prompt encoding |
+| `@ovxa/wire` | Compact prompt encoding, token benchmark |
 
 ## Develop
 
@@ -106,8 +137,12 @@ npm test
 npm run typecheck
 ```
 
+Preview the landing page with any static server, e.g.
+`python3 -m http.server -d site 4173`.
+
 CI runs on every pull request. A version tag `v*` publishes public packages to
-npm with provenance. See [RELEASE.md](RELEASE.md) and [SECURITY.md](SECURITY.md).
+npm with provenance; a push to `main` that touches `site/` deploys the landing
+page. See [RELEASE.md](RELEASE.md) and [SECURITY.md](SECURITY.md).
 
 ## License
 

@@ -21,6 +21,7 @@ export default defineConfig({
       "@ovxa/react": fromRoot("./packages/react/src/index.tsx"),
       "@ovxa/client": fromRoot("./packages/client/src/index.ts"),
       "@ovxa/sdk": fromRoot("./packages/sdk/src/index.ts"),
+      "@ovxa/site": fromRoot("./packages/site/src/index.ts"),
     },
   },
   test: {

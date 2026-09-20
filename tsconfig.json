@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "types": ["node"],
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "noEmit": true,
@@ -29,7 +30,8 @@
       "@ovxa/surface-model": ["./packages/surface-model/src/index.ts"],
       "@ovxa/react": ["./packages/react/src/index.tsx"],
       "@ovxa/client": ["./packages/client/src/index.ts"],
-      "@ovxa/sdk": ["./packages/sdk/src/index.ts"]
+      "@ovxa/sdk": ["./packages/sdk/src/index.ts"],
+      "@ovxa/site": ["./packages/site/src/index.ts"]
     }
   },
   "include": ["packages/*/src"]

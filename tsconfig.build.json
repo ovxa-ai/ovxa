@@ -32,6 +32,9 @@
       "path": "./packages/sdk"
     },
     {
+      "path": "./packages/site"
+    },
+    {
       "path": "./packages/streaming"
     },
     {

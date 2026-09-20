@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { isBinding, type ComponentNode, type SurfaceKind } from "@ovxa/schema";
-import type { ComponentDefinition, ComponentIntent } from "./definition";
+import type { ComponentDefinition, ComponentIntent } from "./definition.js";
 
 export type PropIssue = {
   componentId: string;

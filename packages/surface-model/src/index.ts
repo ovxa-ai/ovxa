@@ -2,21 +2,21 @@ import type { CompileContext, SurfaceModel, UiPlan } from "@ovxa/compiler";
 import type { LlmAdapter } from "@ovxa/llm";
 import type { Catalog } from "@ovxa/registry";
 import { SCHEMA_VERSION, safeParseSurface } from "@ovxa/schema";
-import { normalizeSurfaceDraft, type ActionAllowlist } from "./normalize";
+import { normalizeSurfaceDraft, type ActionAllowlist } from "./normalize.js";
 import {
   buildGenerateSystemPrompt,
   buildGenerateUserPrompt,
   buildPlanSystemPrompt,
   buildPlanUserPrompt,
-} from "./prompt";
+} from "./prompt.js";
 
 export {
   buildGenerateSystemPrompt,
   buildGenerateUserPrompt,
   buildPlanSystemPrompt,
   buildPlanUserPrompt,
-} from "./prompt";
-export { normalizeSurfaceDraft, type ActionAllowlist } from "./normalize";
+} from "./prompt.js";
+export { normalizeSurfaceDraft, type ActionAllowlist } from "./normalize.js";
 
 /** Component name → the actions that component is allowed to invoke. */
 function actionAllowlist(catalog: Catalog): ActionAllowlist {

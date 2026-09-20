@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { actionSchema } from "./action";
-import { collectComponentIds, componentNodeSchema } from "./component";
-import { jsonValueSchema } from "./primitives";
+import { actionSchema } from "./action.js";
+import { collectComponentIds, componentNodeSchema } from "./component.js";
+import { jsonValueSchema } from "./primitives.js";
 
 export const SCHEMA_VERSION = "2.0" as const;
 

@@ -6,7 +6,7 @@ import {
   createLlmSurfaceModel,
   normalizeSurfaceDraft,
   type SurfaceModelAttempt,
-} from "./index";
+} from "./index.js";
 
 /**
  * The adapter is stubbed at the provider HTTP boundary and nowhere else. Every

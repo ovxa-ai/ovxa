@@ -10,9 +10,9 @@
  *
  * North star: did the generated interface help the user complete the task?
  */
-import type { ContextUnderstanding } from "./context";
-import type { CandidateEvaluation } from "./evaluate";
-import type { RankedCandidate } from "./select";
+import type { ContextUnderstanding } from "./context.js";
+import type { CandidateEvaluation } from "./evaluate.js";
+import type { RankedCandidate } from "./select.js";
 
 export {
   classifyTask,
@@ -22,7 +22,7 @@ export {
   type ContextUnderstanding,
   type TaskKind,
   type UserHistorySignals,
-} from "./context";
+} from "./context.js";
 
 export {
   candidateFromPlan,
@@ -30,7 +30,7 @@ export {
   type CandidateSource,
   type PlanDraft,
   type UiCandidate,
-} from "./candidates";
+} from "./candidates.js";
 
 export {
   evaluateCandidate,
@@ -40,9 +40,9 @@ export {
   type DimensionScore,
   type EvaluationInput,
   type QualityDimension,
-} from "./evaluate";
+} from "./evaluate.js";
 
-export { selectBest, type RankedCandidate, type Selection } from "./select";
+export { selectBest, type RankedCandidate, type Selection } from "./select.js";
 
 export {
   benchmarkMetrics,
@@ -53,14 +53,14 @@ export {
   type LearningSignal,
   type OutcomeResult,
   type TaskOutcome,
-} from "./outcome";
+} from "./outcome.js";
 
 export {
   PatternMemory,
   type PatternKey,
   type PatternPrior,
   type PatternStats,
-} from "./memory";
+} from "./memory.js";
 
 export {
   describeAppForPrompt,
@@ -79,7 +79,7 @@ export {
   type VisualContract,
   type VisualDensity,
   type VisualSource,
-} from "./app";
+} from "./app.js";
 
 export {
   compareInterfaceStrategies,
@@ -87,7 +87,7 @@ export {
   defaultStaticPlan,
   type StrategyComparison,
   type StrategySet,
-} from "./benchmark";
+} from "./benchmark.js";
 
 export type IntelligenceReport = {
   understanding: ContextUnderstanding;

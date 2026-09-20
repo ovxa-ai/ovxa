@@ -20,7 +20,7 @@ export {
   summaryProps,
   timelineProps,
   type SurfaceComponentName,
-} from "./components";
+} from "./components.js";
 
 export {
   chartComponents,
@@ -30,7 +30,7 @@ export {
   heatGridProps,
   lineChartProps,
   rankedListProps,
-} from "./charts";
+} from "./charts.js";
 
 export {
   codeBlockProps,
@@ -39,7 +39,7 @@ export {
   jsonViewerProps,
   keyValueGridProps,
   statCardProps,
-} from "./data";
+} from "./data.js";
 
 export {
   agentTaskListProps,
@@ -49,6 +49,6 @@ export {
   sourceListProps,
   thinkingTraceProps,
   toolRunProps,
-} from "./agentic";
+} from "./agentic.js";
 
-export { createSurfaceActions } from "./actions";
+export { createSurfaceActions } from "./actions.js";

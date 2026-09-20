@@ -3,7 +3,7 @@ import {
   type Surface,
   type SurfacePatchOperation,
 } from "@ovxa/schema";
-import { isTerminalEvent, safeParseSurfaceEvent, type SurfaceEvent } from "./events";
+import { isTerminalEvent, safeParseSurfaceEvent, type SurfaceEvent } from "./events.js";
 
 /**
  * `Omit` over a union collapses it to the shared keys, which would let any

@@ -12,7 +12,7 @@ export {
   type ComponentInput,
   type ComponentIntent,
   type ComponentStateSupport,
-} from "./definition";
+} from "./definition.js";
 
 export {
   ComponentRegistry,
@@ -20,7 +20,7 @@ export {
   type ComponentCandidate,
   type NodeValidation,
   type PropIssue,
-} from "./registry";
+} from "./registry.js";
 
 export {
   ActionRegistry,
@@ -32,6 +32,6 @@ export {
   type ActionInput,
   type ActionOutcome,
   type DispatchResult,
-} from "./actions";
+} from "./actions.js";
 
-export { buildCatalog, type Catalog, type CatalogEntry } from "./catalog";
+export { buildCatalog, type Catalog, type CatalogEntry } from "./catalog.js";

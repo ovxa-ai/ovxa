@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { SCHEMA_VERSION, type Surface } from "@ovxa/schema";
 import { encodeSseEvent } from "@ovxa/streaming";
 import type { SurfaceEvent } from "@ovxa/protocol";
-import { OvxaError, collectSurface, createOvxa } from "./index";
+import { OvxaError, collectSurface, createOvxa } from "./index.js";
 
 const shell: Surface = {
   schemaVersion: SCHEMA_VERSION,

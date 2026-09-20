@@ -1,6 +1,6 @@
 import type { SurfaceKind } from "@ovxa/schema";
-import type { TaskKind } from "./context";
-import type { LearningSignal, TaskOutcome } from "./outcome";
+import type { TaskKind } from "./context.js";
+import type { LearningSignal, TaskOutcome } from "./outcome.js";
 
 export type PatternKey = {
   taskKind: TaskKind;

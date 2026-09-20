@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { bindableSchema } from "./primitives";
+import { bindableSchema } from "./primitives.js";
 
 /**
  * How much damage an action can do if the model chose it wrongly. The runtime

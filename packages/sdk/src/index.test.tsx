@@ -7,8 +7,8 @@ import { SCHEMA_VERSION, parseSurface, type Surface } from "@ovxa/schema";
 import { createSurfaceRegistry } from "@ovxa/surface-kit";
 import type { SurfaceSource } from "@ovxa/react";
 import { themeStyle } from "@ovxa/react";
-import { defaultComponents } from "./defaults";
-import { Ovxa, OvxaSearch, defaultUseCases, filterUseCases } from "./index";
+import { defaultComponents } from "./defaults.js";
+import { Ovxa, OvxaSearch, defaultUseCases, filterUseCases } from "./index.js";
 
 const now = "2026-09-17T12:00:00.000Z";
 

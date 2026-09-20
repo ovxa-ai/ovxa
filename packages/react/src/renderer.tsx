@@ -1,10 +1,10 @@
 import * as React from "react";
 import type { ResolvedNode, Surface } from "@ovxa/schema";
 import type { SurfaceRuntime, RuntimeSnapshot } from "@ovxa/genui-runtime";
-import { FallbackNode } from "./fallback";
-import type { SurfaceComponentMap } from "./types";
+import { FallbackNode } from "./fallback.js";
+import type { SurfaceComponentMap } from "./types.js";
 
-export type { SurfaceComponentMap, SurfaceComponentProps } from "./types";
+export type { SurfaceComponentMap, SurfaceComponentProps } from "./types.js";
 
 function RenderNode({
   node,

@@ -6,7 +6,7 @@ import {
   createRegistry,
   defineAction,
   defineComponent,
-} from "./index";
+} from "./index.js";
 
 const planGrid = defineComponent({
   name: "PlanGrid",

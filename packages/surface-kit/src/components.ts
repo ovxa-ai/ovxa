@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { createRegistry, defineComponent, type ComponentRegistry } from "@ovxa/registry";
-import { agenticComponents } from "./agentic";
-import { chartComponents } from "./charts";
-import { dataComponents } from "./data";
+import { agenticComponents } from "./agentic.js";
+import { chartComponents } from "./charts.js";
+import { dataComponents } from "./data.js";
 
 /**
  * The reference component library, registered with OVXA exactly the way a host

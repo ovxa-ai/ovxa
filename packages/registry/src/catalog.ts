@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { SurfaceKind } from "@ovxa/schema";
-import type { ActionRegistry } from "./actions";
-import type { ComponentRegistry } from "./registry";
-import type { ComponentIntent } from "./definition";
+import type { ActionRegistry } from "./actions.js";
+import type { ComponentRegistry } from "./registry.js";
+import type { ComponentIntent } from "./definition.js";
 
 export type CatalogEntry = {
   name: string;

@@ -27,7 +27,7 @@ import {
   type UiCandidate,
   type UserHistorySignals,
 } from "@ovxa/intelligence";
-import { groundPlan, uiPlanSchema, type CompileContext, type UiPlan } from "./plan";
+import { groundPlan, uiPlanSchema, type CompileContext, type UiPlan } from "./plan.js";
 
 /**
  * The stages every generation passes through, in order. Both the batch

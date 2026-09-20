@@ -1,5 +1,5 @@
 import type { Catalog } from "@ovxa/registry";
-import { WIRE_VERSION } from "./grammar";
+import { WIRE_VERSION } from "./grammar.js";
 
 /**
  * The Wire instructions, generated from whatever the host registered.

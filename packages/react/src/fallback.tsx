@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { SurfaceAction } from "@ovxa/schema";
-import type { SurfaceComponentMap, SurfaceComponentProps } from "./types";
+import type { SurfaceComponentMap, SurfaceComponentProps } from "./types.js";
 
 function titleFrom(data: Record<string, unknown>, type: string): string {
   for (const key of ["title", "label", "headline", "name"]) {

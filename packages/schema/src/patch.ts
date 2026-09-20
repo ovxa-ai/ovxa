@@ -1,13 +1,13 @@
 import { z } from "zod";
-import { actionSchema, actionStatuses, type SurfaceAction } from "./action";
-import { componentNodeSchema, componentPhases, type ComponentNode } from "./component";
+import { actionSchema, actionStatuses, type SurfaceAction } from "./action.js";
+import { componentNodeSchema, componentPhases, type ComponentNode } from "./component.js";
 import {
   bindableSchema,
   conditionSchema,
   jsonValueSchema,
   type JsonValue,
-} from "./primitives";
-import { layoutSchema, surfaceKinds, surfaceStatuses, type Surface } from "./surface";
+} from "./primitives.js";
+import { layoutSchema, surfaceKinds, surfaceStatuses, type Surface } from "./surface.js";
 
 /**
  * The patch vocabulary. A generated interface is mutated by addressing nodes,

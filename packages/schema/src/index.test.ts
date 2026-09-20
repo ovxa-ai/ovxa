@@ -9,7 +9,7 @@ import {
   safeParseSurface,
   SCHEMA_VERSION,
   type Surface,
-} from "./index";
+} from "./index.js";
 
 const now = "2026-08-30T12:00:00.000Z";
 

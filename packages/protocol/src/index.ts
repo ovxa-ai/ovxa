@@ -9,7 +9,7 @@ export {
   surfaceEventSchema,
   type SurfaceEvent,
   type SurfaceEventType,
-} from "./events";
+} from "./events.js";
 
 export {
   SurfaceEventEmitter,
@@ -18,4 +18,4 @@ export {
   encodeSurfaceEvent,
   type ApplyOutcome,
   type SurfaceEventInput,
-} from "./stream";
+} from "./stream.js";

@@ -6,8 +6,8 @@ import {
   type IntelligenceReport,
   type PlanDraft,
 } from "@ovxa/intelligence";
-import type { CompileContext, UiPlan } from "./plan";
-import { groundSurface, type GroundingIssue } from "./validate";
+import type { CompileContext, UiPlan } from "./plan.js";
+import { groundSurface, type GroundingIssue } from "./validate.js";
 import {
   CATALOG_LIMIT,
   applyAppStyle,
@@ -19,7 +19,7 @@ import {
   trackInto,
   type CompileTraceEntry,
   type CompilerOptions,
-} from "./phases";
+} from "./phases.js";
 
 /**
  * One candidate taken all the way to a real surface. Scoring a compiled

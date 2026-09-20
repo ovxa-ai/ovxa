@@ -1,5 +1,5 @@
 import { isBinding, type ComponentNode, type Surface } from "@ovxa/schema";
-import { RESERVED_PROP_KEYS } from "./grammar";
+import { RESERVED_PROP_KEYS } from "./grammar.js";
 
 /**
  * Surface → Wire.

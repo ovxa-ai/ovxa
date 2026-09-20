@@ -1,6 +1,6 @@
 import type { SurfaceKind } from "@ovxa/schema";
 import type { ComponentIntent } from "@ovxa/registry";
-import type { ContextUnderstanding } from "./context";
+import type { ContextUnderstanding } from "./context.js";
 
 /**
  * A proposed interface, before any markup exists. Candidates compete; only

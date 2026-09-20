@@ -14,7 +14,7 @@ import {
   decodeValue,
   decodeWire,
   encodeSurfaceToWire,
-} from "./index";
+} from "./index.js";
 
 const WIRE = `surface dashboard 2 wide
 title Q2 revenue against Q1

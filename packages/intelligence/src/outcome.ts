@@ -1,5 +1,5 @@
 import type { SurfaceKind } from "@ovxa/schema";
-import type { TaskKind } from "./context";
+import type { TaskKind } from "./context.js";
 
 /**
  * What actually happened after a generated interface was shown. This is the

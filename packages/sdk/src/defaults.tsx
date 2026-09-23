@@ -267,7 +267,7 @@ function FieldSet({ data, onAction }: SurfaceComponentProps): React.ReactElement
         </label>
       ))}
       <button type="submit" className="ovxa-btn ovxa-btn-primary">
-        Submit
+        Continue
       </button>
     </form>
   );

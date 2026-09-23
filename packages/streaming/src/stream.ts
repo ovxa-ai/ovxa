@@ -17,6 +17,7 @@ import {
   applyAppStyle,
   defaultSurfaceId,
   deterministicSurface,
+  composeBoundSurface,
   ensureComponentActions,
   groundSurface,
   mergeState,
@@ -337,6 +338,8 @@ export async function* streamSurface(
 
   const streamed: ComponentNode[] = [];
   const usedIds = new Set<string>();
+  const title = context.state["title"];
+  const composesDecision = typeof title === "string" && title.trim().length > 0;
   let timeToFirstComponentMs: number | null = null;
   let raw: unknown = null;
   let failure: string | null = null;
@@ -364,9 +367,12 @@ export async function* streamSurface(
         for (const candidate of nodes) {
           const node = groundStreamedNode(candidate, shell, context, options, usedIds);
           if (!node) continue;
-          streamed.push(node);
           usedIds.add(node.id);
           timeToFirstComponentMs ??= Date.now() - startedAt;
+          // A decision is composed once, at the end. Streaming the model's
+          // draft would flash a second, worse screen.
+          if (composesDecision) continue;
+          streamed.push(node);
           yield emitter.emit({
             type: "component.add",
             surfaceId,
@@ -460,7 +466,11 @@ export async function* streamSurface(
   }
 
   final = applyAppStyle(
-    ensureComponentActions(final, options.components, options.actions, context.allowedActions),
+    composeBoundSurface(
+      ensureComponentActions(final, options.components, options.actions, context.allowedActions),
+      options.actions,
+      context.allowedActions,
+    ),
     context,
   );
 

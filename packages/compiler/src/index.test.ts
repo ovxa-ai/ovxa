@@ -8,7 +8,8 @@ import {
 } from "@ovxa/registry";
 import { SCHEMA_VERSION } from "@ovxa/schema";
 import { learnApp } from "@ovxa/intelligence";
-import { compileSurface, type SurfaceModel } from "./index.js";
+import { createSurfaceActions } from "@ovxa/surface-kit";
+import { compileSurface, composeBoundSurface, type SurfaceModel } from "./index.js";
 
 const planGrid = defineComponent({
   name: "PlanGrid",
@@ -383,5 +384,138 @@ describe("compileSurface", () => {
     );
     expect(app.visualSource).toBe("fallback");
     expect(result.surface.layout.density).not.toBe("compact");
+  });
+});
+
+describe("composeBoundSurface", () => {
+  it("leads with the decision already in state", () => {
+    const now = "2026-09-23T12:00:00.000Z";
+    const surface = composeBoundSurface(
+      {
+        schemaVersion: SCHEMA_VERSION,
+        id: "s",
+        intent: "Investigate Umbrella Group in detail",
+        kind: "detail",
+        title: "Investigate Umbrella Group in detail",
+        layout: { columns: 2, density: "comfortable", maxWidth: "regular" },
+        state: {
+          title: "Keep Umbrella Group.",
+          body: "Adoption drop.",
+          tone: "warning",
+          metrics: [{ label: "Risk", value: "82" }],
+          anomalies: [{ id: "cus_umbrella", title: "Umbrella Group" }],
+        },
+        root: [
+          { id: "raw", type: "JsonViewer", props: { data: { $bind: "title" } } },
+          { id: "section", type: "Section", props: { title: { $bind: "title" } } },
+        ],
+        actions: [],
+        status: "ready",
+        createdAt: now,
+        updatedAt: now,
+      },
+      createSurfaceActions(),
+    );
+    expect(surface.title).toBe("Keep Umbrella Group.");
+    expect(surface.layout.columns).toBe(1);
+    expect(surface.root.map((node) => node.type)).toEqual([
+      "Callout",
+      "MetricRow",
+      "AnomalyList",
+    ]);
+    expect(surface.root[0]?.actions?.map((action) => action.label)).toEqual([
+      "Continue",
+      "Not now",
+    ]);
+    expect(surface.root[2]?.actions?.map((action) => action.id)).toEqual(["drillDown"]);
+  });
+
+  it("uses the form as the only decision when a form is present", () => {
+    const now = "2026-09-23T12:00:00.000Z";
+    const surface = composeBoundSurface(
+      {
+        schemaVersion: SCHEMA_VERSION,
+        id: "s",
+        intent: "Refund the duplicate",
+        kind: "detail",
+        title: "Refund the duplicate",
+        layout: { columns: 2, density: "comfortable", maxWidth: "regular" },
+        state: {
+          title: "Refund $1,249.00 to Acme Corp.",
+          body: "Charged twice.",
+          tone: "warning",
+          metrics: [{ label: "To refund", value: "$1,249.00" }],
+          fields: [{ id: "amount", label: "Refund", value: "$1,249.00" }],
+          anomalies: [{ id: "txn", title: "Acme Corp" }],
+        },
+        root: [],
+        actions: [],
+        status: "ready",
+        createdAt: now,
+        updatedAt: now,
+      },
+      createSurfaceActions(),
+    );
+    expect(surface.root.map((node) => node.type)).toEqual(["Callout", "MetricRow", "FieldSet"]);
+    expect(surface.root[0]?.actions ?? []).toEqual([]);
+  });
+
+  it("keeps Continue when the choice is a set of options", () => {
+    const now = "2026-09-23T12:00:00.000Z";
+    const surface = composeBoundSurface(
+      {
+        schemaVersion: SCHEMA_VERSION,
+        id: "s",
+        intent: "Upgrade Acme Corp",
+        kind: "detail",
+        title: "Upgrade Acme Corp",
+        layout: { columns: 2, density: "comfortable", maxWidth: "regular" },
+        state: {
+          title: "Move Acme Corp to Enterprise.",
+          body: "Pro is $199 a month.",
+          tone: "info",
+          metrics: [{ label: "Now", value: "$199" }],
+          options: [{ id: "plan_enterprise", title: "Enterprise" }],
+          fields: [{ id: "plan", label: "Plan", value: "Enterprise" }],
+        },
+        root: [],
+        actions: [],
+        status: "ready",
+        createdAt: now,
+        updatedAt: now,
+      },
+      createSurfaceActions(),
+    );
+    expect(surface.root.map((node) => node.type)).toEqual(["Callout", "MetricRow", "OptionGrid"]);
+    expect(surface.root[0]?.actions?.map((action) => action.label)).toEqual(["Continue", "Not now"]);
+    expect(surface.root[2]?.actions?.map((action) => action.id)).toEqual(["selectOption"]);
+  });
+
+  it("stops once the outcome is recorded", () => {
+    const now = "2026-09-23T12:00:00.000Z";
+    const surface = composeBoundSurface(
+      {
+        schemaVersion: SCHEMA_VERSION,
+        id: "s",
+        intent: "The decision is made",
+        kind: "detail",
+        title: "The decision is made",
+        layout: { columns: 1, density: "comfortable", maxWidth: "regular" },
+        state: {
+          title: "Umbrella Group is assigned for review.",
+          body: "With the owner.",
+          tone: "success",
+          metrics: [{ label: "Status", value: "Recorded" }],
+        },
+        root: [],
+        actions: [],
+        status: "ready",
+        createdAt: now,
+        updatedAt: now,
+      },
+      createSurfaceActions(),
+    );
+    expect(surface.root.map((node) => node.type)).toEqual(["Callout", "MetricRow"]);
+    expect(surface.root[0]?.actions ?? []).toEqual([]);
   });
 });

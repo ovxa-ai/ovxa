@@ -42,6 +42,110 @@ function catalogAction(id: string, actions: ActionRegistry): SurfaceAction {
  * omit that, so each component gets the actions its definition already declared.
  * Actions the model did supply are left alone.
  */
+function stateList(state: Surface["state"], key: string): boolean {
+  const value = state[key];
+  return Array.isArray(value) && value.length > 0;
+}
+
+function bound(state: Surface["state"], key: string): { $bind: string } | null {
+  const value = state[key];
+  if (typeof value === "string" && value.trim().length === 0) return null;
+  if (value === undefined || value === null) return null;
+  return { $bind: key };
+}
+
+/**
+ * A decision already lives in state: title, then the records that support it.
+ *
+ * Models vary the tree. The screen should not. One headline, the numbers, the
+ * list or the form, and the same two decisions.
+ */
+export function composeBoundSurface(
+  surface: Surface,
+  actions: ActionRegistry,
+  allowedActions: readonly string[] = [],
+): Surface {
+  const title = surface.state["title"];
+  if (typeof title !== "string" || title.trim().length === 0) return surface;
+
+  const allow = (id: string): boolean =>
+    actions.has(id) && (allowedActions.length === 0 || allowedActions.includes(id));
+
+  const decision = (ids: string[]): SurfaceAction[] =>
+    ids.filter(allow).map((id) => catalogAction(id, actions));
+
+  const calloutProps: Record<string, { $bind: string }> = {};
+  for (const key of ["title", "body", "tone"] as const) {
+    const prop = bound(surface.state, key);
+    if (prop) calloutProps[key] = prop;
+  }
+
+  const hasOptions = stateList(surface.state, "options");
+  const hasForm = stateList(surface.state, "fields");
+  const hasAnomalies = stateList(surface.state, "anomalies");
+  // A recorded outcome is the end of the loop. Another Continue would ask for the same screen.
+  const settled =
+    surface.state["tone"] === "success" && !hasOptions && !hasForm && !hasAnomalies;
+  const formIsDecision = hasForm && !hasOptions;
+  const root: ComponentNode[] = [
+    {
+      id: "decision",
+      type: "Callout",
+      props: calloutProps,
+      actions: formIsDecision || settled ? [] : decision(["confirm", "dismiss"]),
+    },
+  ];
+
+  if (stateList(surface.state, "metrics")) {
+    root.push({
+      id: "metrics",
+      type: "MetricRow",
+      props: { metrics: { $bind: "metrics" } },
+    });
+  }
+  // One support for the decision: the choice, else the form, else the list.
+  if (hasOptions) {
+    const props: Record<string, { $bind: string }> = { options: { $bind: "options" } };
+    if (bound(surface.state, "selectedId")) props["selectedId"] = { $bind: "selectedId" };
+    root.push({
+      id: "options",
+      type: "OptionGrid",
+      props,
+      actions: decision(["selectOption"]),
+    });
+  } else if (hasForm) {
+    root.push({
+      id: "fields",
+      type: "FieldSet",
+      props: { fields: { $bind: "fields" } },
+    });
+  } else if (hasAnomalies) {
+    root.push({
+      id: "anomalies",
+      type: "AnomalyList",
+      props: { anomalies: { $bind: "anomalies" } },
+      actions: decision(["drillDown"]),
+    });
+  }
+
+  const placed = new Set(root.map((node) => node.type));
+  for (const node of surface.root) {
+    if (placed.has(node.type)) continue;
+    if (node.type === "Section" || node.type === "JsonViewer" || node.type === "Callout") continue;
+    root.push(node);
+  }
+
+  return {
+    ...surface,
+    title: title.trim().slice(0, 140),
+    ...(typeof surface.state["body"] === "string"
+      ? { description: surface.state["body"].slice(0, 400) }
+      : {}),
+    layout: { ...surface.layout, columns: 1 },
+    root,
+  };
+}
+
 export function ensureComponentActions(
   surface: Surface,
   components: ComponentRegistry,

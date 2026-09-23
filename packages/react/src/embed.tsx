@@ -97,6 +97,11 @@ export type UseOvxaSurfaceResult = {
    * one account, confirming a refund — comes back through here.
    */
   follow: (intent: string) => void;
+  /**
+   * The screen already on display while the next one is chosen. Rendering it
+   * keeps a click from blanking the room.
+   */
+  held: Surface | null;
 };
 
 function text(value: unknown): string {
@@ -159,6 +164,8 @@ export function useOvxaSurface({
   const [runtime, setRuntime] = React.useState<SurfaceRuntime | null>(null);
   const [nonce, setNonce] = React.useState(0);
   const [followed, setFollowed] = React.useState<string | null>(null);
+  const [held, setHeld] = React.useState<Surface | null>(null);
+  const shownRef = React.useRef<Surface | null>(null);
   const seenIntent = React.useRef(intent);
   if (seenIntent.current !== intent) {
     seenIntent.current = intent;
@@ -181,6 +188,8 @@ export function useOvxaSurface({
     const controller = new AbortController();
     let live = true;
     const boundState = stateRef.current;
+    const previous = shownRef.current;
+    setHeld(previous && previous.root.length > 0 ? previous : null);
     setRuntime(null);
     setPhase({ status: "planning" });
 
@@ -198,7 +207,9 @@ export function useOvxaSurface({
         while (!next.done) {
           reducer.apply(next.value);
           const current = reducer.current;
-          if (live && current) {
+          if (live && current && current.root.length > 0) {
+            shownRef.current = current;
+            setHeld(null);
             setPhase({
               status: "streaming",
               surface: current,
@@ -218,6 +229,8 @@ export function useOvxaSurface({
           });
           return;
         }
+        shownRef.current = settled;
+        setHeld(null);
         setPhase({
           status: "ready",
           surface: settled,
@@ -267,7 +280,7 @@ export function useOvxaSurface({
     [intent],
   );
 
-  return { phase, runtime, regenerate, follow };
+  return { phase, runtime, regenerate, follow, held };
 }
 
 /** Presentation props shared by `OVXASurface` and `OVXASurfaceView`. */
@@ -336,6 +349,7 @@ export function OVXASurfaceView({
   runtime,
   regenerate,
   follow,
+  held = null,
   loading,
   empty,
   error,
@@ -351,9 +365,13 @@ export function OVXASurfaceView({
       onAction?.(actionId, input);
       const current =
         snapshot?.surface ??
-        (phase.status === "streaming" || phase.status === "ready" || phase.status === "error"
+        (phase.status === "streaming" || phase.status === "ready"
           ? phase.surface
-          : null);
+          : phase.status === "error"
+            ? phase.surface
+            : phase.status === "planning"
+              ? held
+              : null);
       if (!current) return;
       const advance = (result?: { status: string; intent?: string }) => {
         if (result?.status === "recompile" && result.intent) {
@@ -372,7 +390,7 @@ export function OVXASurfaceView({
       }
       void runtime.interact({ actionId, input }).then(advance);
     },
-    [runtime, onAction, snapshot, phase, follow],
+    [runtime, onAction, snapshot, phase, held, follow],
   );
 
   if (phase.status === "idle") return null;
@@ -389,6 +407,17 @@ export function OVXASurfaceView({
   );
 
   if (phase.status === "planning") {
+    if (held && held.root.length > 0) {
+      return root(
+        "planning",
+        <SurfaceRenderer
+          tree={resolveSurface(held)}
+          surface={held}
+          components={components}
+          onAction={dispatch}
+        />,
+      );
+    }
     return root("planning", loading ?? <SurfaceSkeleton />);
   }
 

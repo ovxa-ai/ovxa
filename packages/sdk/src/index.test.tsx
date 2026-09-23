@@ -267,6 +267,54 @@ describe("Ovxa", () => {
     await flush();
   });
 
+  it("keeps the current screen up while the next one is chosen", async () => {
+    const intents: string[] = [];
+    let release: (() => void) | undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const client: SurfaceSource = {
+      async *stream(request): AsyncGenerator<SurfaceEvent, unknown> {
+        intents.push(request.intent);
+        const opened = request.intent.startsWith("Investigate");
+        yield { type: "surface.start", surface: shell(request.intent), seq: 0 };
+        if (opened) await gate;
+        yield {
+          type: "component.add",
+          surfaceId: "srf_test",
+          parentId: null,
+          node: opened
+            ? { id: "stat", type: "StatCard", props: { label: "Account", value: "Opened" } }
+            : {
+                id: "risks",
+                type: "AnomalyList",
+                props: {
+                  anomalies: [{ id: "cus_umbrella", title: "Umbrella Group", detail: "Adoption drop" }],
+                },
+                actions: [{ id: "drillDown", label: "Open" }],
+              },
+          seq: 1,
+        };
+        yield { type: "surface.complete", surfaceId: "srf_test", seq: 2 };
+        return null;
+      },
+    };
+    const host = await render(<Ovxa intent="Find customers likely to churn" client={client} />);
+    await flush();
+    expect(host.textContent).toContain("Umbrella Group");
+    await act(async () => {
+      host.querySelector<HTMLButtonElement>(".ovxa-anomaly-open")?.click();
+    });
+    await flush();
+    expect(intents[1]).toContain("Investigate Umbrella Group");
+    expect(host.textContent).toContain("Umbrella Group");
+    expect(host.textContent).not.toContain("Opened");
+    release?.();
+    await flush();
+    await flush();
+    expect(host.textContent).toContain("Opened");
+  });
+
   it("merges host components over the reference kit instead of replacing it", async () => {
     const client = fakeClient();
     const Custom = (): React.ReactElement => <div className="host-stat">custom</div>;

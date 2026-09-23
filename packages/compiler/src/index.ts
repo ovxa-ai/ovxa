@@ -10,6 +10,7 @@ export {
 } from "./plan.js";
 
 export {
+  composeBoundSurface,
   ensureComponentActions,
   groundSurface,
   type GroundingIssue,

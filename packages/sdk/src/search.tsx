@@ -252,6 +252,9 @@ function SearchBody({
             >
               <span className="ovxa-search-option-title">{useCase.title}</span>
               <span className="ovxa-search-option-intent">{useCase.intent}</span>
+              {useCase.description && useCase.description !== useCase.intent ? (
+                <span className="ovxa-search-option-detail">{useCase.description}</span>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -287,7 +290,10 @@ function SearchBody({
                 title={useCase.intent}
                 onClick={() => submit(useCase.intent)}
               >
-                {useCase.title}
+                <span className="ovxa-chip-title">{useCase.title}</span>
+                {useCase.description ? (
+                  <span className="ovxa-chip-detail">{useCase.description}</span>
+                ) : null}
               </button>
             ))}
           </div>

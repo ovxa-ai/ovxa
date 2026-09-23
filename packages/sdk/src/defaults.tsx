@@ -372,12 +372,14 @@ function RankedList({ data }: SurfaceComponentProps): React.ReactElement | null 
   );
 }
 
-function JsonViewer({ data }: SurfaceComponentProps): React.ReactElement {
+function JsonViewer({ data }: SurfaceComponentProps): React.ReactElement | null {
+  const payload = data["data"];
+  if (payload === undefined) return null;
   return (
     <section className="ovxa-code">
       {str(data["title"]) ? <h3>{str(data["title"])}</h3> : null}
       <pre>
-        <code>{JSON.stringify(data["data"] ?? data, null, 2)}</code>
+        <code>{JSON.stringify(payload, null, 2)}</code>
       </pre>
     </section>
   );
@@ -480,16 +482,23 @@ function AgentTaskList({ data }: SurfaceComponentProps): React.ReactElement | nu
 }
 
 function AnomalyList({ data }: SurfaceComponentProps): React.ReactElement | null {
-  const items = arr<{ id?: string; title: string; detail?: string; severity?: string }>(
-    data["anomalies"] ?? data["items"],
-  );
+  const items = arr<{
+    id?: string;
+    title: string;
+    detail?: string;
+    severity?: string;
+    metric?: string;
+    delta?: string;
+  }>(data["anomalies"] ?? data["items"]);
   if (items.length === 0) return null;
   return (
     <ul className="ovxa-anomalies">
       {items.map((item, index) => (
         <li key={item.id ?? `${item.title}-${index}`} data-severity={item.severity}>
           <strong>{item.title}</strong>
+          {item.metric ? <span className="ovxa-anomaly-metric">{item.metric}</span> : null}
           {item.detail ? <span className="ovxa-muted">{item.detail}</span> : null}
+          {item.delta ? <span className="ovxa-anomaly-delta">{item.delta}</span> : null}
         </li>
       ))}
     </ul>

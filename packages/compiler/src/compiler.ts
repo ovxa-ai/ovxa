@@ -7,7 +7,7 @@ import {
   type PlanDraft,
 } from "@ovxa/intelligence";
 import type { CompileContext, UiPlan } from "./plan.js";
-import { groundSurface, type GroundingIssue } from "./validate.js";
+import { ensureComponentActions, groundSurface, type GroundingIssue } from "./validate.js";
 import {
   CATALOG_LIMIT,
   applyAppStyle,
@@ -167,7 +167,10 @@ export async function compileSurface(
       );
     }
 
-    const styled = applyAppStyle(surface, context);
+    const styled = applyAppStyle(
+      ensureComponentActions(surface, options.components, options.actions, context.allowedActions),
+      context,
+    );
     return {
       candidateId,
       plan,

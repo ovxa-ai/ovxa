@@ -17,6 +17,7 @@ import {
   applyAppStyle,
   defaultSurfaceId,
   deterministicSurface,
+  ensureComponentActions,
   groundSurface,
   mergeState,
   selectPlan,
@@ -458,7 +459,10 @@ export async function* streamSurface(
     );
   }
 
-  final = applyAppStyle(final, context);
+  final = applyAppStyle(
+    ensureComponentActions(final, options.components, options.actions, context.allowedActions),
+    context,
+  );
 
   const operations = reconcile(shell, streamed, final);
   if (operations.length > 0) {

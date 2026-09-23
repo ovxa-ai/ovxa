@@ -48,12 +48,19 @@ function StatCard({ data }: SurfaceComponentProps): React.ReactElement {
   );
 }
 
+const DECISION_ACTIONS = new Set(["confirm", "submit", "dismiss", "approve", "reject"]);
+
+/** Buttons for decisions. Row and field actions are invoked by their own control. */
+function decisionActions(actions: SurfaceComponentProps["actions"]): SurfaceComponentProps["actions"] {
+  return actions.filter((action) => DECISION_ACTIONS.has(action.id));
+}
+
 function Callout({ data, actions, onAction }: SurfaceComponentProps): React.ReactElement {
   return (
     <aside className={`ovxa-callout ovxa-tone-${str(data["tone"], "info")}`} role="note">
       <strong>{str(data["title"])}</strong>
       <p>{str(data["body"])}</p>
-      <ActionBar actions={actions} onAction={onAction} />
+      <ActionBar actions={decisionActions(actions)} onAction={onAction} />
     </aside>
   );
 }
@@ -127,7 +134,7 @@ function SummaryPanel({
           </div>
         ))}
       </dl>
-      <ActionBar actions={actions} onAction={onAction} />
+      <ActionBar actions={decisionActions(actions)} onAction={onAction} />
     </section>
   );
 }
@@ -156,7 +163,7 @@ function OptionGrid({ data, actions, onAction }: SurfaceComponentProps): React.R
             role="radio"
             aria-checked={isSelected}
             className={`ovxa-option${isSelected ? " is-selected" : ""}${option.recommended ? " is-recommended" : ""}`}
-            onClick={() => select && onAction(select.id, { id: option.id })}
+            onClick={() => select && onAction(select.id, { id: option.id, label: option.title })}
           >
             <span>
               <strong>{option.title}</strong>
@@ -352,7 +359,7 @@ function LineChart({ data, node }: SurfaceComponentProps): React.ReactElement | 
   );
 }
 
-function RankedList({ data }: SurfaceComponentProps): React.ReactElement | null {
+function RankedList({ data, onAction }: SurfaceComponentProps): React.ReactElement | null {
   const items = arr<{ label: string; value: number; detail?: string }>(data["items"]);
   if (items.length === 0) return null;
   const unit = str(data["unit"]);
@@ -360,7 +367,13 @@ function RankedList({ data }: SurfaceComponentProps): React.ReactElement | null 
     <ol className="ovxa-ranked">
       {items.map((item, index) => (
         <li key={`${item.label}-${index}`}>
-          <span>{item.label}</span>
+          <button
+            type="button"
+            className="ovxa-ranked-open"
+            onClick={() => onAction("drillDown", { id: item.label, label: item.label })}
+          >
+            {item.label}
+          </button>
           <strong>
             {compact(num(item.value))}
             {unit}
@@ -416,7 +429,7 @@ function ApprovalCard({
           ))}
         </dl>
       ) : null}
-      <ActionBar actions={actions} onAction={onAction} />
+      <ActionBar actions={decisionActions(actions)} onAction={onAction} />
     </article>
   );
 }
@@ -481,7 +494,7 @@ function AgentTaskList({ data }: SurfaceComponentProps): React.ReactElement | nu
   );
 }
 
-function AnomalyList({ data }: SurfaceComponentProps): React.ReactElement | null {
+function AnomalyList({ data, onAction }: SurfaceComponentProps): React.ReactElement | null {
   const items = arr<{
     id?: string;
     title: string;
@@ -493,14 +506,23 @@ function AnomalyList({ data }: SurfaceComponentProps): React.ReactElement | null
   if (items.length === 0) return null;
   return (
     <ul className="ovxa-anomalies">
-      {items.map((item, index) => (
-        <li key={item.id ?? `${item.title}-${index}`} data-severity={item.severity}>
-          <strong>{item.title}</strong>
-          {item.metric ? <span className="ovxa-anomaly-metric">{item.metric}</span> : null}
-          {item.detail ? <span className="ovxa-muted">{item.detail}</span> : null}
-          {item.delta ? <span className="ovxa-anomaly-delta">{item.delta}</span> : null}
-        </li>
-      ))}
+      {items.map((item, index) => {
+        const id = item.id ?? `${item.title}-${index}`;
+        return (
+          <li key={id} data-severity={item.severity}>
+            <button
+              type="button"
+              className="ovxa-anomaly-open"
+              onClick={() => onAction("drillDown", { id, label: item.title })}
+            >
+              <strong>{item.title}</strong>
+              {item.metric ? <span className="ovxa-anomaly-metric">{item.metric}</span> : null}
+              {item.detail ? <span className="ovxa-muted">{item.detail}</span> : null}
+              {item.delta ? <span className="ovxa-anomaly-delta">{item.delta}</span> : null}
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }

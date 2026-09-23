@@ -7,6 +7,67 @@ import {
 } from "@ovxa/schema";
 import type { ActionRegistry, ComponentRegistry } from "@ovxa/registry";
 
+const ACTION_LABEL: Record<string, string> = {
+  confirm: "Continue",
+  submit: "Continue",
+  dismiss: "Not now",
+  approve: "Approve",
+  reject: "Reject",
+  drillDown: "Open",
+  selectOption: "Select",
+  setField: "Update",
+  setFilter: "Filter",
+  openSource: "Open source",
+  retryTool: "Retry",
+  changePeriod: "Change period",
+  exportData: "Export",
+};
+
+function catalogAction(id: string, actions: ActionRegistry): SurfaceAction {
+  const definition = actions.get(id);
+  const primary = id === "confirm" || id === "submit" || id === "approve";
+  return {
+    id,
+    label: ACTION_LABEL[id] ?? id,
+    input: {},
+    variant: primary ? "primary" : id === "reject" ? "destructive" : "secondary",
+    risk: definition?.risk ?? "low",
+    status: "idle",
+    optimistic: [],
+  };
+}
+
+/**
+ * A generated node is clickable only if the action is on the node. Models often
+ * omit that, so each component gets the actions its definition already declared.
+ * Actions the model did supply are left alone.
+ */
+export function ensureComponentActions(
+  surface: Surface,
+  components: ComponentRegistry,
+  actions: ActionRegistry,
+  allowedActions: readonly string[] = [],
+): Surface {
+  const allowed = new Set(allowedActions);
+  const decorate = (nodes: ComponentNode[]): ComponentNode[] =>
+    nodes.map((node) => {
+      const declared = components.get(node.type)?.actions ?? [];
+      const existing = node.actions ?? [];
+      const next =
+        existing.length > 0
+          ? existing
+          : declared
+              .filter((id) => actions.has(id) && (allowed.size === 0 || allowed.has(id)))
+              .map((id) => catalogAction(id, actions));
+      return {
+        ...node,
+        ...(next.length > 0 ? { actions: next } : {}),
+        ...(node.children ? { children: decorate(node.children) } : {}),
+      };
+    });
+  return { ...surface, root: decorate(surface.root) };
+}
+
 export type GroundingIssue = {
   severity: "error" | "warning";
   path: string;

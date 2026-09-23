@@ -92,7 +92,46 @@ export type UseOvxaSurfaceResult = {
   runtime: SurfaceRuntime | null;
   /** Regenerate from scratch. Cancels anything in flight. */
   regenerate: () => void;
+  /**
+   * Ask for the next interface. A click that changes the question — opening
+   * one account, confirming a refund — comes back through here.
+   */
+  follow: (intent: string) => void;
 };
+
+function text(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+/** The next question a click is asking, or null when the click only edits state. */
+export function nextIntent(
+  title: string,
+  intent: string,
+  actionId: string,
+  input: Record<string, unknown>,
+): string | null {
+  if (actionId === "drillDown") {
+    const subject = text(input["label"]) || text(input["id"]);
+    if (!subject) return null;
+    return `Investigate ${subject} in detail and explain what is driving it`;
+  }
+  if (actionId === "selectOption") {
+    const choice = text(input["label"]) || text(input["id"]);
+    if (!choice) return null;
+    return `The user chose ${choice}. ${intent} Show what that choice changes.`;
+  }
+  if (actionId === "confirm" || actionId === "submit" || actionId === "approve") {
+    const decision = title.trim() || intent.trim();
+    if (!decision) return null;
+    return `The decision is made: ${decision}. Show the outcome and what is left to do.`;
+  }
+  if (actionId === "dismiss") {
+    const decision = title.trim() || intent.trim();
+    if (!decision) return null;
+    return `The user set this aside: ${decision}. Show the next decision.`;
+  }
+  return null;
+}
 
 export type UseOvxaSurfaceOptions = {
   intent: string;
@@ -119,6 +158,13 @@ export function useOvxaSurface({
   const [phase, setPhase] = React.useState<SurfacePhase>({ status: "idle" });
   const [runtime, setRuntime] = React.useState<SurfaceRuntime | null>(null);
   const [nonce, setNonce] = React.useState(0);
+  const [followed, setFollowed] = React.useState<string | null>(null);
+  const seenIntent = React.useRef(intent);
+  if (seenIntent.current !== intent) {
+    seenIntent.current = intent;
+    if (followed !== null) setFollowed(null);
+  }
+  const requested = (followed ?? intent).trim();
   const stateRef = React.useRef(state);
   stateRef.current = state;
 
@@ -127,7 +173,7 @@ export function useOvxaSurface({
   const stateKey = React.useMemo(() => JSON.stringify(state ?? null), [state]);
 
   React.useEffect(() => {
-    if (!enabled || intent.trim().length === 0) {
+    if (!enabled || requested.length === 0) {
       setPhase({ status: "idle" });
       return;
     }
@@ -142,7 +188,7 @@ export function useOvxaSurface({
       const reducer = new SurfaceStreamReducer();
       try {
         const stream = client.stream({
-          intent,
+          intent: requested,
           ...(boundState ? { state: boundState } : {}),
           ...(locale ? { locale } : {}),
           signal: controller.signal,
@@ -202,13 +248,26 @@ export function useOvxaSurface({
       live = false;
       controller.abort();
     };
-  }, [client, actions, intent, stateKey, locale, enabled, nonce]);
+  }, [client, actions, requested, stateKey, locale, enabled, nonce]);
 
   const regenerate = React.useCallback(() => {
     setNonce((value) => value + 1);
   }, []);
 
-  return { phase, runtime, regenerate };
+  const follow = React.useCallback(
+    (next: string) => {
+      const trimmed = next.trim();
+      if (trimmed.length === 0) return;
+      setFollowed((current) => {
+        const active = (current ?? intent).trim();
+        return trimmed === active ? current : trimmed;
+      });
+      setNonce((value) => value + 1);
+    },
+    [intent],
+  );
+
+  return { phase, runtime, regenerate, follow };
 }
 
 /** Presentation props shared by `OVXASurface` and `OVXASurfaceView`. */
@@ -276,6 +335,7 @@ export function OVXASurfaceView({
   phase,
   runtime,
   regenerate,
+  follow,
   loading,
   empty,
   error,
@@ -289,10 +349,19 @@ export function OVXASurfaceView({
   const dispatch = React.useCallback(
     (actionId: string, input: Record<string, unknown> = {}) => {
       onAction?.(actionId, input);
-      if (!runtime) return;
-      void runtime.interact({ actionId, input });
+      const current = snapshot?.surface;
+      if (!runtime || !current) return;
+      void runtime.interact({ actionId, input }).then((result) => {
+        if (result.status === "recompile") {
+          follow(result.intent);
+          return;
+        }
+        if (result.status === "needs-confirmation") return;
+        const next = nextIntent(current.title, current.intent, actionId, input);
+        if (next) follow(next);
+      });
     },
-    [runtime, onAction],
+    [runtime, onAction, snapshot, follow],
   );
 
   if (phase.status === "idle") return null;

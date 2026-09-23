@@ -521,12 +521,38 @@
 }
 
 .ovxa-anomalies li {
+  display: block;
+}
+
+.ovxa-anomaly-open,
+.ovxa-ranked-open {
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ovxa-anomaly-open {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 1rem;
   align-items: baseline;
+  border-radius: 0.4rem;
 }
 
-.ovxa-anomalies li > strong {
+.ovxa-anomaly-open:hover,
+.ovxa-ranked-open:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ovxa-anomaly-open > strong {
   grid-column: 1;
   grid-row: 1;
 }
@@ -540,7 +566,7 @@
   letter-spacing: -0.02em;
 }
 
-.ovxa-anomalies li > .ovxa-muted {
+.ovxa-anomaly-open > .ovxa-muted {
   grid-column: 1;
   grid-row: 2;
 }
@@ -555,7 +581,7 @@
 }
 
 .ovxa-ranked li {
-  grid-template-columns: 1.5rem 1fr auto;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
   align-items: baseline;
   column-gap: 0.5rem;
   counter-increment: ovxa-rank;

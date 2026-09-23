@@ -9,7 +9,12 @@ export {
   type UiPlan,
 } from "./plan.js";
 
-export { groundSurface, type GroundingIssue, type GroundingResult } from "./validate.js";
+export {
+  ensureComponentActions,
+  groundSurface,
+  type GroundingIssue,
+  type GroundingResult,
+} from "./validate.js";
 
 export {
   CATALOG_LIMIT,

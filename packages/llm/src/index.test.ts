@@ -251,6 +251,41 @@ describe("llm adapter", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("reads a Gemini stream framed with carriage returns", async () => {
+    const payload = JSON.stringify({
+      candidates: [{ content: { parts: [{ text: '{"title":"Keep"}' }] } }],
+    });
+    const body = `data: ${payload}\r\n\r\n`;
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(body, {
+        status: 200,
+        headers: { "content-type": "text/event-stream" },
+      }),
+    );
+    globalThis.fetch = fetchMock;
+    const adapter = createLlmAdapter({
+      provider: "gemini",
+      auth: "vertex",
+      project: "nuro-459222",
+      location: "us-central1",
+      model: "gemini-2.5-flash",
+      getAccessToken: async () => "ya29.test-token",
+    });
+    const chunks: string[] = [];
+    for await (const chunk of adapter.stream!({
+      system: "s",
+      messages: [{ role: "user", content: "u" }],
+    })) {
+      chunks.push(chunk);
+    }
+    expect(chunks.join("")).toBe('{"title":"Keep"}');
+    const init = fetchMock.mock.calls[0]?.[1];
+    const sent = JSON.parse(String(init?.body)) as {
+      generationConfig?: { thinkingConfig?: { thinkingBudget?: number } };
+    };
+    expect(sent.generationConfig?.thinkingConfig?.thinkingBudget).toBe(0);
+  });
+
   it("fails when the provider returns an empty completion", async () => {
     globalThis.fetch = vi
       .fn<typeof fetch>()

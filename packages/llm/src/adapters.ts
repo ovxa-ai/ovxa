@@ -256,6 +256,11 @@ function buildCall(config: LlmAdapterConfig, request: LlmRequest): ProviderCall 
       temperature,
       maxOutputTokens: maxTokens,
       responseMimeType: "application/json",
+      // 2.5 spends the output budget on thoughts and the JSON document arrives
+      // cut off. A surface has to be the whole answer.
+      ...(config.model.includes("2.5")
+        ? { thinkingConfig: { thinkingBudget: 0 } }
+        : {}),
     },
   };
 
@@ -347,7 +352,15 @@ function buildCall(config: LlmAdapterConfig, request: LlmRequest): ProviderCall 
  */
 function sseFrames(buffer: string): { frames: string[]; rest: string } {
   const frames: string[] = [];
+  // A trailing CR may be the first half of CRLF. Hold it for the next chunk.
+  let heldCr = "";
   let rest = buffer;
+  if (rest.endsWith("\r")) {
+    heldCr = "\r";
+    rest = rest.slice(0, -1);
+  }
+  // Vertex sends CRLF. A parser that only splits on LF never sees a frame.
+  rest = rest.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
   for (;;) {
     const boundary = rest.indexOf("\n\n");
@@ -362,7 +375,7 @@ function sseFrames(buffer: string): { frames: string[]; rest: string } {
     if (data.length > 0 && data !== "[DONE]") frames.push(data);
   }
 
-  return { frames, rest };
+  return { frames, rest: rest + heldCr };
 }
 
 /**
@@ -428,23 +441,32 @@ export function createLlmAdapter(config: LlmAdapterConfig): LlmAdapter {
         const decoder = new TextDecoder();
         let buffer = "";
 
+        const emit = function* (frames: string[]): Generator<string> {
+          for (const frame of frames) {
+            let payload: unknown;
+            try {
+              payload = JSON.parse(frame);
+            } catch {
+              continue;
+            }
+            const delta = call.stream.readDelta(payload);
+            if (delta !== null && delta.length > 0) yield delta;
+          }
+        };
+
         try {
           for (;;) {
             const { done, value } = await reader.read();
-            if (done) break;
-            buffer += decoder.decode(value, { stream: true });
-            const { frames, rest } = sseFrames(buffer);
-            buffer = rest;
-            for (const frame of frames) {
-              let payload: unknown;
-              try {
-                payload = JSON.parse(frame);
-              } catch {
-                continue;
-              }
-              const delta = call.stream.readDelta(payload);
-              if (delta !== null && delta.length > 0) yield delta;
+            if (done) {
+              buffer += decoder.decode();
+              // A stream can close on the last event without a trailing blank line.
+              yield* emit(sseFrames(`${buffer}\n\n`).frames);
+              break;
             }
+            buffer += decoder.decode(value, { stream: true });
+            const split = sseFrames(buffer);
+            buffer = split.rest;
+            yield* emit(split.frames);
           }
         } finally {
           reader.releaseLock();

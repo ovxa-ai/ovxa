@@ -222,6 +222,51 @@ describe("Ovxa", () => {
     expect(host.querySelector(".ovxa-stat-value")?.textContent).toBe("Umbrella");
   });
 
+  it("follows a click that lands before the stream has finished", async () => {
+    const intents: string[] = [];
+    let release: (() => void) | undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const client: SurfaceSource = {
+      async *stream(request): AsyncGenerator<SurfaceEvent, unknown> {
+        intents.push(request.intent);
+        const opened = request.intent.startsWith("Investigate");
+        yield { type: "surface.start", surface: shell(request.intent), seq: 0 };
+        yield {
+          type: "component.add",
+          surfaceId: "srf_test",
+          parentId: null,
+          node: opened
+            ? { id: "stat", type: "StatCard", props: { label: "Account", value: "Umbrella" } }
+            : {
+                id: "risks",
+                type: "AnomalyList",
+                props: {
+                  anomalies: [{ id: "cus_umbrella", title: "Umbrella Group", detail: "Adoption drop" }],
+                },
+                actions: [{ id: "drillDown", label: "Open" }],
+              },
+          seq: 1,
+        };
+        if (!opened) await gate;
+        yield { type: "surface.complete", surfaceId: "srf_test", seq: 2 };
+        return null;
+      },
+    };
+    const host = await render(<Ovxa intent="Find customers likely to churn" client={client} />);
+    await flush();
+    const row = host.querySelector<HTMLButtonElement>(".ovxa-anomaly-open");
+    expect(row?.textContent).toContain("Umbrella Group");
+    await act(async () => {
+      row?.click();
+    });
+    await flush();
+    expect(intents[1]).toContain("Investigate Umbrella Group");
+    release?.();
+    await flush();
+  });
+
   it("merges host components over the reference kit instead of replacing it", async () => {
     const client = fakeClient();
     const Custom = (): React.ReactElement => <div className="host-stat">custom</div>;

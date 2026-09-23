@@ -349,19 +349,30 @@ export function OVXASurfaceView({
   const dispatch = React.useCallback(
     (actionId: string, input: Record<string, unknown> = {}) => {
       onAction?.(actionId, input);
-      const current = snapshot?.surface;
-      if (!runtime || !current) return;
-      void runtime.interact({ actionId, input }).then((result) => {
-        if (result.status === "recompile") {
+      const current =
+        snapshot?.surface ??
+        (phase.status === "streaming" || phase.status === "ready" || phase.status === "error"
+          ? phase.surface
+          : null);
+      if (!current) return;
+      const advance = (result?: { status: string; intent?: string }) => {
+        if (result?.status === "recompile" && result.intent) {
           follow(result.intent);
           return;
         }
-        if (result.status === "needs-confirmation") return;
+        if (result?.status === "needs-confirmation") return;
         const next = nextIntent(current.title, current.intent, actionId, input);
         if (next) follow(next);
-      });
+      };
+      // Rows appear while the document is still streaming. A click then has no
+      // runtime yet, and waiting for one makes the row look dead.
+      if (!runtime) {
+        advance();
+        return;
+      }
+      void runtime.interact({ actionId, input }).then(advance);
     },
-    [runtime, onAction, snapshot, follow],
+    [runtime, onAction, snapshot, phase, follow],
   );
 
   if (phase.status === "idle") return null;

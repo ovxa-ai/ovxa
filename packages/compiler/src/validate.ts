@@ -128,13 +128,6 @@ export function composeBoundSurface(
     });
   }
 
-  const placed = new Set(root.map((node) => node.type));
-  for (const node of surface.root) {
-    if (placed.has(node.type)) continue;
-    if (node.type === "Section" || node.type === "JsonViewer" || node.type === "Callout") continue;
-    root.push(node);
-  }
-
   return {
     ...surface,
     title: title.trim().slice(0, 140),

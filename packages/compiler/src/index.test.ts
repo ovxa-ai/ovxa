@@ -408,6 +408,7 @@ describe("composeBoundSurface", () => {
         root: [
           { id: "raw", type: "JsonViewer", props: { data: { $bind: "title" } } },
           { id: "section", type: "Section", props: { title: { $bind: "title" } } },
+          { id: "extra", type: "SummaryPanel", props: { items: { $bind: "metrics" } } },
         ],
         actions: [],
         status: "ready",

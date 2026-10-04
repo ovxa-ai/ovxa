@@ -211,9 +211,9 @@ kbd {
 }
 
 .hero {
-  padding: clamp(4rem, 10vw, 7.5rem) 0 clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(2.25rem, 5vw, 4rem) 0 clamp(1.25rem, 3vw, 2rem);
   display: grid;
-  gap: 1.5rem;
+  gap: 1.15rem;
   max-width: 46rem;
 }
 
@@ -522,43 +522,85 @@ h1 {
   grid-area: 1 / 1;
 }
 
-.g-skeleton {
+.decision {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.85rem;
   align-content: start;
-  animation: rise 240ms var(--ease) both;
 }
 
-.g-skeleton[hidden] {
+.decision[hidden] {
   display: none;
 }
 
-.g-sk {
-  display: block;
-  border-radius: calc(var(--radius) - 0.25rem);
-  background: var(--fill-strong);
-  min-height: 0.75rem;
-  animation: pulse 1.4s ease-in-out infinite;
-}
-
-.g-sk-title {
-  width: 38%;
-  height: 1.1rem;
-}
-
-.g-sk-line {
-  width: 62%;
-}
-
-.g-sk-grid {
+.candidates {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.g-sk-card {
-  height: 5.5rem;
+.candidate {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.35rem 0.9rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: var(--fill);
+  animation: rise 420ms var(--ease) both;
+}
+
+.candidate:nth-child(2) { animation-delay: 80ms; }
+.candidate:nth-child(3) { animation-delay: 160ms; }
+
+.candidate[data-winner="true"] {
+  border-color: var(--border-strong);
+  background: var(--fill-strong);
+}
+
+.candidate .rank {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--fg-faint);
+}
+
+.candidate div {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.candidate strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.candidate div span {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+.candidate .verdict {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  font-weight: 500;
+}
+
+.candidate[data-winner="true"] .verdict {
+  color: var(--fg);
+}
+
+.rationale {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  text-wrap: pretty;
 }
 
 .scene {
@@ -880,7 +922,7 @@ h1 {
 
 .pipeline {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1.55fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.5rem;
   margin: 0;
   padding: 0;
@@ -1018,12 +1060,22 @@ pre code {
   transition: border-color 160ms var(--ease), background 160ms var(--ease);
 }
 
+button.usecase {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 .usecase:hover {
   border-color: var(--border-strong);
   background: var(--fill-strong);
 }
 
-.usecase h3 {
+.usecase h3,
+.usecase-title {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -1043,6 +1095,21 @@ pre code {
 .usecase p {
   font-size: 0.875rem;
   color: var(--fg-muted);
+}
+
+.usecase .wins {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+.usecase .wins span {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  font-weight: 500;
 }
 
 /* Guarantees */
@@ -1095,6 +1162,29 @@ pre code {
 .pkg span {
   color: var(--fg-muted);
   font-size: 0.8rem;
+}
+
+/* Close */
+
+.close-band {
+  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+}
+
+.close {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+}
+
+.close p {
+  max-width: 28rem;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
 /* Footer */
@@ -1177,7 +1267,7 @@ pre code {
 
 @media (max-width: 960px) {
   .pipeline {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
   .step:not(:last-child)::after {
     display: none;
@@ -1200,14 +1290,14 @@ pre code {
   .g-two {
     grid-template-columns: 1fr;
   }
-  .pipeline {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .g-metrics {
     grid-template-columns: 1fr 1fr;
   }
-  .g-sk-grid {
-    grid-template-columns: 1fr;
+  .candidate {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .candidate .verdict {
+    grid-column: 2;
   }
   .stage {
     min-height: 24rem;

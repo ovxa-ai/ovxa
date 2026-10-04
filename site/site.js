@@ -11,12 +11,41 @@
     approve: "Review this refund request and decide",
     investigate: "Why did checkout conversion drop last Tuesday?",
   };
+  /** Illustrative rankings. The caption says these are not live engine scores. */
+  const decisions = {
+    compare: {
+      rationale: "Selected comparison over chat. Strongest signal: task completion.",
+      plans: [
+        { rank: "01", name: "Comparison", why: "Two periods side by side, with the delta.", verdict: "Wins", winner: true },
+        { rank: "02", name: "Static dashboard", why: "Built for one quarter, not this question.", verdict: "Loses" },
+        { rank: "03", name: "Chat", why: "A paragraph cannot compare two periods.", verdict: "Loses" },
+      ],
+    },
+    approve: {
+      rationale: "Selected decision over chat. Strongest signal: task completion.",
+      plans: [
+        { rank: "01", name: "Decision", why: "The facts, the risk, and one clear action.", verdict: "Wins", winner: true },
+        { rank: "02", name: "Refund form", why: "A blank form, not this request.", verdict: "Loses" },
+        { rank: "03", name: "Chat", why: "A paragraph cannot take the action.", verdict: "Loses" },
+      ],
+    },
+    investigate: {
+      rationale: "Selected investigation over chat. Strongest signal: task completion.",
+      plans: [
+        { rank: "01", name: "Investigation", why: "A funnel, the anomaly, and the sources.", verdict: "Wins", winner: true },
+        { rank: "02", name: "Checkout dashboard", why: "The usual charts, not last Tuesday.", verdict: "Loses" },
+        { rank: "03", name: "Chat", why: "A paragraph cannot show the funnel.", verdict: "Loses" },
+      ],
+    },
+  };
   const order = Object.keys(intents);
   const tabs = Array.from(document.querySelectorAll(".tab[data-scene]"));
   const scenes = Array.from(document.querySelectorAll(".scene[id^='scene-']"));
   const intentNode = document.getElementById("demo-intent");
   const stateNode = document.querySelector(".sbar .state");
-  const skeleton = document.querySelector(".g-skeleton");
+  const decision = document.querySelector(".decision");
+  const candidateList = document.getElementById("candidates");
+  const rationaleNode = document.getElementById("decision-rationale");
   const bar = document.querySelector(".sbar");
   const windowNode = document.querySelector(".window");
 
@@ -61,6 +90,48 @@
     }
   };
 
+  const hideDecision = () => {
+    if (decision) decision.hidden = true;
+  };
+
+  const showDecision = (name) => {
+    const spec = decisions[name];
+    if (!decision || !candidateList || !rationaleNode || !spec) return;
+    candidateList.replaceChildren();
+    for (const plan of spec.plans) {
+      const item = document.createElement("li");
+      item.className = "candidate";
+      if (plan.winner) item.dataset.winner = "true";
+
+      const rank = document.createElement("span");
+      rank.className = "rank";
+      rank.textContent = plan.rank;
+
+      const body = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = plan.name;
+      const why = document.createElement("span");
+      why.textContent = plan.why;
+      body.append(title, why);
+
+      const verdict = document.createElement("span");
+      verdict.className = "verdict";
+      verdict.textContent = plan.verdict;
+
+      item.append(rank, body, verdict);
+      candidateList.append(item);
+    }
+    rationaleNode.textContent = spec.rationale;
+    decision.hidden = false;
+    if (!reduceMotion) {
+      for (const child of candidateList.children) {
+        child.style.animation = "none";
+        void child.offsetWidth;
+        child.style.animation = "";
+      }
+    }
+  };
+
   const typeIntent = async (text, token) => {
     if (!intentNode) return;
     if (reduceMotion) {
@@ -84,24 +155,24 @@
 
     if (reduceMotion) {
       if (intentNode) intentNode.textContent = intents[name];
-      if (skeleton) skeleton.hidden = true;
+      hideDecision();
       revealScene(name);
       setPhase("ready", "Ready");
       return;
     }
 
     hideScenes();
-    if (skeleton) skeleton.hidden = true;
+    hideDecision();
     setPhase("typing", "");
     await typeIntent(intents[name], token);
     if (token !== run) return;
 
     setPhase("planning", "Choosing an interface");
-    if (skeleton) skeleton.hidden = false;
-    await sleep(720);
+    showDecision(name);
+    await sleep(1680);
     if (token !== run) return;
 
-    if (skeleton) skeleton.hidden = true;
+    hideDecision();
     setPhase("building", "Building");
     revealScene(name);
     await sleep(820);
@@ -118,6 +189,15 @@
   const takeOver = () => {
     autoplay = false;
   };
+
+  for (const card of document.querySelectorAll(".usecase[data-scene]")) {
+    card.addEventListener("click", () => {
+      takeOver();
+      const demo = document.getElementById("demo");
+      if (demo) demo.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      void show(card.dataset.scene);
+    });
+  }
 
   for (const tab of tabs) {
     tab.addEventListener("click", () => {

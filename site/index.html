@@ -40,6 +40,7 @@
         <nav class="nav-links" aria-label="Primary">
           <a href="#how" class="optional">How it works</a>
           <a href="#use-cases" class="optional">Use cases</a>
+          <a href="#install">Install</a>
           <a href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md">Docs</a>
           <a href="https://github.com/ovxa-ai/ovxa">GitHub</a>
         </nav>
@@ -72,7 +73,7 @@
         </div>
       </section>
 
-      <section class="wrap demo" aria-labelledby="demo-title">
+      <section class="wrap demo" id="demo" aria-labelledby="demo-title">
         <h2 id="demo-title" hidden>Live example</h2>
         <div class="window">
           <div class="window-chrome">
@@ -96,14 +97,9 @@
             </div>
 
             <div class="stage">
-            <div class="g-skeleton" aria-hidden="true" hidden>
-              <span class="g-sk g-sk-title"></span>
-              <span class="g-sk g-sk-line"></span>
-              <div class="g-sk-grid">
-                <span class="g-sk g-sk-card"></span>
-                <span class="g-sk g-sk-card"></span>
-                <span class="g-sk g-sk-card"></span>
-              </div>
+            <div class="decision" hidden>
+              <ol class="candidates" id="candidates" aria-label="Ranked interface plans"></ol>
+              <p class="rationale" id="decision-rationale" role="status"></p>
             </div>
 
             <div class="scene" id="scene-compare" role="tabpanel" aria-labelledby="tab-compare" data-active="true">
@@ -202,7 +198,8 @@
           </div>
         </div>
         <p class="caption">
-          Three intents, three different interfaces, one component. Shown in the reference kit,
+          Three intents, three different interfaces, one component. The ranking before each surface
+          illustrates the Quality Engine; it is not a live score. Shown in the reference kit,
           which inherits the host's colour and type — no theme was configured.
         </p>
       </section>
@@ -268,35 +265,35 @@
             <p>The user needs to compare, choose, configure, approve or investigate something — and a paragraph cannot do that.</p>
           </div>
           <div class="grid-3" data-reveal>
-            <article class="usecase">
-              <h3>Compare</h3>
+            <button class="usecase" type="button" data-scene="compare">
+              <span class="usecase-title">Compare</span>
               <q>Compare Q2 revenue against Q1 and show where growth was lost</q>
-              <p>Two periods side by side, with the delta that explains the change.</p>
-            </article>
+              <span class="wins"><span>What wins</span> Two periods side by side, with the delta that explains the change.</span>
+            </button>
             <article class="usecase">
               <h3>Choose</h3>
               <q>Help me pick the right plan for a team of twelve</q>
-              <p>Options with a recommendation, not a wall of feature rows.</p>
+              <p class="wins"><span>What wins</span> Options with a recommendation.</p>
             </article>
             <article class="usecase">
               <h3>Configure</h3>
               <q>Set alerting thresholds for the checkout service</q>
-              <p>Only the fields that matter, prefilled from current state.</p>
+              <p class="wins"><span>What wins</span> Only the fields that matter, prefilled.</p>
             </article>
-            <article class="usecase">
-              <h3>Approve</h3>
+            <button class="usecase" type="button" data-scene="approve">
+              <span class="usecase-title">Approve</span>
               <q>Review this refund request and decide</q>
-              <p>The facts, the risk, and one clear action.</p>
-            </article>
-            <article class="usecase">
-              <h3>Investigate</h3>
+              <span class="wins"><span>What wins</span> The facts, the risk, one clear action.</span>
+            </button>
+            <button class="usecase" type="button" data-scene="investigate">
+              <span class="usecase-title">Investigate</span>
               <q>Why did checkout conversion drop last Tuesday?</q>
-              <p>A funnel, the anomaly, and the sources behind it.</p>
-            </article>
+              <span class="wins"><span>What wins</span> A funnel, the anomaly, and the sources.</span>
+            </button>
             <article class="usecase">
               <h3>Monitor</h3>
               <q>Show the health of the payments pipeline right now</q>
-              <p>Live metrics with the failing step pulled to the front.</p>
+              <p class="wins"><span>What wins</span> Live metrics, failing step first.</p>
             </article>
           </div>
         </div>
@@ -346,6 +343,24 @@
             <div class="pkg"><code>@ovxa/intelligence</code><span>Understand, propose, score, select</span></div>
             <div class="pkg"><code>@ovxa/compiler</code><span>Plan → generate → ground → fallback</span></div>
             <div class="pkg"><code>@ovxa/streaming</code><span>Incremental parse and compile</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section close-band">
+        <div class="wrap close">
+          <p>A model proposes an interface. The compiler decides what survives.</p>
+          <div class="install">
+            <code>npm install @ovxa/sdk</code>
+            <button class="copy" type="button" data-copy="npm install @ovxa/sdk" aria-label="Copy install command">
+              <svg class="icon-copy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
+              </svg>
+              <svg class="icon-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M3.5 8.5 6.5 11.5 12.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
       </section>

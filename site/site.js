@@ -1,270 +1,208 @@
 (() => {
   "use strict";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const sleep = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Demo ------------------------------------------------------------------ */
-
-  const intents = {
-    compare: "Compare Q2 revenue against Q1 and show where growth was lost",
-    approve: "Review this refund request and decide",
-    investigate: "Why did checkout conversion drop last Tuesday?",
+  const nav = document.querySelector(".mk-nav");
+  const onScroll = () => {
+    if (nav) nav.classList.toggle("is-scrolled", window.scrollY > 8);
   };
-  /** Illustrative rankings. The caption says these are not live engine scores. */
-  const decisions = {
-    compare: {
-      rationale: "Selected comparison over chat. Strongest signal: task completion.",
-      plans: [
-        { rank: "01", name: "Comparison", why: "Two periods side by side, with the delta.", verdict: "Wins", winner: true },
-        { rank: "02", name: "Static dashboard", why: "Built for one quarter, not this question.", verdict: "Loses" },
-        { rank: "03", name: "Chat", why: "A paragraph cannot compare two periods.", verdict: "Loses" },
-      ],
-    },
-    approve: {
-      rationale: "Selected decision over chat. Strongest signal: task completion.",
-      plans: [
-        { rank: "01", name: "Decision", why: "The facts, the risk, and one clear action.", verdict: "Wins", winner: true },
-        { rank: "02", name: "Refund form", why: "A blank form, not this request.", verdict: "Loses" },
-        { rank: "03", name: "Chat", why: "A paragraph cannot take the action.", verdict: "Loses" },
-      ],
-    },
-    investigate: {
-      rationale: "Selected investigation over chat. Strongest signal: task completion.",
-      plans: [
-        { rank: "01", name: "Investigation", why: "A funnel, the anomaly, and the sources.", verdict: "Wins", winner: true },
-        { rank: "02", name: "Checkout dashboard", why: "The usual charts, not last Tuesday.", verdict: "Loses" },
-        { rank: "03", name: "Chat", why: "A paragraph cannot show the funnel.", verdict: "Loses" },
-      ],
-    },
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const menuBtn = document.querySelector(".mk-menu-btn");
+  const drawer = document.getElementById("mk-drawer");
+  const setMenu = (open) => {
+    if (!menuBtn || !drawer) return;
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    drawer.hidden = !open;
   };
-  const order = Object.keys(intents);
-  const tabs = Array.from(document.querySelectorAll(".tab[data-scene]"));
-  const scenes = Array.from(document.querySelectorAll(".scene[id^='scene-']"));
-  const intentNode = document.getElementById("demo-intent");
-  const stateNode = document.querySelector(".sbar .state");
-  const decision = document.querySelector(".decision");
-  const candidateList = document.getElementById("candidates");
-  const rationaleNode = document.getElementById("decision-rationale");
-  const bar = document.querySelector(".sbar");
-  const windowNode = document.querySelector(".window");
-
-  let run = 0;
-  let current = 0;
-  let autoplay = true;
-
-  const setPhase = (phase, label) => {
-    if (!stateNode) return;
-    stateNode.dataset.phase = phase;
-    stateNode.querySelector("span").textContent = label;
-    if (bar) bar.dataset.phase = phase;
-  };
-
-  const selectTab = (name) => {
-    for (const tab of tabs) {
-      const selected = tab.dataset.scene === name;
-      tab.setAttribute("aria-selected", String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-    }
-  };
-
-  const hideScenes = () => {
-    for (const scene of scenes) {
-      scene.hidden = true;
-      scene.dataset.active = "false";
-    }
-  };
-
-  const revealScene = (name) => {
-    for (const scene of scenes) {
-      const active = scene.id === `scene-${name}`;
-      scene.hidden = !active;
-      scene.dataset.active = String(active);
-      if (active && !reduceMotion) {
-        for (const child of scene.children) {
-          child.style.animation = "none";
-          void child.offsetWidth;
-          child.style.animation = "";
-        }
-      }
-    }
-  };
-
-  const hideDecision = () => {
-    if (decision) decision.hidden = true;
-  };
-
-  const showDecision = (name) => {
-    const spec = decisions[name];
-    if (!decision || !candidateList || !rationaleNode || !spec) return;
-    candidateList.replaceChildren();
-    for (const plan of spec.plans) {
-      const item = document.createElement("li");
-      item.className = "candidate";
-      if (plan.winner) item.dataset.winner = "true";
-
-      const rank = document.createElement("span");
-      rank.className = "rank";
-      rank.textContent = plan.rank;
-
-      const body = document.createElement("div");
-      const title = document.createElement("strong");
-      title.textContent = plan.name;
-      const why = document.createElement("span");
-      why.textContent = plan.why;
-      body.append(title, why);
-
-      const verdict = document.createElement("span");
-      verdict.className = "verdict";
-      verdict.textContent = plan.verdict;
-
-      item.append(rank, body, verdict);
-      candidateList.append(item);
-    }
-    rationaleNode.textContent = spec.rationale;
-    decision.hidden = false;
-    if (!reduceMotion) {
-      for (const child of candidateList.children) {
-        child.style.animation = "none";
-        void child.offsetWidth;
-        child.style.animation = "";
-      }
-    }
-  };
-
-  const typeIntent = async (text, token) => {
-    if (!intentNode) return;
-    if (reduceMotion) {
-      intentNode.textContent = text;
-      return;
-    }
-    intentNode.textContent = "";
-    for (let index = 1; index <= text.length; index += 1) {
-      if (token !== run) return;
-      intentNode.textContent = text.slice(0, index);
-      const char = text[index - 1];
-      await sleep(char === " " ? 34 : 18 + Math.random() * 22);
-    }
-  };
-
-  /** One full pass: type the intent, choose a plan, stream the surface, settle. */
-  const show = async (name) => {
-    const token = ++run;
-    current = Math.max(0, order.indexOf(name));
-    selectTab(name);
-
-    if (reduceMotion) {
-      if (intentNode) intentNode.textContent = intents[name];
-      hideDecision();
-      revealScene(name);
-      setPhase("ready", "Ready");
-      return;
-    }
-
-    hideScenes();
-    hideDecision();
-    setPhase("typing", "");
-    await typeIntent(intents[name], token);
-    if (token !== run) return;
-
-    setPhase("planning", "Choosing an interface");
-    showDecision(name);
-    await sleep(1680);
-    if (token !== run) return;
-
-    hideDecision();
-    setPhase("building", "Building");
-    revealScene(name);
-    await sleep(820);
-    if (token !== run) return;
-
-    setPhase("ready", "Ready");
-
-    if (!autoplay) return;
-    await sleep(5200);
-    if (token !== run || !autoplay || document.hidden) return;
-    void show(order[(current + 1) % order.length]);
-  };
-
-  const takeOver = () => {
-    autoplay = false;
-  };
-
-  for (const card of document.querySelectorAll(".usecase[data-scene]")) {
-    card.addEventListener("click", () => {
-      takeOver();
-      const demo = document.getElementById("demo");
-      if (demo) demo.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-      void show(card.dataset.scene);
-    });
-  }
-
-  for (const tab of tabs) {
-    tab.addEventListener("click", () => {
-      takeOver();
-      void show(tab.dataset.scene);
-    });
-    tab.addEventListener("keydown", (event) => {
-      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-      event.preventDefault();
-      takeOver();
-      const step = event.key === "ArrowRight" ? 1 : -1;
-      const next = order[(current + step + order.length) % order.length];
-      void show(next);
-      tabs.find((item) => item.dataset.scene === next)?.focus();
-    });
-  }
-
-  if (windowNode) {
-    windowNode.addEventListener("focusin", takeOver);
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    // Resume the cycle when the tab comes back, unless the visitor took over.
-    if (!document.hidden && autoplay && stateNode?.dataset.phase === "ready") {
-      void show(order[(current + 1) % order.length]);
-    }
+  menuBtn?.addEventListener("click", () => {
+    setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
   });
-
-  if (tabs.length > 0 && scenes.length > 0) {
-    // Let the hero paint first; the demo starts as the eye reaches it.
-    window.setTimeout(() => void show(order[0]), reduceMotion ? 0 : 500);
-  }
-
-  /* Copy to clipboard ------------------------------------------------------ */
+  drawer?.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLAnchorElement) setMenu(false);
+  });
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setMenu(false);
+  });
 
   for (const button of document.querySelectorAll("button[data-copy]")) {
     button.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(button.dataset.copy);
-        button.dataset.copied = "true";
-        button.setAttribute("aria-label", "Copied");
-        window.setTimeout(() => {
-          delete button.dataset.copied;
-          button.setAttribute("aria-label", "Copy install command");
-        }, 1600);
       } catch {
-        // Clipboard access denied: the command is visible next to the button.
+        return;
       }
+      button.dataset.copied = "true";
+      button.setAttribute("aria-label", "Copied");
+      window.setTimeout(() => {
+        delete button.dataset.copied;
+        button.setAttribute("aria-label", "Copy install command");
+      }, 1600);
     });
   }
 
-  /* Scroll reveal ---------------------------------------------------------- */
+  const tabs = Array.from(document.querySelectorAll(".hosts-tabs [data-host]"));
+  const compares = Array.from(document.querySelectorAll(".compare[data-host]"));
+  const hosts = compares.map((node) => node.dataset.host);
+  let active = "northline";
+  let run = 0;
 
-  const revealables = Array.from(document.querySelectorAll("[data-reveal]"));
-  if (revealables.length > 0 && !reduceMotion && "IntersectionObserver" in window) {
+  const placeCursor = (stage) => {
+    if (!stage) return;
+    const cursor = stage.querySelector(".flow-cursor");
+    const hot = stage.querySelector(".is-on [data-hot], [data-hot]");
+    if (!cursor || !hot) return;
+    const bounds = stage.getBoundingClientRect();
+    const target = hot.getBoundingClientRect();
+    cursor.style.left = `${target.left - bounds.left + target.width / 2 - (5.2 / 24) * 22}px`;
+    cursor.style.top = `${target.top - bounds.top + target.height / 2 - (2.8 / 24) * 22}px`;
+  };
+
+  const setHere = (header, name) => {
+    if (!header) return;
+    for (const link of header.querySelectorAll("nav span")) {
+      const label = link.dataset.link || link.textContent;
+      link.classList.toggle("is-here", label === name);
+    }
+  };
+
+  const replay = (node) => {
+    if (!node || reduce) return;
+    node.style.animation = "none";
+    void node.offsetWidth;
+    node.style.animation = "";
+  };
+
+  const showWithout = (compare, step) => {
+    const screen = compare.querySelector(".without .flow-screen");
+    if (!screen) return;
+    for (const pane of screen.querySelectorAll("[data-step]")) {
+      pane.classList.toggle("is-on", Number(pane.dataset.step) === step);
+    }
+    replay(screen);
+    const names = compare.dataset.without.split(",");
+    setHere(compare.querySelector(".without .site-nav"), names[step] || names[0]);
+    placeCursor(compare.querySelector(".without .flow-stage"));
+  };
+
+  const showWith = (compare, phase) => {
+    const ask = compare.querySelector(".with-ask");
+    const induct = compare.querySelector(".ovxa-induction");
+    const result = compare.querySelector(".site-result");
+    const stage = compare.querySelector(".with .flow-stage");
+    if (ask) ask.hidden = phase === "done";
+    if (induct) {
+      induct.hidden = phase !== "induct";
+      if (phase === "induct") {
+        for (const node of induct.querySelectorAll(".induct-frame, .induct-bar, .induct-a, .induct-b, .induct-word")) {
+          replay(node);
+        }
+      }
+    }
+    if (result) {
+      result.hidden = phase !== "done";
+      result.classList.toggle("is-in", phase === "done");
+    }
+    if (stage) stage.classList.toggle("is-down", phase === "down");
+    setHere(compare.querySelector(".with .site-nav"), phase === "done" ? compare.dataset.done : compare.dataset.idle);
+    if (phase === "ask" || phase === "down") placeCursor(stage);
+  };
+
+  const sleep = (ms, token) =>
+    new Promise((resolve) => {
+      window.setTimeout(() => resolve(token === run), ms);
+    });
+
+  const play = async (name) => {
+    const token = ++run;
+    const compare = compares.find((node) => node.dataset.host === name);
+    if (!compare) return;
+    if (reduce) {
+      showWithout(compare, 0);
+      showWith(compare, "done");
+      return;
+    }
+    let step = 0;
+    showWithout(compare, 0);
+    const left = window.setInterval(() => {
+      if (token !== run) {
+        window.clearInterval(left);
+        return;
+      }
+      step = (step + 1) % 6;
+      showWithout(compare, step);
+    }, 1800);
+
+    showWith(compare, "ask");
+    while (token === run) {
+      const stage = compare.querySelector(".with .flow-stage");
+      stage?.classList.remove("is-down");
+      showWith(compare, "ask");
+      if (!(await sleep(640, token))) break;
+      stage?.classList.add("is-down");
+      if (!(await sleep(360, token))) break;
+      showWith(compare, "down");
+      if (!(await sleep(260, token))) break;
+      showWith(compare, "induct");
+      if (!(await sleep(1760, token))) break;
+      showWith(compare, "done");
+      if (!(await sleep(4200, token))) break;
+    }
+    window.clearInterval(left);
+  };
+
+  const selectHost = (name) => {
+    active = name;
+    for (const tab of tabs) {
+      const selected = tab.dataset.host === name;
+      tab.classList.toggle("is-active", selected);
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    }
+    for (const compare of compares) {
+      const on = compare.dataset.host === name;
+      compare.hidden = !on;
+      compare.dataset.active = String(on);
+    }
+    void play(name);
+  };
+
+  const tablist = document.querySelector(".hosts-tabs");
+  tablist?.addEventListener("keydown", (event) => {
+    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+    const current = hosts.indexOf(active);
+    event.preventDefault();
+    const next =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? hosts.length - 1
+          : event.key === "ArrowRight"
+            ? (current + 1) % hosts.length
+            : (current - 1 + hosts.length) % hosts.length;
+    selectHost(hosts[next]);
+    tabs[next]?.focus();
+  });
+  for (const tab of tabs) {
+    tab.addEventListener("click", () => selectHost(tab.dataset.host));
+  }
+
+  const start = () => selectHost("northline");
+  const hostSection = document.querySelector(".hosts");
+  if (reduce || !hostSection || !("IntersectionObserver" in window)) {
+    start();
+  } else {
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.dataset.reveal = "in";
-          observer.unobserve(entry.target);
-        }
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        start();
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+      { threshold: 0.15 },
     );
-    for (const node of revealables) observer.observe(node);
-  } else {
-    for (const node of revealables) node.dataset.reveal = "in";
+    observer.observe(hostSection);
   }
 })();

@@ -4,18 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>OVXA — The UI Intelligence Engine for Generative UI</title>
-    <meta
-      name="description"
-      content="A model proposes an interface. The compiler decides what survives. One component turns a user's intent into the interface that finishes the task, in your design system."
-    />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="description" content="Without it, the data. With it, the decision." />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a0a" />
     <meta property="og:title" content="OVXA — The UI Intelligence Engine" />
-    <meta
-      property="og:description"
-      content="A model proposes an interface. The compiler decides what survives. One component, your design system."
-    />
+    <meta property="og:description" content="Without it, the data. With it, the decision." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ovxa.ai" />
     <meta name="twitter:card" content="summary" />
@@ -24,345 +17,471 @@
     <script src="boot.js"></script>
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <div class="marketing">
+      <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="nav">
-      <div class="wrap">
-        <a class="brand" href="#" aria-label="OVXA home">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <rect x="2.25" y="2.25" width="27.5" height="27.5" rx="8" stroke="currentColor" stroke-width="2.5" />
-            <rect x="9" y="9" width="14" height="3.5" rx="1.75" fill="currentColor" />
-            <rect x="9" y="15.5" width="6.5" height="7.5" rx="2" fill="currentColor" />
-            <rect x="17.75" y="15.5" width="5.25" height="7.5" rx="2" fill="currentColor" opacity="0.4" />
-          </svg>
-          OVXA
-        </a>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="#how" class="optional">How it works</a>
-          <a href="#use-cases" class="optional">Use cases</a>
-          <a href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md">Docs</a>
-          <a href="https://github.com/ovxa-ai/ovxa">GitHub</a>
+      <header class="mk-nav">
+        <div class="mk-nav-inner">
+          <a class="mk-brand" href="#main" aria-label="OVXA home">
+            <span class="brand-logo" role="img" aria-label="OVXA" style="--brand-logo-height: 24px">
+              <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <rect x="2.25" y="2.25" width="27.5" height="27.5" rx="8" stroke="currentColor" stroke-width="2.5" />
+                <rect x="9" y="9" width="14" height="3.5" rx="1.75" fill="currentColor" />
+                <rect x="9" y="15.5" width="6.5" height="7.5" rx="2" fill="currentColor" />
+                <rect x="17.75" y="15.5" width="5.25" height="7.5" rx="2" fill="currentColor" opacity="0.4" />
+              </svg>
+              <span class="brand-wordmark" aria-hidden="true">OVXA</span>
+            </span>
+          </a>
+          <nav class="mk-links" aria-label="Primary">
+            <a href="#use-cases">Use cases</a>
+            <a href="#sdk">SDK</a>
+            <a href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md" rel="noreferrer" target="_blank">Docs</a>
+          </nav>
+          <div class="mk-nav-end">
+            <a class="button button-ghost mk-signin" href="https://ovxa.ai/login">Sign in</a>
+            <a class="button button-primary" href="https://ovxa.ai/signup">Get Started</a>
+            <button class="mk-menu-btn" type="button" aria-expanded="false" aria-controls="mk-drawer" aria-label="Open menu">Menu</button>
+          </div>
+        </div>
+        <nav id="mk-drawer" class="mk-drawer" aria-label="Mobile" hidden>
+          <a href="#use-cases">Use cases</a>
+          <a href="#sdk">SDK</a>
+          <a href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md" rel="noreferrer" target="_blank">Docs</a>
+          <a href="https://ovxa.ai/login">Sign In</a>
         </nav>
-      </div>
-    </header>
+      </header>
 
-    <main id="main" class="hero-bg">
-      <section class="wrap hero">
-        <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Open source · Apache-2.0 · Node 22+</p>
-        <h1>The interface a task deserves.</h1>
-        <p class="lede">
-          A model proposes an interface. The compiler decides what survives. Your app gets the one
-          most likely to finish the job — in one component, in your design system.
-        </p>
-        <div class="cta">
-          <div class="install">
-            <code id="install-cmd">npm install @ovxa/sdk</code>
-            <button class="copy" type="button" data-copy="npm install @ovxa/sdk" aria-label="Copy install command">
-              <svg class="icon-copy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
-                <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
-              </svg>
-              <svg class="icon-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M3.5 8.5 6.5 11.5 12.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-          <a class="btn btn-primary" href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md">Read the docs</a>
-          <a class="btn btn-ghost" href="https://github.com/ovxa-ai/ovxa">View source</a>
-        </div>
-      </section>
-
-      <section class="wrap demo" aria-labelledby="demo-title">
-        <h2 id="demo-title" hidden>Live example</h2>
-        <div class="window">
-          <div class="window-chrome">
-            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
-            <div class="tabs" role="tablist" aria-label="Example tasks">
-              <button class="tab" role="tab" type="button" id="tab-compare" aria-selected="true" aria-controls="scene-compare" data-scene="compare">Compare</button>
-              <button class="tab" role="tab" type="button" id="tab-approve" aria-selected="false" aria-controls="scene-approve" data-scene="approve" tabindex="-1">Approve</button>
-              <button class="tab" role="tab" type="button" id="tab-investigate" aria-selected="false" aria-controls="scene-investigate" data-scene="investigate" tabindex="-1">Investigate</button>
+      <main id="main" class="mk-hero-bg">
+        <section class="mk-wrap mk-hero">
+          <p class="mk-eyebrow"><span class="mk-dot" aria-hidden="true"></span>One SDK</p>
+          <h1>Their product answers.</h1>
+          <p class="mk-lede">Without it, the data. With it, the decision.</p>
+          <div class="mk-cta">
+            <div class="mk-install">
+              <code>npm install @ovxa/sdk</code>
+              <button class="mk-copy" type="button" data-copy="npm install @ovxa/sdk" aria-label="Copy install command">
+                <svg class="mk-copy-idle" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                  <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
+                </svg>
+                <svg class="mk-copy-done" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M3.5 8.5 6.5 11.5 12.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
             </div>
-            <span>&lt;OvxaSearch /&gt;</span>
+            <a class="button button-primary mk-btn" href="https://ovxa.ai/signup">Get Started</a>
           </div>
+        </section>
 
-          <div class="window-body">
-            <div class="sbar" aria-hidden="true">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
-                <circle cx="9" cy="9" r="5.5" />
-                <path d="M13.2 13.2 17 17" stroke-linecap="round" />
-              </svg>
-              <span class="q" id="demo-intent">Compare Q2 revenue against Q1 and show where growth was lost</span>
-              <span class="state" data-phase="ready"><span>Ready</span></span>
-            </div>
-
-            <div class="stage">
-            <div class="g-skeleton" aria-hidden="true" hidden>
-              <span class="g-sk g-sk-title"></span>
-              <span class="g-sk g-sk-line"></span>
-              <div class="g-sk-grid">
-                <span class="g-sk g-sk-card"></span>
-                <span class="g-sk g-sk-card"></span>
-                <span class="g-sk g-sk-card"></span>
+        <section class="hosts" id="use-cases" aria-labelledby="hosts-title">
+          <div class="mk-wrap">
+            <h2 id="hosts-title" class="sr-only">The same screen with OVXA and without it</h2>
+            <div class="hosts-bar">
+              <div class="hosts-tabs" role="tablist" aria-label="Customer product">
+                <button type="button" role="tab" id="tab-northline" aria-selected="true" class="is-active" data-host="northline">
+                  <i class="host-mark is-northline" aria-hidden="true"></i>Northline
+                </button>
+                <button type="button" role="tab" id="tab-lumen" aria-selected="false" tabindex="-1" data-host="lumen">
+                  <i class="host-mark is-lumen" aria-hidden="true"></i>Lumen
+                </button>
+                <button type="button" role="tab" id="tab-kite" aria-selected="false" tabindex="-1" data-host="kite">
+                  <i class="host-mark is-kite" aria-hidden="true"></i>Kite
+                </button>
               </div>
             </div>
 
-            <div class="scene" id="scene-compare" role="tabpanel" aria-labelledby="tab-compare" data-active="true">
-              <div class="g-metrics">
-                <div class="g-card">
-                  <span class="g-label">Q2 revenue</span>
-                  <span class="g-value">$4.82M</span>
-                  <span class="g-delta up">+6.1% vs Q1</span>
-                </div>
-                <div class="g-card">
-                  <span class="g-label">New ARR</span>
-                  <span class="g-value">$612k</span>
-                  <span class="g-delta down">−18.4% vs Q1</span>
-                </div>
-                <div class="g-card">
-                  <span class="g-label">Net retention</span>
-                  <span class="g-value">108%</span>
-                  <span class="g-delta up">+3 pts</span>
-                </div>
-              </div>
-              <div class="g-two">
-                <div class="g-card">
-                  <span class="g-label">Growth by segment, Q2 vs Q1</span>
-                  <div class="g-bars">
-                    <div class="g-bar"><span>Enterprise</span><i data-w="92"></i><b>+$318k</b></div>
-                    <div class="g-bar"><span>Mid-market</span><i data-w="54"></i><b>+$186k</b></div>
-                    <div class="g-bar"><span>SMB</span><i data-w="22"></i><b>+$76k</b></div>
-                    <div class="g-bar"><span>Self-serve</span><i data-w="38" class="faint"></i><b class="down">−$131k</b></div>
+            <div class="compare" data-host="northline" data-active="true" data-without="Overview,Ledger,Segments,Segments,Ledger,Ledger" data-idle="Overview" data-done="Ledger">
+              <figure class="compare-col without">
+                <figcaption class="is-off"><b>Without OVXA</b></figcaption>
+                <article class="site site-north" aria-label="Northline without OVXA">
+                  <header class="site-nav">
+                    <strong>NORTHLINE</strong>
+                    <nav aria-hidden="true"><span class="is-here">Overview</span><span>Ledger</span><span>Segments</span></nav>
+                    <span class="site-live">Live</span>
+                  </header>
+                  <div class="site-page">
+                    <div class="flow-stage">
+                      <div class="flow-screen">
+                        <div class="flow-step is-on" data-step="0">
+                          <div class="web-head"><p class="web-title">Cash</p><span class="web-meta">Close in 6 days</span></div>
+                          <ul class="web-list">
+                            <li><span>Operating<em>••4821 · ACH posted yesterday</em></span><b>$1.20M</b></li>
+                            <li><span>Reserve<em>••1104 · no movement this month</em></span><b>$640k</b></li>
+                            <li><span>Payroll<em>••7730 · run is Friday</em></span><b>$88.4k</b></li>
+                            <li class="has-media"><img class="north-card" src="hosts/north-card.jpg" alt="" /><span>Cards<em>••2290 · 14 charges still open</em></span><b>$12.6k</b></li>
+                            <li data-hot="true"><span>Q2 close<em>Revenue +6.1% · new ARR −18.4% · unopened</em></span><b>Ledger</b></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="1">
+                          <div class="web-head"><p class="web-title">Ledger</p><span class="web-meta">Q2 against Q1 · closed 30 Jun</span></div>
+                          <div class="north-metrics">
+                            <div><span>Q2 revenue</span><b>$4.82M</b><em class="is-up">+6.1%</em></div>
+                            <div data-hot="true"><span>New ARR</span><b>$612k</b><em class="is-down">−18.4%</em></div>
+                            <div><span>Net retention</span><b>108%</b><em class="is-up">+3 pts</em></div>
+                          </div>
+                          <p class="north-note">New ARR is the line that broke. The mix sits under Segments.</p>
+                        </div>
+                        <div class="flow-step" data-step="2">
+                          <div class="web-head"><p class="web-title">Segments</p><span class="web-meta">Share of new ARR</span></div>
+                          <div class="north-bars">
+                            <div><span>Enterprise</span><span class="north-track"><i style="width: 92%"></i></span></div>
+                            <div><span>Mid-market</span><span class="north-track"><i style="width: 54%"></i></span></div>
+                            <div data-hot="true"><span>Self-serve</span><span class="north-track"><i class="is-down" style="width: 31%"></i></span></div>
+                          </div>
+                        </div>
+                        <div class="flow-step" data-step="3">
+                          <div class="web-head"><p class="web-title">Self-serve</p><span class="web-meta">Trial to paid · last 90 days</span></div>
+                          <ul class="web-list">
+                            <li><span>Conversion<em>4.8% before 14 May</em></span><b>3.1%</b></li>
+                            <li><span>Trial starts<em>Volume held through the quarter</em></span><b>Flat</b></li>
+                            <li data-hot="true"><span>14 May price test<em>Self-serve monthly · still running</em></span><b>$29 → $39</b></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="4">
+                          <div class="web-head"><p class="web-title">Price test</p><span class="web-meta" data-hot="true">Open Q2 note</span></div>
+                          <div class="north-metrics">
+                            <div><span>Control</span><b>$29</b><em class="is-up">4.8% paid</em></div>
+                            <div><span>Variant</span><b>$39</b><em class="is-down">3.1% paid</em></div>
+                            <div><span>Status</span><b>Live</b><em>Growth · unclosed</em></div>
+                          </div>
+                          <p class="north-note">Same plan. Higher price. The note for the close is still empty.</p>
+                        </div>
+                        <div class="flow-step" data-step="5">
+                          <div class="web-head"><p class="web-title">Q2 note</p><span class="web-meta">Unsent · close in 6 days</span></div>
+                          <div class="note-pad"><span>What broke new ARR</span><b></b></div>
+                          <div class="north-actions"><span data-hot="true">Save note</span><span>Leave it blank</span></div>
+                        </div>
+                      </div>
+                      <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                    </div>
                   </div>
-                </div>
-                <div class="g-card">
-                  <span class="g-label">Where growth was lost</span>
-                  <table class="g-table">
-                    <thead><tr><th>Source</th><th>Q1</th><th>Q2</th></tr></thead>
-                    <tbody>
-                      <tr><td>Self-serve signups</td><td>4,120</td><td>3,205</td></tr>
-                      <tr><td>Trial → paid</td><td>11.8%</td><td>9.2%</td></tr>
-                      <tr><td>Expansion</td><td>$402k</td><td>$418k</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="g-card g-callout">
-                <strong>Self-serve conversion fell 2.6 points after the pricing change on 14 May.</strong>
-                <p>Enterprise more than covered it. If self-serve had held Q1 conversion, Q2 would have closed at $5.01M.</p>
-                <div class="g-actions"><span class="g-btn primary">Open pricing experiment</span><span class="g-btn">Export</span></div>
-              </div>
+                </article>
+              </figure>
+              <figure class="compare-col with">
+                <figcaption class="is-on"><b>With OVXA</b></figcaption>
+                <article class="site site-north" aria-label="Northline with OVXA">
+                  <header class="site-nav">
+                    <strong>NORTHLINE</strong>
+                    <nav aria-hidden="true"><span data-link="Overview" class="is-here">Overview</span><span data-link="Ledger">Ledger</span><span data-link="Segments">Segments</span></nav>
+                    <span class="site-live">Live</span>
+                  </header>
+                  <div class="site-page">
+                    <div class="with-ask">
+                      <div class="flow-stage">
+                        <div class="flow-screen">
+                          <div class="web-head"><p class="web-title">Cash</p><span class="web-meta">Close in 6 days</span></div>
+                          <ul class="web-list">
+                            <li><span>Operating<em>••4821 · ACH posted yesterday</em></span><b>$1.20M</b></li>
+                            <li><span>Reserve<em>••1104 · no movement this month</em></span><b>$640k</b></li>
+                            <li><span>Payroll<em>••7730 · run is Friday</em></span><b>$88.4k</b></li>
+                            <li class="has-media"><img class="north-card" src="hosts/north-card.jpg" alt="" /><span>Cards<em>••2290 · 14 charges still open</em></span><b>$12.6k</b></li>
+                          </ul>
+                          <div class="north-ask" data-hot="true"><span>&gt;</span><b>Why is new ARR down?</b></div>
+                        </div>
+                        <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                      </div>
+                    </div>
+                    <div class="ovxa-induction" hidden>
+                      <span class="induct-lockup">
+                        <svg class="induct-mark" viewBox="0 0 32 32" width="80" height="80" aria-hidden="true">
+                          <rect class="induct-frame" pathLength="100" x="2.25" y="2.25" width="27.5" height="27.5" rx="8" />
+                          <rect class="induct-bar" x="9" y="9" width="14" height="3.5" rx="1.75" />
+                          <rect class="induct-a" x="9" y="15.5" width="6.5" height="7.5" rx="2" />
+                          <rect class="induct-b" x="17.75" y="15.5" width="5.25" height="7.5" rx="2" />
+                        </svg>
+                        <span class="induct-word">OVXA</span>
+                      </span>
+                    </div>
+                    <div class="site-result" hidden>
+                      <div class="north-native">
+                        <p class="site-verdict">Self-serve broke it.</p>
+                        <p class="north-kicker">Q2 closed 30 Jun · against Q1</p>
+                        <div class="north-metrics">
+                          <div><span>Q2 revenue</span><b>$4.82M</b><em class="is-up">+6.1%</em></div>
+                          <div><span>New ARR</span><b>$612k</b><em class="is-down">−18.4%</em></div>
+                          <div><span>Net retention</span><b>108%</b><em class="is-up">+3 pts</em></div>
+                        </div>
+                        <div class="north-bars" aria-hidden="true">
+                          <div><span>Enterprise</span><span class="north-track"><i style="width: 92%"></i></span></div>
+                          <div><span>Mid-market</span><span class="north-track"><i style="width: 54%"></i></span></div>
+                          <div><span>Self-serve</span><span class="north-track"><i class="is-down" style="width: 31%"></i></span></div>
+                        </div>
+                        <p class="north-note">Enterprise expansion of $410k carried the quarter. New ARR missed because self-serve trial-to-paid fell from 4.8% to 3.1% after the 14 May price test. Mid-market was flat.</p>
+                        <div class="north-actions"><span>Hold enterprise pricing</span><span>Roll back self-serve</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </figure>
             </div>
 
-            <div class="scene" id="scene-approve" role="tabpanel" aria-labelledby="tab-approve" data-active="false" hidden>
-              <div class="g-card">
-                <span class="g-label">Refund request · #R-48211 · Medium risk</span>
-                <strong class="g-title">Refund $1,240.00 to Meridian Labs</strong>
-                <p class="g-note">Annual plan, cancelled on day 41. Policy allows a prorated refund inside 45 days; this exceeds the prorated amount by $186.</p>
-                <dl class="g-facts">
-                  <div><dt>Customer since</dt><dd>March 2024 · 3 renewals</dd></div>
-                  <div><dt>Prorated amount</dt><dd>$1,054.00</dd></div>
-                  <div><dt>Requested by</dt><dd>D. Okafor (Support) · 2h ago</dd></div>
-                  <div><dt>Previous refunds</dt><dd>None</dd></div>
-                </dl>
-                <div class="g-actions"><span class="g-btn primary">Approve $1,240</span><span class="g-btn">Approve prorated $1,054</span><span class="g-btn danger">Decline</span></div>
-              </div>
-              <div class="g-card g-callout">
-                <strong>Recommendation: approve the prorated amount.</strong>
-                <p>Retention risk is low — the account already churned — and the delta exceeds the support approval threshold.</p>
-              </div>
+            <div class="compare" data-host="lumen" data-active="false" hidden data-without="Today,Today,Chart,Chart,Coverage,Coverage" data-idle="Today" data-done="Chart">
+              <figure class="compare-col without">
+                <figcaption class="is-off"><b>Without OVXA</b></figcaption>
+                <article class="site site-lumen" aria-label="Lumen without OVXA">
+                  <header class="site-nav">
+                    <strong>lumen</strong>
+                    <nav aria-hidden="true"><span class="is-here">Today</span><span>Chart</span><span>Coverage</span></nav>
+                  </header>
+                  <div class="site-page">
+                    <div class="flow-stage">
+                      <div class="flow-screen">
+                        <div class="flow-step is-on" data-step="0">
+                          <img class="lumen-room" src="hosts/lumen-room.jpg" alt="The consulting room at Lumen" />
+                          <p class="web-day">Tuesday 23 Sep · 3 seen · 8 still due</p>
+                          <p class="web-title">Today</p>
+                          <ul class="web-list web-schedule">
+                            <li data-hot="true"><span>09:00</span><img class="web-avatar" src="hosts/lumen-maya.jpg" alt="" /><span class="web-person"><b>Maya Chen</b><em>Follow-up · room 2 · checked in</em></span></li>
+                            <li><span>09:40</span><img class="web-avatar" src="hosts/lumen-jonah.jpg" alt="" /><span class="web-person"><b>Jonah Hale</b><em>New intake · waiting room</em></span></li>
+                            <li><span>10:20</span><img class="web-avatar" src="hosts/lumen-priya.jpg" alt="" /><span class="web-person"><b>Priya Shah</b><em>Med review · confirmed</em></span></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="1">
+                          <div class="maya-strip"><img src="hosts/lumen-maya.jpg" alt="" /><span><b>Maya Chen</b><em>Follow-up · room 2 · checked in at 09:00</em></span><img src="hosts/lumen-adeyemi.jpg" alt="" /></div>
+                          <div class="app-sub"><span>Visit</span><span data-hot="true">Chart</span><span>Plan</span><span>Coverage</span></div>
+                          <ul class="web-list">
+                            <li><span>Checked in<em>Room 2 is open. The chart is not.</em></span><b>09:00</b></li>
+                            <li><span>Reason<em>Follow-up on the new sleep dose</em></span><b>Open</b></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="2">
+                          <div class="maya-strip"><img src="hosts/lumen-maya.jpg" alt="" /><span><b>Maya Chen</b><em>Follow-up · room 2 · checked in at 09:00</em></span><img src="hosts/lumen-adeyemi.jpg" alt="" /></div>
+                          <div class="app-sub"><span>Visit</span><span>Chart</span><span data-hot="true">Plan</span><span>Coverage</span></div>
+                          <ul class="web-list">
+                            <li><span>11 Sep<em>Sleep dose left unfinished</em></span><b>Visit</b></li>
+                            <li><span>PHQ-9<em>Moved from 11 to 8</em></span><b>8</b></li>
+                            <li><span>Clinician<em>Dr. Adeyemi · room 2</em></span><b>Here</b></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="3">
+                          <div class="maya-strip"><img src="hosts/lumen-maya.jpg" alt="" /><span><b>Maya Chen</b><em>Follow-up · room 2 · checked in at 09:00</em></span><img src="hosts/lumen-adeyemi.jpg" alt="" /></div>
+                          <div class="app-sub"><span>Visit</span><span>Chart</span><span>Plan</span><span data-hot="true">Coverage</span></div>
+                          <div class="plan-cap"><b>40</b><span>minute cap on this plan. An extension has to be filed on coverage.</span></div>
+                        </div>
+                        <div class="flow-step" data-step="4">
+                          <div class="maya-strip"><img src="hosts/lumen-maya.jpg" alt="" /><span><b>Maya Chen</b><em>Follow-up · room 2 · checked in at 09:00</em></span><img src="hosts/lumen-adeyemi.jpg" alt="" /></div>
+                          <p class="web-title">Coverage</p>
+                          <ul class="web-list">
+                            <li><span>Aetna<em>One extension allowed this quarter</em></span><b>0 of 1</b></li>
+                            <li data-hot="true"><span>Request<em>Minutes and reason are still blank</em></span><b>File</b></li>
+                          </ul>
+                        </div>
+                        <div class="flow-step" data-step="5">
+                          <div class="maya-strip"><img src="hosts/lumen-maya.jpg" alt="" /><span><b>Maya Chen</b><em>Follow-up · room 2 · checked in at 09:00</em></span><img src="hosts/lumen-adeyemi.jpg" alt="" /></div>
+                          <p class="web-title">Request</p>
+                          <div class="flow-field"><span>Minutes past 40</span><b></b></div>
+                          <div class="flow-field"><span>Reason for Dr. Adeyemi</span><b></b></div>
+                          <div class="lumen-actions"><span class="lumen-yes" data-hot="true">Send for approval</span></div>
+                        </div>
+                      </div>
+                      <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                    </div>
+                  </div>
+                </article>
+              </figure>
+              <figure class="compare-col with">
+                <figcaption class="is-on"><b>With OVXA</b></figcaption>
+                <article class="site site-lumen" aria-label="Lumen with OVXA">
+                  <header class="site-nav">
+                    <strong>lumen</strong>
+                    <nav aria-hidden="true"><span data-link="Today" class="is-here">Today</span><span data-link="Chart">Chart</span><span data-link="Coverage">Coverage</span></nav>
+                  </header>
+                  <div class="site-page">
+                    <div class="with-ask">
+                      <div class="flow-stage">
+                        <div class="flow-screen">
+                          <img class="lumen-room" src="hosts/lumen-room.jpg" alt="The consulting room at Lumen" />
+                          <p class="web-day">Tuesday 23 Sep · 3 seen · 8 still due</p>
+                          <p class="web-title">Today</p>
+                          <ul class="web-list web-schedule">
+                            <li><span>09:00</span><img class="web-avatar" src="hosts/lumen-maya.jpg" alt="" /><span class="web-person"><b>Maya Chen</b><em>Follow-up · room 2 · checked in<i class="visit-extend" data-hot="true">Extend</i></em></span></li>
+                            <li><span>09:40</span><img class="web-avatar" src="hosts/lumen-jonah.jpg" alt="" /><span class="web-person"><b>Jonah Hale</b><em>New intake · waiting room</em></span></li>
+                            <li><span>10:20</span><img class="web-avatar" src="hosts/lumen-priya.jpg" alt="" /><span class="web-person"><b>Priya Shah</b><em>Med review · confirmed</em></span></li>
+                          </ul>
+                        </div>
+                        <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                      </div>
+                    </div>
+                    <div class="ovxa-induction" hidden>
+                      <span class="induct-lockup">
+                        <svg class="induct-mark" viewBox="0 0 32 32" width="80" height="80" aria-hidden="true">
+                          <rect class="induct-frame" pathLength="100" x="2.25" y="2.25" width="27.5" height="27.5" rx="8" />
+                          <rect class="induct-bar" x="9" y="9" width="14" height="3.5" rx="1.75" />
+                          <rect class="induct-a" x="9" y="15.5" width="6.5" height="7.5" rx="2" />
+                          <rect class="induct-b" x="17.75" y="15.5" width="5.25" height="7.5" rx="2" />
+                        </svg>
+                        <span class="induct-word">OVXA</span>
+                      </span>
+                    </div>
+                    <div class="site-result" hidden>
+                      <div class="lumen-card">
+                        <div class="lumen-who">
+                          <img class="web-avatar is-lg" src="hosts/lumen-maya.jpg" alt="" />
+                          <span class="lumen-kicker">Follow-up · Maya Chen · room 2 · checked in</span>
+                        </div>
+                        <h3 class="site-verdict">Extend to 55 minutes.</h3>
+                        <p>The 11 Sep visit closed on an unfinished question about the new sleep dose. PHQ-9 has moved from 11 to 8. The plan cap is 40 minutes. Aetna allows one extension this quarter, and none has been used.</p>
+                        <dl>
+                          <div><dt>Clinician</dt><dd class="lumen-person"><img src="hosts/lumen-adeyemi.jpg" alt="" />Dr. Adeyemi</dd></div>
+                          <div><dt>Last visit</dt><dd>11 Sep</dd></div>
+                          <div><dt>Payer</dt><dd>Aetna · 0 of 1</dd></div>
+                        </dl>
+                        <div class="lumen-actions"><span class="lumen-yes">Approve 55 min</span><span class="lumen-no">Keep the plan at 40</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </figure>
             </div>
 
-            <div class="scene" id="scene-investigate" role="tabpanel" aria-labelledby="tab-investigate" data-active="false" hidden>
-              <div class="g-two">
-                <div class="g-card">
-                  <span class="g-label">Checkout funnel · Tuesday vs 4-week median</span>
-                  <ol class="g-funnel">
-                    <li data-w="100"><span>Cart</span><b>18,420 · −1%</b></li>
-                    <li data-w="78"><span>Address</span><b>14,360 · −2%</b></li>
-                    <li data-w="41" class="drop"><span>Payment</span><b>7,550 · −31%</b></li>
-                    <li data-w="36"><span>Confirmed</span><b>6,630 · −29%</b></li>
-                  </ol>
-                </div>
-                <div class="g-card">
-                  <span class="g-label">Anomalies in the window</span>
-                  <ul class="g-list">
-                    <li><strong class="down">Payment step error rate 4.1% → 19.6%</strong><small>13:05–15:40 UTC · 3DS challenge timeouts</small></li>
-                    <li><strong>psp-adapter deploy v2.31.0</strong><small>12:58 UTC · changed 3DS fallback default</small></li>
-                    <li><strong>Mobile Safari share of failures: 71%</strong><small>Desktop unaffected</small></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="g-card g-callout">
-                <strong>Most likely cause: v2.31.0 disabled the 3DS frictionless fallback on Safari.</strong>
-                <p>The drop starts seven minutes after the deploy and is confined to the payment step and to browsers that hit the 3DS challenge.</p>
-                <div class="g-actions"><span class="g-btn primary">Roll back v2.31.0</span><span class="g-btn">Open trace</span><span class="g-btn">Sources (3)</span></div>
-              </div>
-            </div>
+            <div class="compare" data-host="kite" data-active="false" hidden data-without="Drop,Jacket,Jacket,Jacket,Bag,Bag" data-idle="Drop" data-done="Bag">
+              <figure class="compare-col without">
+                <figcaption class="is-off"><b>Without OVXA</b></figcaption>
+                <article class="site site-kite" aria-label="Kite without OVXA">
+                  <header class="site-nav">
+                    <strong>KITE</strong>
+                    <nav aria-hidden="true"><span class="is-here">Drop</span><span>Jacket</span><span>Bag</span></nav>
+                  </header>
+                  <div class="site-page">
+                    <div class="flow-stage">
+                      <div class="flow-screen">
+                        <div class="flow-step is-on" data-step="0">
+                          <div class="web-head"><p class="web-title">Spring drop</p><span class="web-meta">Oakland · ships Thu</span></div>
+                          <div class="kite-grid">
+                            <div class="kite-tile" data-hot="true"><span class="kite-swatch"><img src="hosts/kite-jacket.jpg" alt="" /></span><b>Field jacket</b><span>$186</span><em>Charcoal · XS–XL · 40 in stock</em></div>
+                            <div class="kite-tile"><span class="kite-swatch"><img src="hosts/kite-tee.jpg" alt="" /></span><b>Studio tee</b><span>$48</span><em>One size · 220 in stock</em></div>
+                          </div>
+                          <p class="kite-line"><img src="hosts/kite-pant.jpg" alt="" /><b>Work pant</b><span>$128 · 6 left · back in 3 weeks</span></p>
+                        </div>
+                        <div class="flow-step" data-step="1">
+                          <div class="jacket-hero"><img src="hosts/kite-jacket.jpg" alt="" /><div><p class="web-title">Field jacket</p><b>$186</b><em>Charcoal · 40 in the Oakland cage</em></div></div>
+                          <div class="flow-chips"><span class="is-on">Charcoal</span><span>Stone</span><span>Navy</span></div>
+                          <div class="app-sub"><span>Color</span><span data-hot="true">Sizes</span><span>Bag</span></div>
+                        </div>
+                        <div class="flow-step" data-step="2">
+                          <div class="web-head"><p class="web-title">Field jacket</p><span class="web-meta">Charcoal · pick the run</span></div>
+                          <div class="flow-sizes"><span class="is-on">XS<b>2</b></span><span class="is-on">M<b>4</b></span><span class="is-on">L<b>4</b></span><span class="is-on">XL<b>2</b></span></div>
+                          <div class="kite-buy" data-hot="true"><span>Add 12 to the bag</span><b>$2,232</b></div>
+                        </div>
+                        <div class="flow-step" data-step="3">
+                          <div class="web-head"><p class="web-title">Ship</p><span class="web-meta">Twelve pieces · not placed</span></div>
+                          <div class="flow-field"><span>Quantity</span><b>12 · 2 XS, 4 M, 4 L, 2 XL</b></div>
+                          <div class="flow-field"><span>Leave Oakland</span><b>Thursday</b></div>
+                          <div class="app-sub"><span>Sizes</span><span data-hot="true">Bag</span></div>
+                        </div>
+                        <div class="flow-step" data-step="4">
+                          <div class="web-head"><p class="web-title">Bag</p><span class="web-meta">Outer layer only</span></div>
+                          <p class="kite-line"><img src="hosts/kite-jacket.jpg" alt="" /><b>Field jacket × 12</b><span>$2,232</span></p>
+                          <p class="kite-line"><img src="hosts/kite-tee.jpg" alt="" /><b>Studio tee</b><span>Left out</span></p>
+                          <p class="kite-line"><img src="hosts/kite-pant.jpg" alt="" /><b>Work pant</b><span>Backordered</span></p>
+                          <div class="app-sub"><span data-hot="true">Checkout</span></div>
+                        </div>
+                        <div class="flow-step" data-step="5">
+                          <div class="web-head"><p class="web-title">Checkout</p><span class="web-meta">Oakland · Thursday</span></div>
+                          <p class="kite-line"><img src="hosts/kite-jacket.jpg" alt="" /><b>Field jacket × 12</b><span>$2,232</span></p>
+                          <div class="kite-buy" data-hot="true"><span>Place the order</span><b>$2,232</b></div>
+                          <p class="kite-fine">Tee stays off the order. The pant cannot ship this week.</p>
+                        </div>
+                      </div>
+                      <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                    </div>
+                  </div>
+                </article>
+              </figure>
+              <figure class="compare-col with">
+                <figcaption class="is-on"><b>With OVXA</b></figcaption>
+                <article class="site site-kite" aria-label="Kite with OVXA">
+                  <header class="site-nav">
+                    <strong>KITE</strong>
+                    <nav aria-hidden="true"><span data-link="Drop" class="is-here">Drop</span><span data-link="Jacket">Jacket</span><span data-link="Bag">Bag</span></nav>
+                  </header>
+                  <div class="site-page">
+                    <div class="with-ask">
+                      <div class="flow-stage">
+                        <div class="flow-screen">
+                          <div class="web-head"><p class="web-title">Spring drop</p><span class="kite-kit" data-hot="true">Kit twelve by Friday</span></div>
+                          <div class="kite-grid">
+                            <div class="kite-tile"><span class="kite-swatch"><img src="hosts/kite-jacket.jpg" alt="" /></span><b>Field jacket</b><span>$186</span><em>Charcoal · XS–XL · 40 in stock</em></div>
+                            <div class="kite-tile"><span class="kite-swatch"><img src="hosts/kite-tee.jpg" alt="" /></span><b>Studio tee</b><span>$48</span><em>One size · 220 in stock</em></div>
+                          </div>
+                          <p class="kite-line"><img src="hosts/kite-pant.jpg" alt="" /><b>Work pant</b><span>$128 · 6 left · back in 3 weeks</span></p>
+                        </div>
+                        <span class="flow-cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.2 2.8 19.4 14.2h-6.3L10.6 21.2 5.2 2.8Z" /></svg></span>
+                      </div>
+                    </div>
+                    <div class="ovxa-induction" hidden>
+                      <span class="induct-lockup">
+                        <svg class="induct-mark" viewBox="0 0 32 32" width="80" height="80" aria-hidden="true">
+                          <rect class="induct-frame" pathLength="100" x="2.25" y="2.25" width="27.5" height="27.5" rx="8" />
+                          <rect class="induct-bar" x="9" y="9" width="14" height="3.5" rx="1.75" />
+                          <rect class="induct-a" x="9" y="15.5" width="6.5" height="7.5" rx="2" />
+                          <rect class="induct-b" x="17.75" y="15.5" width="5.25" height="7.5" rx="2" />
+                        </svg>
+                        <span class="induct-word">OVXA</span>
+                      </span>
+                    </div>
+                    <div class="site-result" hidden>
+                      <div class="kite-native">
+                        <p class="site-verdict">Twelve jackets. Thursday.</p>
+                        <div class="kite-grid">
+                          <div class="kite-tile is-picked"><span class="kite-swatch"><img src="hosts/kite-jacket.jpg" alt="" /></span><b>Field jacket</b><span>$186 · charcoal</span><em>In stock for the roster: 2 XS, 4 M, 4 L, 2 XL. Ships Thursday from Oakland.</em></div>
+                          <div class="kite-tile"><span class="kite-swatch"><img src="hosts/kite-tee.jpg" alt="" /></span><b>Studio tee</b><span>Not an outer layer</span><em>One size. It can ship Thursday, and it does not cover the brief.</em></div>
+                        </div>
+                        <div class="kite-buy"><span>Order 12 jackets</span><b>$2,232</b></div>
+                        <p class="kite-fine">Work pant is backordered. Six are left, and the rest return in three weeks.</p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </figure>
             </div>
           </div>
-        </div>
-        <p class="caption">
-          Three intents, three different interfaces, one component. Shown in the reference kit,
-          which inherits the host's colour and type — no theme was configured.
-        </p>
-      </section>
+        </section>
 
-      <section class="section" id="how">
-        <div class="wrap">
-          <div class="section-head" data-reveal>
-            <span class="kicker">How generation works</span>
-            <h2>The Quality Engine ranks competing plans before anything is compiled.</h2>
-            <p>Generation is the expensive step and it happens once, for the plan that won. Rendering is deterministic: nothing unregistered ever executes.</p>
-          </div>
-          <ol class="pipeline" aria-label="Generation pipeline" data-reveal>
-            <li class="step"><strong>Intent</strong><span>What the user is trying to do, in their words.</span></li>
-            <li class="step"><strong>Context</strong><span>App state, data, permissions, and what happened last time.</span></li>
-            <li class="step"><strong>Candidates</strong><span>Several competing UI plans — plus chat and a static screen as baselines.</span></li>
-            <li class="step hero-step"><strong>Quality Engine</strong><span>Scored on task fit, clarity, accessibility and cost. One plan wins.</span></li>
-            <li class="step"><strong>Compile</strong><span>Grounded against your registry. Invalid nodes are stripped, never guessed.</span></li>
-            <li class="step"><strong>Render</strong><span>Streams component by component in your design system.</span></li>
-            <li class="step"><strong>Outcome</strong><span>Completion, correction or abandonment feeds the next decision.</span></li>
-          </ol>
-        </div>
-      </section>
+        <section class="mk-section mk-sdk-section" id="sdk" aria-labelledby="sdk-title">
+          <div class="mk-wrap mk-sdk">
+            <div class="mk-sdk-copy">
+              <h2 id="sdk-title">One import.</h2>
+              <p>No theme object required. It inherits the page it sits on.</p>
+            </div>
+            <pre class="mk-code"><code><span class="tok-keyword">import</span> { <span class="tok-type">Ovxa</span> } <span class="tok-keyword">from</span> <span class="tok-string">"@ovxa/sdk"</span>;
+<span class="tok-keyword">import</span> <span class="tok-string">"@ovxa/sdk/styles.css"</span>;
 
-      <section class="section" id="sdk">
-        <div class="wrap">
-          <div class="section-head" data-reveal>
-            <span class="kicker">The SDK</span>
-            <h2>One import. An intent in, a live interface out.</h2>
-            <p>Streaming, the action loop, and loading, empty and error states are handled. The surface inherits your colour and type; tune the rest with tokens.</p>
-          </div>
-          <div class="cols" data-reveal>
-            <div class="card">
-              <h3>Render one intent</h3>
-              <p>Drop it where a chart or a form would have gone. It decides which one the task needs.</p>
-<pre><code><span class="tok-k">import</span> { <span class="tok-t">Ovxa</span> } <span class="tok-k">from</span> <span class="tok-s">"@ovxa/sdk"</span>;
-<span class="tok-k">import</span> <span class="tok-s">"@ovxa/sdk/styles.css"</span>;
-
-&lt;<span class="tok-t">Ovxa</span>
-  intent=<span class="tok-s">"Compare Q2 revenue against Q1"</span>
+&lt;<span class="tok-type">Ovxa</span>
+  intent=<span class="tok-string">"Compare Q2 revenue against Q1"</span>
   data={revenue}
 /&gt;</code></pre>
-            </div>
-            <div class="card">
-              <h3>Let the user ask</h3>
-              <p>A search box for interfaces. Suggestions before they type, the answer underneath when they do.</p>
-<pre><code><span class="tok-k">import</span> { <span class="tok-t">OvxaSearch</span> } <span class="tok-k">from</span> <span class="tok-s">"@ovxa/sdk"</span>;
-
-&lt;<span class="tok-t">OvxaSearch</span>
-  data={workspace}
-  theme={{ radius: <span class="tok-s">"var(--radius)"</span> }}
-  onIntent={(intent) =&gt; track(intent)}
-/&gt;</code></pre>
-            </div>
           </div>
+        </section>
+      </main>
+
+      <footer class="mk-footer">
+        <div class="mk-footer-inner">
+          <span class="brand-logo" role="img" aria-label="OVXA" style="--brand-logo-height: 22px">
+            <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect x="2.25" y="2.25" width="27.5" height="27.5" rx="8" stroke="currentColor" stroke-width="2.5" />
+              <rect x="9" y="9" width="14" height="3.5" rx="1.75" fill="currentColor" />
+              <rect x="9" y="15.5" width="6.5" height="7.5" rx="2" fill="currentColor" />
+              <rect x="17.75" y="15.5" width="5.25" height="7.5" rx="2" fill="currentColor" opacity="0.4" />
+            </svg>
+            <span class="brand-wordmark" aria-hidden="true">OVXA</span>
+          </span>
+          <nav aria-label="Footer">
+            <a href="#main">Home</a>
+            <a href="https://github.com/ovxa-ai/ovxa/blob/main/packages/sdk/README.md" rel="noreferrer" target="_blank">Docs</a>
+            <a href="https://github.com/ovxa-ai/ovxa" rel="noreferrer" target="_blank">Engine</a>
+            <a href="https://github.com/ovxa-ai/studio" rel="noreferrer" target="_blank">Studio</a>
+            <a href="https://www.npmjs.com/package/@ovxa/sdk" rel="noreferrer" target="_blank">npm</a>
+            <a href="https://github.com/ovxa-ai/ovxa/blob/main/ARCHITECTURE.md" rel="noreferrer" target="_blank">Architecture</a>
+            <a href="https://github.com/ovxa-ai/ovxa/blob/main/SECURITY.md" rel="noreferrer" target="_blank">Security</a>
+            <a href="https://ovxa.ai/privacy">Privacy</a>
+            <a href="https://ovxa.ai/terms">Terms</a>
+          </nav>
+          <p>© 2026 OVXA · Apache-2.0</p>
         </div>
-      </section>
-
-      <section class="section" id="use-cases">
-        <div class="wrap">
-          <div class="section-head" data-reveal>
-            <span class="kicker">Use cases</span>
-            <h2>When chat is the wrong output.</h2>
-            <p>The user needs to compare, choose, configure, approve or investigate something — and a paragraph cannot do that.</p>
-          </div>
-          <div class="grid-3" data-reveal>
-            <article class="usecase">
-              <h3>Compare</h3>
-              <q>Compare Q2 revenue against Q1 and show where growth was lost</q>
-              <p>Two periods side by side, with the delta that explains the change.</p>
-            </article>
-            <article class="usecase">
-              <h3>Choose</h3>
-              <q>Help me pick the right plan for a team of twelve</q>
-              <p>Options with a recommendation, not a wall of feature rows.</p>
-            </article>
-            <article class="usecase">
-              <h3>Configure</h3>
-              <q>Set alerting thresholds for the checkout service</q>
-              <p>Only the fields that matter, prefilled from current state.</p>
-            </article>
-            <article class="usecase">
-              <h3>Approve</h3>
-              <q>Review this refund request and decide</q>
-              <p>The facts, the risk, and one clear action.</p>
-            </article>
-            <article class="usecase">
-              <h3>Investigate</h3>
-              <q>Why did checkout conversion drop last Tuesday?</q>
-              <p>A funnel, the anomaly, and the sources behind it.</p>
-            </article>
-            <article class="usecase">
-              <h3>Monitor</h3>
-              <q>Show the health of the payments pipeline right now</q>
-              <p>Live metrics with the failing step pulled to the front.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="guarantees">
-        <div class="wrap">
-          <div class="section-head" data-reveal>
-            <span class="kicker">Guarantees</span>
-            <h2>Fail closed. Degrade gracefully.</h2>
-            <p>Generated output is data, never code. Everything a model writes is checked against your registry as it streams.</p>
-          </div>
-          <div class="grid-2" data-reveal>
-            <div class="guarantee">
-              <h3>Unregistered components never render</h3>
-              <p>Component types, prop shapes and action ids are allowlists. A node that cannot resolve is stripped; a surface that cannot be grounded becomes a simpler one, never a blank screen.</p>
-            </div>
-            <div class="guarantee">
-              <h3>Patch, don't regenerate</h3>
-              <p>Interactions return a patch addressed by node id. Selections, form values, focus and scroll survive every turn — and most actions never reach a model at all.</p>
-            </div>
-            <div class="guarantee">
-              <h3>It inherits your design system</h3>
-              <p>The surface takes your colour and font. Every other visual is a token. Map your components when you are ready; anything unmapped still shows its data.</p>
-            </div>
-            <div class="guarantee">
-              <h3>Latency is a feature</h3>
-              <p>The shell streams as soon as a plan wins — before generation starts. Data is bound by reference, so the model never transcribes a record: cost tracks components, not rows.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="install">
-        <div class="wrap">
-          <div class="section-head" data-reveal>
-            <span class="kicker">Install</span>
-            <h2>Start with one package. Reach for the rest when you need them.</h2>
-            <p>Dependency flow is one way. Nothing below imports anything above.</p>
-          </div>
-          <div class="packages" data-reveal>
-            <div class="pkg"><code>@ovxa/sdk</code><span>Zero-config embed and search</span></div>
-            <div class="pkg"><code>@ovxa/react</code><span>Renderer, provider, tokens</span></div>
-            <div class="pkg"><code>@ovxa/client</code><span>Typed HTTP / SSE transport</span></div>
-            <div class="pkg"><code>@ovxa/schema</code><span>Surfaces, bindings, patches</span></div>
-            <div class="pkg"><code>@ovxa/registry</code><span>Component and action allowlist</span></div>
-            <div class="pkg"><code>@ovxa/intelligence</code><span>Understand, propose, score, select</span></div>
-            <div class="pkg"><code>@ovxa/compiler</code><span>Plan → generate → ground → fallback</span></div>
-            <div class="pkg"><code>@ovxa/streaming</code><span>Incremental parse and compile</span></div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="wrap">
-        <span>© OVXA · Apache-2.0</span>
-        <nav aria-label="Footer">
-          <a href="https://github.com/ovxa-ai/ovxa">GitHub</a>
-          <a href="https://www.npmjs.com/package/@ovxa/sdk">npm</a>
-          <a href="https://github.com/ovxa-ai/ovxa/blob/main/SECURITY.md">Security</a>
-          <a href="https://github.com/ovxa-ai/ovxa/blob/main/ARCHITECTURE.md">Architecture</a>
-        </nav>
-      </div>
-    </footer>
-
+      </footer>
+    </div>
     <script src="site.js" defer></script>
   </body>
 </html>
